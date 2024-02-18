@@ -39,6 +39,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   multi_image_picker:
   http: ^0.13.3
+  longdo_maps_api3_flutter: ^1.11.0
+  geolocator: ^11.0.0
 
 dev_dependencies:
   flutter_test:

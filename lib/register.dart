@@ -22,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
         user_password.text.isNotEmpty) {
       if (user_password.text == confirm_password.text) {
         try {
-          String uri = "http://10.0.2.2/User_API/user_insert.php";
+          String uri = "http://192.168.1.32/User_API/user_insert.php";
           var res = await http.post(Uri.parse(uri), body: {
             "name": user_name.text,
             "email": user_email.text,

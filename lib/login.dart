@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> getrecord() async {
     try {
-      String uri = "http://10.0.2.2/User_API/user_login.php";
+      String uri = "http://192.168.1.32/User_API/user_login.php";
       // String uri = "http://10.0.2.2/PRO_API/view_data.php";
       var response = await http.get(Uri.parse(uri));
       setState(() {

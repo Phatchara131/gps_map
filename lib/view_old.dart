@@ -5,6 +5,8 @@ import 'package:flutter_application_5/insert_old.dart';
 import 'package:flutter_application_5/update_old.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:longdo_maps_api3_flutter/longdo_maps_api3_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 class View_old extends StatefulWidget {
   const View_old({Key? key}) : super(key: key);
@@ -19,6 +21,9 @@ class _View_oldState extends State<View_old> {
   bool isDarkModeEnabled = false;
   bool isCardView = true;
   String searchText = '';
+  final map = GlobalKey<LongdoMapState>();
+  final GlobalKey<ScaffoldMessengerState> messenger =
+      GlobalKey<ScaffoldMessengerState>();
   //-----map-----
   static const LatLng _pGooglePlex = LatLng(37.4223, -122.0848);
   late TextEditingController _latitudeController;
@@ -71,8 +76,45 @@ class _View_oldState extends State<View_old> {
     }
   }
 
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    var localtion = await Geolocator.getCurrentPosition();
+    print("lat: ${localtion.latitude} lon: ${localtion.longitude}");
+    return await Geolocator.getCurrentPosition();
+  }
+
+  void move_location() {
+    map.currentState?.call("location", args: [
+      {
+        "lon": _longitudeController.text,
+        "lat": _latitudeController.text,
+      }
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
+    var marker;
+    var markerMap = {};
+    var isAddSourceAnimatedRouting = false;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -228,79 +270,274 @@ class _View_oldState extends State<View_old> {
                       ),
                     ),
                   ),
-            Center(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Card(
-                        child: SizedBox(
-                          height: 300,
-                          child: GoogleMap(
-                            initialCameraPosition: CameraPosition(
-                              target: _pGooglePlex,
-                              zoom: 13,
-                            ),
-                          ),
-                        ),
+            Column(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: LongdoMapWidget(
+                    apiKey: "556e31e859f72e9ec99600ae7135f479",
+                    key: map,
+                    eventName: [
+                      JavascriptChannel(
+                        name: "ready",
+                        onMessageReceived: (message) {
+                          var lay = map.currentState
+                              ?.LongdoStatic("Layers", 'RASTER_POI');
+                          if (lay != null) {
+                            print("ready");
+                            map.currentState
+                                ?.call('Layers.setBase', args: [lay]);
+                          }
+                          // var marker = Longdo.LongdoObject(
+                          //   "Marker",
+                          //   args: [
+                          //     {
+                          //       "lon": 100.56,
+                          //       "lat": 13.74,
+                          //     },
+                          //   ],
+                          // );
+                          // map.currentState
+                          //     ?.call("Overlays.add", args: [marker]);
+                          // var id = marker["\$id"];
+                          // print(id);
+                          // markerMap[id] = marker;
+                          // marker["\$id"] = "TEST";
+                          // id = marker["\$id"];
+                          // print(id);
+                          var latlon = _determinePosition();
+                          print(latlon);
+                          latlon.then((value) => {
+                                setState(() {
+                                  map.currentState?.call("location", args: [
+                                    {
+                                      "lon": value.longitude,
+                                      "lat": value.latitude,
+                                    }
+                                  ]);
+                                  var marker = Longdo.LongdoObject(
+                                    "Marker",
+                                    args: [
+                                      {
+                                        "lon": value.longitude,
+                                        "lat": value.latitude,
+                                      },
+                                      {"draggable": true}
+                                    ],
+                                  );
+                                  map.currentState
+                                      ?.call("Overlays.add", args: [marker]);
+                                  final id = marker["\$id"];
+                                  markerMap[id] = marker;
+                                })
+                              });
+                        },
                       ),
-                      SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _latitudeController,
-                              decoration: InputDecoration(
-                                labelText: 'Latitude',
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: TextField(
-                              controller: _longitudeController,
-                              decoration: InputDecoration(
-                                labelText: 'Longitude',
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                        ],
+                      JavascriptChannel(
+                        name: "click",
+                        onMessageReceived: (message) {
+                          var jsonObj = json.decode(message.message);
+                          var lat = jsonObj['data']['lat'];
+                          var lon = jsonObj['data']['lon'];
+                          print("lat: $lat, lon: $lon");
+                          // check type lat and lon
+                          print(lat.runtimeType);
+                          setState(() {
+                            _latitudeController.text = lat.toStringAsFixed(6);
+                            _longitudeController.text = lon.toStringAsFixed(6);
+                          });
+                          // var marker = Longdo.LongdoObject(
+                          //   "Marker",
+                          //   args: [
+                          //     {
+                          //       "lon": lon,
+                          //       "lat": lat,
+                          //     },
+                          //     {"draggable": true}
+                          //   ],
+                          // );
+                          // map.currentState
+                          //     ?.call("Overlays.add", args: [marker]);
+
+                          // final id = marker["\$id"];
+                          // markerMap[id] = marker;
+                        },
                       ),
-                      SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              // Handle confirm button pressed
-                              double latitude =
-                                  double.tryParse(_latitudeController.text) ??
-                                      0.0;
-                              double longitude =
-                                  double.tryParse(_longitudeController.text) ??
-                                      0.0;
-                              // Do something with latitude and longitude
-                            },
-                            child: Text('Confirm'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Handle cancel button pressed
-                              _latitudeController.clear();
-                              _longitudeController.clear();
-                            },
-                            child: Text('Cancel'),
-                          ),
-                        ],
+                      JavascriptChannel(
+                        name: "overlayClick",
+                        onMessageReceived: (message) {
+                          var jsonObj = json.decode(message.message);
+                          map.currentState?.call("Overlays.remove",
+                              args: [jsonObj["data"]]);
+                          final id = jsonObj["data"]["\$id"];
+                          markerMap.remove(id);
+                        },
+                      ),
+                      JavascriptChannel(
+                        name: "overlayDrop",
+                        onMessageReceived: (message) async {
+                          var obj = json.decode(message.message);
+                          final location = await map.currentState
+                              ?.objectCall(obj["data"], "location");
+                          print(location);
+                        },
                       ),
                     ],
+                    options: {
+                      // "ui": Longdo.LongdoStatic(
+                      //   "UiComponent",
+                      //   "None",
+                      // )
+                      // "zoom": 9
+                      // "layer": Longdo.LongdoStatic("Layers", "POLITICAL")
+                    },
                   ),
                 ),
-              ),
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: _latitudeController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Latitude',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: TextField(
+                                  controller: _longitudeController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Longitude',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          width: double.infinity,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Handle confirm button pressed
+                                  double latitude = double.tryParse(
+                                          _latitudeController.text) ??
+                                      0.0;
+                                  double longitude = double.tryParse(
+                                          _longitudeController.text) ??
+                                      0.0;
+                                  // Do something with latitude and longitude
+                                  move_location();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(70, 50),
+                                ),
+                                child: Text('Confirm'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Handle cancel button pressed
+                                  _latitudeController.clear();
+                                  _longitudeController.clear();
+                                },
+                                child: Text('Cancel'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
+            // Center(
+            //   child: SingleChildScrollView(
+            //     child: Padding(
+            //       padding: const EdgeInsets.all(16.0),
+            //       child: Column(
+            //         children: [
+            //           Card(
+            //             child: SizedBox(
+            //               height: 300,
+            //               child:
+            //               // child: GoogleMap(
+            //               //   initialCameraPosition: CameraPosition(
+            //               //     target: _pGooglePlex,
+            //               //     zoom: 13,
+            //               //   ),
+            //               // ),
+            //             ),
+            //           ),
+            //           SizedBox(height: 16),
+            //           Row(
+            //             children: [
+            //               Expanded(
+            //                 child: TextField(
+            //                   controller: _latitudeController,
+            //                   decoration: InputDecoration(
+            //                     labelText: 'Latitude',
+            //                     border: OutlineInputBorder(),
+            //                   ),
+            //                 ),
+            //               ),
+            //               SizedBox(width: 8),
+            //               Expanded(
+            //                 child: TextField(
+            //                   controller: _longitudeController,
+            //                   decoration: InputDecoration(
+            //                     labelText: 'Longitude',
+            //                     border: OutlineInputBorder(),
+            //                   ),
+            //                 ),
+            //               ),
+            //             ],
+            //           ),
+            //           SizedBox(height: 16),
+            //           Row(
+            //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //             children: [
+            //               ElevatedButton(
+            //                 onPressed: () {
+            //                   // Handle confirm button pressed
+            //                   double latitude =
+            //                       double.tryParse(_latitudeController.text) ??
+            //                           0.0;
+            //                   double longitude =
+            //                       double.tryParse(_longitudeController.text) ??
+            //                           0.0;
+            //                   // Do something with latitude and longitude
+            //                 },
+            //                 child: Text('Confirm'),
+            //               ),
+            //               ElevatedButton(
+            //                 onPressed: () {
+            //                   // Handle cancel button pressed
+            //                   _latitudeController.clear();
+            //                   _longitudeController.clear();
+            //                 },
+            //                 child: Text('Cancel'),
+            //               ),
+            //             ],
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
