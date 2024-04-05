@@ -1,8 +1,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/> <!-- เพิ่มบรรทัดนี้ -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" /> <!-- เพิ่มบรรทัดนี้ -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" /> <!-- เพิ่มบรรทัดนี้ -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" /> <!-- เพิ่มบรรทัดนี้ -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
         android:label="flutter_application_5"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" /> <!-- เพิ่มบรรทัดนี้ -->
+        <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"> <!-- เพิ่มบรรทัดนี้ -->
+            <intent-filter> <!-- เพิ่มบรรทัดนี้ -->
+                <action android:name="android.intent.action.BOOT_COMPLETED"/> <!-- เพิ่มบรรทัดนี้ -->
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/> <!-- เพิ่มบรรทัดนี้ -->
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" /> <!-- เพิ่มบรรทัดนี้ -->
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/> <!-- เพิ่มบรรทัดนี้ -->
+            </intent-filter> <!-- เพิ่มบรรทัดนี้ -->
+        </receiver> <!-- เพิ่มบรรทัดนี้ -->
+         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" /> <!-- เพิ่มบรรทัดนี้ -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
