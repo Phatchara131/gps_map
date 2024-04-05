@@ -1,13 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_5/main.dart';
+import 'package:flutter_application_5/people/view_people.dart';
 import 'package:flutter_application_5/register.dart';
-import 'package:flutter_application_5/view_old.dart';
+import 'package:flutter_application_5/view_main.dart';
 import 'package:http/http.dart' as http;
-
-void main() {
-  runApp(MyApp());
-}
 
 class MyApp extends StatelessWidget {
   @override
@@ -32,12 +29,14 @@ class _LoginPageState extends State<LoginPage> {
   bool loginError = false;
   bool _obscurePassword = true;
 
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController useremailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   Future<void> getrecord() async {
     try {
-      String uri = "http://192.168.1.32/User_API/user_login.php";
+      // String uri = "http://192.168.1.32/User_API/user_login.php";
+      String uri =
+          "https://project-old.000webhostapp.com/User_API/user_login.php";
       // String uri = "http://10.0.2.2/PRO_API/view_data.php";
       var response = await http.get(Uri.parse(uri));
       setState(() {
@@ -50,12 +49,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void loginUser() async {
-    String enteredUsername = usernameController.text;
+    String enteredUseremail = useremailController.text;
     String enteredPassword = passwordController.text;
     getrecord(); // เรียกใช้ getrecord เพื่อดึงข้อมูลล่าสุด
     print(userdata);
     for (var index in userdata) {
-      if (index['user_name'] == enteredUsername &&
+      if (index['user_email'] == enteredUseremail &&
           index['user_password'] == enteredPassword) {
         // เข้าสู่ระบบสำเร็จ!
         print("เข้าสู่ระบบสำเร็จ!");
@@ -65,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
         // เพื่อความง่าย, ขอให้เราเข้าสู่หน้าจอ Register ไว้ก่อน
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const View_old()),
+          MaterialPageRoute(builder: (context) => const ViewOld()),
         );
         return;
       } else {
@@ -77,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     // print(enteredPassword);
-    // print(enteredUsername);
+    // print(enteredUseremail);
   }
 
   @override
@@ -104,9 +103,9 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 32.0),
               TextField(
-                controller: usernameController,
+                controller: useremailController,
                 decoration: InputDecoration(
-                  labelText: 'Username',
+                  labelText: 'E-mail',
                   prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(),
                   filled: true,
@@ -167,23 +166,49 @@ class _LoginPageState extends State<LoginPage> {
                     )
                   : Container(), // ซ่อนข้อความผิดพลาดในที่สุด
               SizedBox(height: 16.0),
-              GestureDetector(
-                onTap: () {
-                  // Navigate to the Register screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegisterPage()),
-                  );
-                },
-                child: Text(
-                  'ยังไม่มีบัญชีใช่หรือไม่? ลงทะเบียนที่นี่',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Existing Widgets...
+
+                  SizedBox(height: 16.0),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RegisterPage()),
+                      );
+                    },
+                    child: Text(
+                      'ลงทะเบียนที่นี่',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
                   ),
-                ),
+
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ViewOld_people()),
+                      );
+                    },
+                    child: Text(
+                      'ดูข้อมูลผู้สูงอายุ',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_5/view_old.dart';
+import 'package:flutter_application_5/view_main.dart';
 import 'package:http/http.dart' as http;
 
 class Update_old extends StatefulWidget {
@@ -12,9 +12,9 @@ class Update_old extends StatefulWidget {
   String age;
   String gender;
   String medicalCondition;
+  String relativeID;
   String relativeName;
   String contactNumber;
-
   Update_old(
       this.old_id,
       this.userId,
@@ -24,9 +24,9 @@ class Update_old extends StatefulWidget {
       this.age,
       this.gender,
       this.medicalCondition,
+      this.relativeID,
       this.relativeName,
       this.contactNumber);
-
   @override
   State<Update_old> createState() => _Update_oldState();
 }
@@ -39,12 +39,13 @@ class _Update_oldState extends State<Update_old> {
   TextEditingController age = TextEditingController();
   TextEditingController gender = TextEditingController();
   TextEditingController medicalCondition = TextEditingController();
+  TextEditingController relativeID = TextEditingController();
   TextEditingController relativeName = TextEditingController();
   TextEditingController contactNumber = TextEditingController();
-
   Future<void> updaterecord() async {
     try {
-      String uri = "http://10.0.2.2/Old_API/old_update.php";
+      String uri =
+          "https://project-old.000webhostapp.com/Old_API/old_update.php";
       var res = await http.post(Uri.parse(uri), body: {
         "old_ID": widget.old_id,
         "old_userID": userId.text,
@@ -54,6 +55,7 @@ class _Update_oldState extends State<Update_old> {
         "old_age": age.text,
         "old_sex": gender.text,
         "old_disease": medicalCondition.text,
+        "old_relativeID": relativeID.text,
         "old_Cname": relativeName.text,
         "old_Ctel": contactNumber.text,
       });
@@ -62,7 +64,7 @@ class _Update_oldState extends State<Update_old> {
         print("update");
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const View_old()),
+          MaterialPageRoute(builder: (context) => const ViewOld()),
         );
       } else {
         print("some issue");
@@ -81,6 +83,7 @@ class _Update_oldState extends State<Update_old> {
     age.text = widget.age;
     gender.text = widget.gender;
     medicalCondition.text = widget.medicalCondition;
+    relativeID.text = widget.relativeID;
     relativeName.text = widget.relativeName;
     contactNumber.text = widget.contactNumber;
 
@@ -167,6 +170,16 @@ class _Update_oldState extends State<Update_old> {
             Container(
               margin: EdgeInsets.all(10),
               child: TextFormField(
+                controller: relativeID,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'บัตรประจำตัว(ญาติ)...',
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.all(10),
+              child: TextFormField(
                 controller: relativeName,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -188,7 +201,30 @@ class _Update_oldState extends State<Update_old> {
               margin: EdgeInsets.all(10),
               child: ElevatedButton(
                 onPressed: () {
-                  updaterecord();
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('ยืนยันการอัพเดทข้อมูล'),
+                        content: Text('คุณต้องการที่จะอัพเดทข้อมูลหรือไม่?'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // ปิด AlertDialog
+                              updaterecord(); // เรียกใช้งานฟังก์ชัน updaterecord() เมื่อยืนยัน
+                            },
+                            child: Text('ใช่'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // ปิด AlertDialog
+                            },
+                            child: Text('ไม่'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
                 child: Text('Update Data'),
               ),

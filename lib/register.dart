@@ -12,26 +12,31 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _obscurePassword = true;
 
   final TextEditingController user_name = TextEditingController();
+  final TextEditingController user_idcard = TextEditingController();
   final TextEditingController user_email = TextEditingController();
   final TextEditingController user_password = TextEditingController();
   final TextEditingController confirm_password = TextEditingController();
 
   Future<void> register(BuildContext context) async {
     if (user_name.text.isNotEmpty &&
+        user_idcard.text.isNotEmpty &&
         user_email.text.isNotEmpty &&
         user_password.text.isNotEmpty) {
       if (user_password.text == confirm_password.text) {
         try {
-          String uri = "http://192.168.1.32/User_API/user_insert.php";
+          // String uri = "http://192.168.1.32/User_API/user_insert.php";
+          String uri =
+              "https://project-old.000webhostapp.com/User_API/user_insert.php";
           var res = await http.post(Uri.parse(uri), body: {
             "name": user_name.text,
+            "idcard": user_idcard.text,
             "email": user_email.text,
             "password": user_password.text,
           });
 
           var response = jsonDecode(res.body);
           if (response["success"] == "true") {
-            print("Record Inserted");
+            print("Insert success");
           } else {
             print("Some issue");
           }
@@ -107,6 +112,17 @@ class _RegisterPageState extends State<RegisterPage> {
                     decoration: InputDecoration(
                       labelText: 'Username',
                       prefixIcon: Icon(Icons.person),
+                      border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                    ),
+                  ),
+                  SizedBox(height: 16.0),
+                  TextField(
+                    controller: user_idcard,
+                    decoration: InputDecoration(
+                      labelText: 'UserID',
+                      prefixIcon: Icon(Icons.add_card_rounded),
                       border: OutlineInputBorder(),
                       filled: true,
                       fillColor: Colors.grey[200],
