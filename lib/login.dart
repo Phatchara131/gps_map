@@ -90,127 +90,136 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 229, 255, 213),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.network(
-                'https://f.ptcdn.info/691/055/000/p2n6hzgmmNMzcUSHrM7-o.gif',
-                height: 200,
-              ),
-              const SizedBox(height: 32.0),
-              TextField(
-                controller: useremailController,
-                decoration: InputDecoration(
-                  labelText: 'E-mail',
-                  prefixIcon: Icon(Icons.person),
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Colors.grey[200],
+      // backgroundColor: Color.fromARGB(255, 229, 255, 213),
+
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(
+              'https://modernformhealthcare.co.th/wp-content/uploads/2024/02/happy-asian-senior-couple-smiling-outside.webp',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 32.0),
+                TextField(
+                  controller: useremailController,
+                  decoration: InputDecoration(
+                    labelText: 'E-mail',
+                    prefixIcon: Icon(Icons.person),
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16.0),
-              TextField(
-                controller: passwordController,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  prefixIcon: const Icon(Icons.lock),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Colors.grey,
+                const SizedBox(height: 16.0),
+                TextField(
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    prefixIcon: const Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
+                    border: const OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.grey[200],
                   ),
-                  border: const OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Colors.grey[200],
+                  obscureText: _obscurePassword,
                 ),
-                obscureText: _obscurePassword,
-              ),
 
-              const SizedBox(height: 32.0),
-              ElevatedButton(
-                onPressed: () {
-                  // เรียกใช้ loginUser เมื่อปุ่มเข้าสู่ระบบถูกกด
-                  loginUser();
-                },
-                child: Text(
-                  'เข้าสู่ระบบ',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 0, 255, 157),
-                  minimumSize: Size(double.infinity, 50),
-                ),
-              ),
-              SizedBox(height: 16.0),
-              loginError
-                  ? Text(
-                      'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
-                      style: TextStyle(
-                        color: Colors.red,
-                      ),
-                    )
-                  : Container(), // ซ่อนข้อความผิดพลาดในที่สุด
-              SizedBox(height: 16.0),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Existing Widgets...
-
-                  SizedBox(height: 16.0),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RegisterPage()),
-                      );
-                    },
-                    child: Text(
-                      'ลงทะเบียนที่นี่',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
-                      ),
+                const SizedBox(height: 32.0),
+                ElevatedButton(
+                  onPressed: () {
+                    // เรียกใช้ loginUser เมื่อปุ่มเข้าสู่ระบบถูกกด
+                    loginUser();
+                  },
+                  child: Text(
+                    'เข้าสู่ระบบ',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 0, 255, 157),
+                    minimumSize: Size(double.infinity, 50),
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                loginError
+                    ? Text(
+                        'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      )
+                    : Container(), // ซ่อนข้อความผิดพลาดในที่สุด
+                SizedBox(height: 16.0),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Existing Widgets...
 
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ViewOld_people()),
-                      );
-                    },
-                    child: Text(
-                      'ดูข้อมูลผู้สูงอายุ',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
+                    SizedBox(height: 16.0),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterPage()),
+                        );
+                      },
+                      child: Text(
+                        'ลงทะเบียนที่นี่',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ViewOld_people()),
+                        );
+                      },
+                      child: Text(
+                        'ดูข้อมูลผู้สูงอายุ',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

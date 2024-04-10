@@ -17,14 +17,54 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController user_password = TextEditingController();
   final TextEditingController confirm_password = TextEditingController();
 
+  bool validateThaiID(String id) {
+    if (id.length != 13) {
+      return false;
+    }
+
+    if (!RegExp(r'^[0-9]*$').hasMatch(id)) {
+      return false;
+    }
+
+    int sum = 0;
+    for (int i = 0; i < 12; i++) {
+      sum += int.parse(id[i]) * (13 - i);
+    }
+    if ((11 - (sum % 11)) % 10 != int.parse(id[12])) {
+      return false;
+    }
+
+    return true;
+  }
+
   Future<void> register(BuildContext context) async {
     if (user_name.text.isNotEmpty &&
         user_idcard.text.isNotEmpty &&
         user_email.text.isNotEmpty &&
         user_password.text.isNotEmpty) {
       if (user_password.text == confirm_password.text) {
+        if (!validateThaiID(user_idcard.text)) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("แจ้งเตือน"),
+                content: Text("เลขบัตรประชาชนไม่ถูกต้อง"),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("OK"),
+                  ),
+                ],
+              );
+            },
+          );
+          return;
+        }
+
         try {
-          // String uri = "http://192.168.1.32/User_API/user_insert.php";
           String uri =
               "https://project-old.000webhostapp.com/User_API/user_insert.php";
           var res = await http.post(Uri.parse(uri), body: {
@@ -48,7 +88,6 @@ class _RegisterPageState extends State<RegisterPage> {
           MaterialPageRoute(builder: (context) => LoginPage()),
         );
       } else {
-        // Password and Confirm Password do not match, show alert dialog
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -68,7 +107,6 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       }
     } else {
-      // Notify user about empty fields
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -92,8 +130,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner:
-          false, // เพิ่ม debugShowCheckedModeBanner ที่นี่
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Color.fromARGB(255, 229, 255, 213),
         body: Center(
