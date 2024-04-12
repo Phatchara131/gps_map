@@ -27,15 +27,29 @@ class _ViewOldState extends State<ViewOld> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("View Data")),
+        appBar: AppBar(title: Text("")),
+        // สีดำโปงใส
         drawer: CustomDrawer(),
-        body: RefreshIndicator(
-          child: isCardView ? _buildCardView() : _buildTableView(),
-          onRefresh: () async {
-            await Future.delayed(const Duration(seconds: 2), () => getrecord());
-          },
+        body: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(
+                'https://modernformhealthcare.co.th/wp-content/uploads/2024/02/happy-asian-senior-couple-smiling-outside.webp',
+              ),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: RefreshIndicator(
+            child: isCardView ? _buildCardView() : _buildTableView(),
+            onRefresh: () async {
+              await Future.delayed(
+                  const Duration(seconds: 2), () => getrecord());
+            },
+          ),
         ));
   }
+
   Widget _buildCardView() {
     return ListView.builder(
       itemCount: userdata.length,
@@ -187,5 +201,3 @@ class _ViewOldState extends State<ViewOld> {
     );
   }
 }
-
-

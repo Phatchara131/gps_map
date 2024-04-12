@@ -88,164 +88,175 @@ class _Insert_oldState extends State<Insert_old> {
       appBar: AppBar(
         title: Text('ลงทะเบียน'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              TextFormField(
-                controller: idController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  labelText: 'รหัสประจำตัว...',
-                  prefixIcon: Icon(Icons.perm_identity),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  labelText: 'ชื่อ...',
-                  prefixIcon: Icon(Icons.person),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: lastNameController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  labelText: 'นามสกุล...',
-                  prefixIcon: Icon(Icons.person),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: addressController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  labelText: 'ที่อยู่...',
-                  prefixIcon: Icon(Icons.home),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: ageController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  labelText: 'อายุ...',
-                  prefixIcon: Icon(Icons.calendar_today),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: genderController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  labelText: 'เพศ...',
-                  prefixIcon: Icon(Icons.wc),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: medicalConditionController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  labelText: 'โรคประจำตัว...',
-                  prefixIcon: Icon(Icons.local_hospital),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: relativeIDController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  labelText: 'บัตรประจำตัว(ญาติ)...',
-                  prefixIcon: Icon(Icons.add_card_rounded),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: relativeNameController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  labelText: 'ชื่อ(ญาติ)...',
-                  prefixIcon: Icon(Icons.person),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: contactNumberController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  labelText: 'เบอร์ติดต่อ(ญาติ)...',
-                  prefixIcon: Icon(Icons.phone),
-                ),
-              ),
-              SizedBox(height: 10),
-              // ส่วนเลือกรูปภาพ
-              // ElevatedButton(
-              //   onPressed: _getImage,
-              //   child: Text('เลือกรูปภาพ'),
-              // ),
-              SizedBox(height: 10),
-              // ปุ่มยืนยัน
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text("ยืนยันการบันทึกข้อมูล"),
-                            content: Text(
-                                "คุณต้องการจะยืนยันที่จะบันทึกข้อมูลหรือไม่?"),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  inserrecordold();
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ViewOld()),
-                                  );
-                                },
-                                child: Text("ยืนยัน"),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text("ยกเลิก"),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    child: Text('ยืนยัน'),
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(
+              'https://modernformhealthcare.co.th/wp-content/uploads/2024/02/happy-asian-senior-couple-smiling-outside.webp',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: idController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    labelText: 'รหัสประจำตัว...',
+                    prefixIcon: Icon(Icons.perm_identity),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text("ยกเลิก"),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    labelText: 'ชื่อ...',
+                    prefixIcon: Icon(Icons.person),
                   ),
-                ],
-              ),
-            ],
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: lastNameController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    labelText: 'นามสกุล...',
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: addressController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    labelText: 'ที่อยู่...',
+                    prefixIcon: Icon(Icons.home),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: ageController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    labelText: 'อายุ...',
+                    prefixIcon: Icon(Icons.calendar_today),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: genderController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    labelText: 'เพศ...',
+                    prefixIcon: Icon(Icons.wc),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: medicalConditionController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    labelText: 'โรคประจำตัว...',
+                    prefixIcon: Icon(Icons.local_hospital),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: relativeIDController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    labelText: 'บัตรประจำตัว(ญาติ)...',
+                    prefixIcon: Icon(Icons.add_card_rounded),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: relativeNameController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    labelText: 'ชื่อ(ญาติ)...',
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: contactNumberController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    labelText: 'เบอร์ติดต่อ(ญาติ)...',
+                    prefixIcon: Icon(Icons.phone),
+                  ),
+                ),
+                SizedBox(height: 10),
+                // ส่วนเลือกรูปภาพ
+                // ElevatedButton(
+                //   onPressed: _getImage,
+                //   child: Text('เลือกรูปภาพ'),
+                // ),
+                SizedBox(height: 10),
+                // ปุ่มยืนยัน
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("ยืนยันการบันทึกข้อมูล"),
+                              content: Text(
+                                  "คุณต้องการจะยืนยันที่จะบันทึกข้อมูลหรือไม่?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    inserrecordold();
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ViewOld()),
+                                    );
+                                  },
+                                  child: Text("ยืนยัน"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text("ยกเลิก"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Text('ยืนยัน'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("ยกเลิก"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
