@@ -14,25 +14,6 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Initialize OneSignal
-  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-  OneSignal.Debug.setAlertLevel(OSLogLevel.none);
-  OneSignal.consentRequired(false);
-  OneSignal.initialize("a3781753-2e28-49b9-b782-90781230523c");
-  OneSignal.Notifications.requestPermission(true);
-  OneSignal.User.pushSubscription.addObserver((state) {
-    print("ID : ${state.jsonRepresentation()}"); // print the user id
-  });
-  OneSignal.User.addTagWithKey("test2", "val2");
-  OneSignal.Notifications.addClickListener((event) async {
-    print('NOTIFICATION CLICK LISTENER CALLED WITH EVENT: $event');
-    print(event.notification.jsonRepresentation());
-    print(event.notification.additionalData?['lon']);
-    double lat = double.parse(event.notification.additionalData?['lat']);
-    double lon = double.parse(event.notification.additionalData?['lon']);
-    navigatorKey.currentState?.push(
-        MaterialPageRoute(builder: (context) => Mapnoti(lat: lat, lon: lon)));
-  });
   runApp(MaterialApp(
     title: "App",
     home: LoginPage(),
