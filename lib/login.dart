@@ -203,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
 
-                    const SizedBox(height: 32.0),
+                    const SizedBox(height: 16.0),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
@@ -219,12 +219,20 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 0, 255, 157),
+                          shadowColor: Colors.transparent,
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(
+                            color: Color.fromARGB(255, 0, 255, 157),
+                          ),
                           minimumSize: Size(double.infinity, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          foregroundColor: Color.fromARGB(255, 0, 255, 157),
                         ),
                       ),
                     ),
-                    SizedBox(height: 16.0),
+                    loginError ? SizedBox(height: 16.0) : Container(),
                     loginError
                         ? Text(
                             'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
@@ -233,15 +241,18 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           )
                         : Container(), // ซ่อนข้อความผิดพลาดในที่สุด
-                    SizedBox(height: 16.0),
-                    Column(
+
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Existing Widgets...
-
-                        SizedBox(height: 16.0),
-                        GestureDetector(
-                          onTap: () {
+                        Text(
+                          'ยังไม่มีบัญชีผู้ใช้?',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -253,32 +264,71 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ViewOld_people()),
-                            );
-                          },
-                          child: Text(
-                            'ดูข้อมูลผู้สูงอายุ',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
+                              color: Color.fromARGB(255, 0, 255, 157),
                             ),
                           ),
                         ),
                       ],
                     ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ViewOld_people()),
+                        );
+                      },
+                      child: Text(
+                        'ดูข้อมูลผู้สูงอายุ',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 0, 255, 157),
+                        ),
+                      ),
+                    ),
+
+                    // Column(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     GestureDetector(
+                    //       onTap: () {
+                    //         Navigator.push(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //               builder: (context) => RegisterPage()),
+                    //         );
+                    //       },
+                    //       child: Text(
+                    //         'ลงทะเบียนที่นี่',
+                    //         style: TextStyle(
+                    //           fontSize: 16.0,
+                    //           fontWeight: FontWeight.bold,
+                    //           color: Colors.blue,
+                    //           decoration: TextDecoration.underline,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     GestureDetector(
+                    //       onTap: () {
+                    //         Navigator.push(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //               builder: (context) => ViewOld_people()),
+                    //         );
+                    //       },
+                    //       child: Text(
+                    //         'ดูข้อมูลผู้สูงอายุ',
+                    //         style: TextStyle(
+                    //           fontSize: 16.0,
+                    //           fontWeight: FontWeight.bold,
+                    //           color: Colors.blue,
+                    //           decoration: TextDecoration.underline,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),
