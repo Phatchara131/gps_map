@@ -1,5 +1,6 @@
 import 'package:flutter_application_5/login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_5/view_mapnoti.dart';
 // import 'package:flutter_application_5/relative/view_relative.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -10,6 +11,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize OneSignal
@@ -25,11 +27,16 @@ void main() async {
   OneSignal.Notifications.addClickListener((event) async {
     print('NOTIFICATION CLICK LISTENER CALLED WITH EVENT: $event');
     print(event.notification.jsonRepresentation());
-    print(event.notification.additionalData);
+    print(event.notification.additionalData?['lon']);
+    double lat = double.parse(event.notification.additionalData?['lat']);
+    double lon = double.parse(event.notification.additionalData?['lon']);
+    navigatorKey.currentState?.push(
+        MaterialPageRoute(builder: (context) => Mapnoti(lat: lat, lon: lon)));
   });
   runApp(MaterialApp(
     title: "App",
     home: LoginPage(),
+    navigatorKey: navigatorKey,
     // home: ViewOld(),
   ));
 }
