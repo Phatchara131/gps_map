@@ -13,6 +13,9 @@ class Insert_old extends StatefulWidget {
 }
 
 class _Insert_oldState extends State<Insert_old> {
+  List userdata = [];
+
+  TextEditingController loraController = TextEditingController();
   TextEditingController idController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
@@ -23,10 +26,25 @@ class _Insert_oldState extends State<Insert_old> {
   TextEditingController relativeIDController = TextEditingController();
   TextEditingController relativeNameController = TextEditingController();
   TextEditingController contactNumberController = TextEditingController();
+
   late File _imageFile;
 
+  Future<void> getrecord() async {
+    try {
+      String uri = "https://project-old.000webhostapp.com/Old_API/old_view.php";
+      var response = await http.post(Uri.parse(uri));
+      setState(() {
+        userdata = jsonDecode(response.body);
+        print(userdata);
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> inserrecordold() async {
-    if (idController.text != "" ||
+    if (loraController.text != "" ||
+        idController.text != "" ||
         nameController.text != "" ||
         lastNameController.text != "" ||
         addressController.text != "" ||
@@ -43,6 +61,7 @@ class _Insert_oldState extends State<Insert_old> {
           Uri.parse(
               'http://project-old.000webhostapp.com/Old_API/old_insert.php'));
       request.bodyFields = {
+        "loraid": loraController.text,
         "id": idController.text,
         "name": nameController.text,
         "lastName": lastNameController.text,
@@ -104,11 +123,21 @@ class _Insert_oldState extends State<Insert_old> {
             child: Column(
               children: [
                 TextFormField(
+                  controller: loraController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    labelText: 'รหัสอุปกรณ์...',
+                    prefixIcon: Icon(Icons.perm_identity),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
                   controller: idController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     filled: true,
-                    labelText: 'รหัสประจำตัว...',
+                    labelText: 'บัตรประจำตัว...',
                     prefixIcon: Icon(Icons.perm_identity),
                   ),
                 ),

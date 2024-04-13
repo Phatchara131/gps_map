@@ -1,5 +1,6 @@
 import 'package:flutter_application_5/login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_5/relative/view_relative.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -29,6 +30,7 @@ void main() async {
   runApp(MaterialApp(
     title: "App",
     home: LoginPage(),
+    // home: ViewOld(),
   ));
 }
 
