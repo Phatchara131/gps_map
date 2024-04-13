@@ -121,13 +121,34 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
+                        cursorColor: Colors.white,
                         controller: useremailController,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                         decoration: InputDecoration(
                           labelText: 'E-mail',
-                          prefixIcon: Icon(Icons.person),
-                          border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.email,
+                            color: Colors.white,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
                           filled: true,
-                          fillColor: Colors.grey[200],
+                          fillColor: Colors.transparent,
                         ),
                       ),
                     ),
@@ -135,16 +156,26 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
+                        cursorColor: Colors.white,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                         controller: passwordController,
                         decoration: InputDecoration(
                           labelText: 'Password',
-                          prefixIcon: const Icon(Icons.lock),
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.lock,
+                            color: Colors.white,
+                          ),
                           suffixIcon: IconButton(
                             icon: Icon(
                               _obscurePassword
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color: Colors.grey,
+                              color: Colors.white,
                             ),
                             onPressed: () {
                               setState(() {
@@ -153,8 +184,20 @@ class _LoginPageState extends State<LoginPage> {
                             },
                           ),
                           border: const OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
                           filled: true,
-                          fillColor: Colors.grey[200],
+                          fillColor: Colors.transparent,
                         ),
                         obscureText: _obscurePassword,
                       ),
