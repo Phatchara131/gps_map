@@ -114,12 +114,14 @@ class _MapnotiState extends State<Mapnoti> {
           ),
         ),
         body: Container(
+          height: double.infinity,
+          width: double.infinity,
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.91,
                   child: LongdoMapWidget(
                     apiKey: "556e31e859f72e9ec99600ae7135f479",
                     key: map,
@@ -227,72 +229,72 @@ class _MapnotiState extends State<Mapnoti> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: _latitudeController,
-                            decoration: InputDecoration(
-                              labelText: 'Latitude',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: _longitudeController,
-                            decoration: InputDecoration(
-                              labelText: 'Longitude',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: _areaController,
-                            decoration: InputDecoration(
-                              labelText: 'Area',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        move_location();
-                        insertRecord();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(70, 50),
-                      ),
-                      child: Text('Confirm'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _latitudeController.clear();
-                        _longitudeController.clear();
-                      },
-                      child: Text('Cancel'),
-                    ),
-                  ],
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //     children: [
+                //       Expanded(
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(8.0),
+                //           child: TextField(
+                //             controller: _latitudeController,
+                //             decoration: InputDecoration(
+                //               labelText: 'Latitude',
+                //               border: OutlineInputBorder(),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //       Expanded(
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(8.0),
+                //           child: TextField(
+                //             controller: _longitudeController,
+                //             decoration: InputDecoration(
+                //               labelText: 'Longitude',
+                //               border: OutlineInputBorder(),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //       Expanded(
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(8.0),
+                //           child: TextField(
+                //             controller: _areaController,
+                //             decoration: InputDecoration(
+                //               labelText: 'Area',
+                //               border: OutlineInputBorder(),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //   children: [
+                //     ElevatedButton(
+                //       onPressed: () {
+                //         move_location();
+                //         insertRecord();
+                //       },
+                //       style: ElevatedButton.styleFrom(
+                //         minimumSize: Size(70, 50),
+                //       ),
+                //       child: Text('Confirm'),
+                //     ),
+                //     ElevatedButton(
+                //       onPressed: () {
+                //         _latitudeController.clear();
+                //         _longitudeController.clear();
+                //       },
+                //       child: Text('Cancel'),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),
