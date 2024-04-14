@@ -133,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           child: Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(25.0),
+              padding: const EdgeInsets.all(10.0),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -183,7 +183,10 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 16.0),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.only(
+                          left: 8.0,
+                          right: 8.0,
+                        ),
                         child: TextField(
                           cursorColor: Colors.white,
                           style: TextStyle(
@@ -231,10 +234,38 @@ class _LoginPageState extends State<LoginPage> {
                           obscureText: _obscurePassword,
                         ),
                       ),
-
-                      const SizedBox(height: 16.0),
+                      Container(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => Forgot(),
+                            //   ),
+                            // );
+                          },
+                          child: Text(
+                            'ลืมรหัสผ่าน?',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.only(
+                              right: 8.0,
+                            ),
+                            minimumSize: Size(0, 5),
+                          ),
+                        ),
+                      ),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.only(
+                          left: 8.0,
+                          right: 8.0,
+                        ),
                         child: ElevatedButton(
                           onPressed: () {
                             // เรียกใช้ loginUser เมื่อปุ่มเข้าสู่ระบบถูกกด
