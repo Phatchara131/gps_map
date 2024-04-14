@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_5/main.dart';
+import 'package:flutter_application_5/page/ForgotPassword.dart';
 import 'package:flutter_application_5/people/view_people.dart';
 import 'package:flutter_application_5/register.dart';
 import 'package:flutter_application_5/view_main.dart';
@@ -238,12 +239,12 @@ class _LoginPageState extends State<LoginPage> {
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => Forgot(),
-                            //   ),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ForgotPassword(),
+                              ),
+                            );
                           },
                           child: Text(
                             'ลืมรหัสผ่าน?',
