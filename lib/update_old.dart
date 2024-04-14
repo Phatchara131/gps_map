@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 class Update_old extends StatefulWidget {
   String old_id;
+  String loraId;
   String userId;
   String fname;
   String lname;
@@ -17,6 +18,7 @@ class Update_old extends StatefulWidget {
   String contactNumber;
   Update_old(
       this.old_id,
+      this.loraId,
       this.userId,
       this.fname,
       this.lname,
@@ -32,6 +34,7 @@ class Update_old extends StatefulWidget {
 }
 
 class _Update_oldState extends State<Update_old> {
+  TextEditingController loraId = TextEditingController();
   TextEditingController userId = TextEditingController();
   TextEditingController fname = TextEditingController();
   TextEditingController lname = TextEditingController();
@@ -48,6 +51,7 @@ class _Update_oldState extends State<Update_old> {
           "https://project-old.000webhostapp.com/Old_API/old_update.php";
       var res = await http.post(Uri.parse(uri), body: {
         "old_ID": widget.old_id,
+        "old_loraID": loraId.text,
         "old_userID": userId.text,
         "old_fname": fname.text,
         "old_lname": lname.text,
@@ -76,6 +80,7 @@ class _Update_oldState extends State<Update_old> {
 
   @override
   void initState() {
+    loraId.text = widget.loraId;
     userId.text = widget.userId;
     fname.text = widget.fname;
     lname.text = widget.lname;
@@ -100,7 +105,19 @@ class _Update_oldState extends State<Update_old> {
             Container(
               margin: EdgeInsets.all(10),
               child: TextFormField(
+                controller: loraId,
+                readOnly: true, // Set this to true to make it readonly
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'รหัสอุปกรณ์...',
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.all(10),
+              child: TextFormField(
                 controller: userId,
+                readOnly: true,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'รหัสประจำตัว...',
@@ -171,6 +188,7 @@ class _Update_oldState extends State<Update_old> {
               margin: EdgeInsets.all(10),
               child: TextFormField(
                 controller: relativeID,
+                readOnly: true,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'บัตรประจำตัว(ญาติ)...',

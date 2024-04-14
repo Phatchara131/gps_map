@@ -37,7 +37,7 @@ class _ViewOldState extends State<ViewOld> {
           },
         ));
   }
-  
+
   Widget _buildCardView() {
     return ListView.builder(
       itemCount: userdata.length,
@@ -59,6 +59,7 @@ class _ViewOldState extends State<ViewOld> {
                 MaterialPageRoute(
                   builder: (context) => Update_old(
                     userdata[index]["old_ID"],
+                    userdata[index]["old_loraID"],
                     userdata[index]["old_userID"],
                     userdata[index]["old_fname"],
                     userdata[index]["old_lname"],
@@ -161,9 +162,11 @@ class _ViewOldState extends State<ViewOld> {
       print(e);
     }
   }
-    Future<void> getidcard() async {
+
+  Future<void> getidcard() async {
     try {
-      String uri = "https://project-old.000webhostapp.com/User_API/user_login.php";
+      String uri =
+          "https://project-old.000webhostapp.com/User_API/user_login.php";
       var response = await http.post(Uri.parse(uri));
       setState(() {
         idcarddata = jsonDecode(response.body);
@@ -201,5 +204,3 @@ class _ViewOldState extends State<ViewOld> {
     );
   }
 }
-
-

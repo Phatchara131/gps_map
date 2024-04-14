@@ -71,6 +71,7 @@ class _ViewOldState extends State<ViewOld> {
                 MaterialPageRoute(
                   builder: (context) => Update_old(
                     userdata[index]["old_ID"],
+                    userdata[index]["old_loraID"],
                     userdata[index]["old_userID"],
                     userdata[index]["old_fname"],
                     userdata[index]["old_lname"],

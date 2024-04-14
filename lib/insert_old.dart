@@ -21,13 +21,12 @@ class _Insert_oldState extends State<Insert_old> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController ageController = TextEditingController();
-  TextEditingController genderController = TextEditingController();
   TextEditingController medicalConditionController = TextEditingController();
   TextEditingController relativeIDController = TextEditingController();
   TextEditingController relativeNameController = TextEditingController();
   TextEditingController contactNumberController = TextEditingController();
 
-  late File _imageFile;
+  String? selectedGender;
 
   Future<void> getrecord() async {
     try {
@@ -49,12 +48,11 @@ class _Insert_oldState extends State<Insert_old> {
         lastNameController.text != "" ||
         addressController.text != "" ||
         ageController.text != "" ||
-        genderController.text != "" ||
+        selectedGender != null ||
         medicalConditionController.text != "" ||
         relativeIDController.text != "" ||
         relativeNameController.text != "" ||
-        contactNumberController.text != "" ||
-        _imageFile != null) {
+        contactNumberController.text != "") {
       var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
       var request = http.Request(
           'POST',
@@ -67,7 +65,7 @@ class _Insert_oldState extends State<Insert_old> {
         "lastName": lastNameController.text,
         "address": addressController.text,
         "age": ageController.text,
-        "gender": genderController.text,
+        "gender": selectedGender!,
         "medicalCondition": medicalConditionController.text,
         "relativeID": relativeIDController.text,
         "relativeName": relativeNameController.text,
@@ -87,19 +85,19 @@ class _Insert_oldState extends State<Insert_old> {
     }
   }
 
-  Future<void> _getImage() async {
-    final picker = ImagePicker();
-    // ignore: deprecated_member_use
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+  // Future<void> _getImage() async {
+  //   final picker = ImagePicker();
+  //   // ignore: deprecated_member_use
+  //   final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
-    setState(() {
-      if (pickedFile != null) {
-        _imageFile = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
+  //   setState(() {
+  //     if (pickedFile != null) {
+  //       _imageFile = File(pickedFile.path);
+  //     } else {
+  //       print('No image selected.');
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -182,14 +180,25 @@ class _Insert_oldState extends State<Insert_old> {
                   ),
                 ),
                 SizedBox(height: 10),
-                TextFormField(
-                  controller: genderController,
+                DropdownButtonFormField<String>(
+                  value: selectedGender,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     filled: true,
                     labelText: 'เพศ...',
                     prefixIcon: Icon(Icons.wc),
                   ),
+                  items: ['ชาย', 'หญิง', 'อื่นๆ'].map((String gender) {
+                    return DropdownMenuItem<String>(
+                      value: gender,
+                      child: Text(gender),
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedGender = value;
+                    });
+                  },
                 ),
                 SizedBox(height: 10),
                 TextFormField(
