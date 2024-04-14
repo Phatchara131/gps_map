@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_5/page/SelectOTP.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -68,6 +69,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       if (response.statusCode == 200) {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('otp', otp);
+        prefs.setString('email', email);
         Navigator.of(context).pop();
         //print response.body
         print(response.body);
@@ -76,12 +78,29 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           title: 'ส่งรหัส OTP สำเร็จ',
           text: 'รหัส OTP ถูกส่งไปยังอีเมลของคุณแล้ว',
           type: QuickAlertType.success,
+          showConfirmBtn: false,
+          widget: Container(
+            width: double.infinity,
+            child: Column(
+              children: [
+                SizedBox(height: 10),
+                CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.greenAccent),
+                ),
+                SizedBox(height: 10),
+                Text('กำลังพาคุณไปยังหน้าเปลี่ยนรหัสผ่าน'),
+              ],
+            ),
+          ),
           // onConfirmBtnTap: () {},
         );
-        Future.delayed(Duration(seconds: 2), () {
-          Navigator.of(context).pop();
+        Future.delayed(Duration(seconds: 5), () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return SelectOTP();
+          }));
         });
       } else {
+        Navigator.of(context).pop();
         QuickAlert.show(
           context: context,
           title: 'ส่งรหัส OTP ไม่สำเร็จ',
