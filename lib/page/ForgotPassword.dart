@@ -17,6 +17,7 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   TextEditingController emailController = TextEditingController();
+  bool _isLoading = false;
 
   String generateOTP() {
     // สร้างรหัส OTP 6 หลัก
@@ -25,6 +26,30 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     final otp =
         List.generate(6, (index) => digits[random.nextInt(digits.length)]);
     return otp.join();
+  }
+
+  Future<bool> checkEmail() async {
+    final email = emailController.text;
+    try {
+      showLoading('กำลังตรวจสอบอีเมล...');
+      String url =
+          'https://project-old.000webhostapp.com/User_API/user_rest.php?checkEmail=$email';
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+        print(jsonData);
+        if (jsonData['status'] == 'success') {
+          Navigator.of(context).pop();
+          return true;
+        } else {
+          Navigator.of(context).pop();
+          return false;
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    return false;
   }
 
   Future<void> sendOTP() async {
@@ -49,22 +74,28 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       return;
     }
 
+    final isEmailExist = await checkEmail();
+    if (!isEmailExist) {
+      QuickAlert.show(
+        context: context,
+        title: 'อีเมลไม่ถูกต้อง',
+        text: 'ไม่พบอีเมลนี้ในระบบ',
+        type: QuickAlertType.error,
+      );
+      return;
+    }
+
     final otp = generateOTP();
     try {
+      showLoading('กำลังส่งรหัส OTP...');
       final response = await http.post(
-        Uri.parse('https://crud-web-five.vercel.app/api/sendEmail'),
+        Uri.parse('https://crud-web-g7hi.onrender.com/api/sendEmail'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'message': email,
           'otp': otp,
           'subject': 'รหัส OTP สำหรับการลืมรหัสผ่าน'
         }),
-      );
-      QuickAlert.show(
-        context: context,
-        title: 'ส่งรหัส OTP',
-        text: 'กำลังส่งรหัส OTP ไปยังอีเมลของคุณ',
-        type: QuickAlertType.loading,
       );
       if (response.statusCode == 200) {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -74,6 +105,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         //print response.body
         print(response.body);
         QuickAlert.show(
+          barrierDismissible: false,
           context: context,
           title: 'ส่งรหัส OTP สำเร็จ',
           text: 'รหัส OTP ถูกส่งไปยังอีเมลของคุณแล้ว',
@@ -95,6 +127,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           // onConfirmBtnTap: () {},
         );
         Future.delayed(Duration(seconds: 5), () {
+          Navigator.of(context).pop();
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return SelectOTP();
           }));
@@ -111,6 +144,37 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void showLoading(String msg) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 50,
+                width: 50,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.greenAccent),
+                  strokeWidth: 10,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                msg,
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
