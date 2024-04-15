@@ -187,53 +187,55 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       ),
       body: Padding(
         padding: EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.network(
-              'https://i.imgur.com/fxv47XI.png', // เปลี่ยนเป็นที่อยู่ของรูปภาพของคุณ
-              height: 200,
-              fit: BoxFit.contain,
-            ),
-            SizedBox(height: 20),
-            Text(
-              'กรุณากรอกอีเมลของคุณ\nเพื่อรับรหัส OTP',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black54, // สีของข้อความรายละเอียด
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.network(
+                'https://i.imgur.com/fxv47XI.png', // เปลี่ยนเป็นที่อยู่ของรูปภาพของคุณ
+                height: 200,
+                fit: BoxFit.contain,
               ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: 'อีเมล',
-                hintText: 'example@example.com',
-                prefixIcon: Icon(Icons.email),
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: sendOTP,
-              child: Text(
-                'ส่งรหัส OTP',
-                style: TextStyle(fontSize: 16),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.lightGreenAccent, // สีพื้นหลังของปุ่ม
-                foregroundColor: Colors.black, // สีของตัวอักษรบนปุ่ม
-                padding: EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
+              SizedBox(height: 20),
+              Text(
+                'กรุณากรอกอีเมลของคุณ\nเพื่อรับรหัส OTP',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black54, // สีของข้อความรายละเอียด
                 ),
               ),
-            ),
-          ],
+              SizedBox(height: 20),
+              TextField(
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  labelText: 'อีเมล',
+                  hintText: 'example@example.com',
+                  prefixIcon: Icon(Icons.email),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: sendOTP,
+                child: Text(
+                  'ส่งรหัส OTP',
+                  style: TextStyle(fontSize: 16),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.lightGreenAccent, // สีพื้นหลังของปุ่ม
+                  foregroundColor: Colors.black, // สีของตัวอักษรบนปุ่ม
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
