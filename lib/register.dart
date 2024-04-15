@@ -59,7 +59,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<bool> checkEmail() async {
     final email = user_email.text;
     try {
-      showLoading('กำลังตรวจสอบอีเมล...');
+      showLoading('กำลังตรวจสอบข้อมูล...');
       String url =
           'https://project-old.000webhostapp.com/User_API/user_rest.php?checkEmail=$email';
       var response = await http.get(Uri.parse(url));
@@ -87,6 +87,8 @@ class _RegisterPageState extends State<RegisterPage> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -117,95 +119,75 @@ class _RegisterPageState extends State<RegisterPage> {
         user_email.text.isNotEmpty &&
         user_password.text.isNotEmpty) {
       if (user_password.text == confirm_password.text) {
-        if (await checkEmail()) {
+        if (user_password.text.length >= 6) {
+          if (await checkEmail()) {
+            QuickAlert.show(
+              context: context,
+              title: 'ตรวจสอบอีเมล',
+              text: 'มีอีเมลนี้ในระบบแล้ว',
+              type: QuickAlertType.error,
+            );
+            return;
+          }
+          if (!validateThaiID(user_idcard.text)) {
+            QuickAlert.show(
+              context: context,
+              title: 'ตรวจสอบบัตรประชาชน',
+              text: 'กรุณาใส่บัตรประชาชนให้ถูกต้อง',
+              type: QuickAlertType.error,
+              confirmBtnText: "ยืนยัน",
+            );
+            return;
+          }
+
+          try {
+            String uri =
+                "https://project-old.000webhostapp.com/User_API/user_insert.php";
+            var res = await http.post(Uri.parse(uri), body: {
+              "name": user_name.text,
+              "idcard": user_idcard.text,
+              "email": user_email.text,
+              "password": user_password.text,
+            });
+
+            var response = jsonDecode(res.body);
+            if (response["success"] == "true") {
+              print("Insert success");
+            } else {
+              print("Some issue");
+            }
+          } catch (e) {
+            print(e);
+          }
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+        } else {
           QuickAlert.show(
             context: context,
-            title: 'ตรวจสอบอีเมล',
-            text: 'มีอีเมลนี้ในระบบแล้ว',
+            title: 'ตรวจสอบรหัสผ่าน',
+            text: 'กรุณาใส่รหัสอย่างน้อย 6 ตัว',
             type: QuickAlertType.error,
+            confirmBtnText: "ยืนยัน",
           );
-          return;
         }
-        if (!validateThaiID(user_idcard.text)) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("แจ้งเตือน"),
-                content: Text("เลขบัตรประชาชนไม่ถูกต้อง"),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("OK"),
-                  ),
-                ],
-              );
-            },
-          );
-          return;
-        }
-
-        try {
-          String uri =
-              "https://project-old.000webhostapp.com/User_API/user_insert.php";
-          var res = await http.post(Uri.parse(uri), body: {
-            "name": user_name.text,
-            "idcard": user_idcard.text,
-            "email": user_email.text,
-            "password": user_password.text,
-          });
-
-          var response = jsonDecode(res.body);
-          if (response["success"] == "true") {
-            print("Insert success");
-          } else {
-            print("Some issue");
-          }
-        } catch (e) {
-          print(e);
-        }
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
-        );
       } else {
-        showDialog(
+        QuickAlert.show(
           context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("แจ้งเตือน"),
-              content: Text("กรุณาใส่รหัสให้ตรงกัน"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("OK"),
-                ),
-              ],
-            );
-          },
+          title: 'ตรวจสอบรหัสผ่าน',
+          text: 'กรุณาใส่รหัสผ่านให้ตรงกัน',
+          type: QuickAlertType.error,
+          confirmBtnText: "ยืนยัน",
         );
       }
     } else {
-      showDialog(
+      QuickAlert.show(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("แจ้งเตือน"),
-            content: Text("กรุณากรอกข้อมูลให้ครบทุกช่อง"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
+        title: 'ตรวจสอบข้อมูล',
+        text: 'กรุณากรอกข้อมูลให้ครบ',
+        type: QuickAlertType.error,
+        confirmBtnText: "ยืนยัน",
       );
     }
   }
