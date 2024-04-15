@@ -94,6 +94,16 @@ class _LoginPageState extends State<LoginPage> {
       print("ID : ${state.jsonRepresentation()}"); // print the user id
     });
     OneSignal.User.addTagWithKey("test2", "val2");
+    //show With custom Key in SnackBar
+
+    var Tage = await OneSignal.User.getTags();
+
+    print("ID : ${Tage}");
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("ID : ${Tage}"),
+    ));
+
     OneSignal.Notifications.addClickListener((event) async {
       print('NOTIFICATION CLICK LISTENER CALLED WITH EVENT: $event');
       print(event.notification.jsonRepresentation());
