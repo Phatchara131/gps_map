@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_5/login.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -9,6 +11,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  List userdata = [];
   bool _obscurePassword = true;
 
   final TextEditingController user_name = TextEditingController();
@@ -37,12 +40,92 @@ class _RegisterPageState extends State<RegisterPage> {
     return true;
   }
 
+  Future<void> getrecord() async {
+    try {
+      // String uri = "http://192.168.1.32/User_API/user_login.php";
+      String uri =
+          "https://project-old.000webhostapp.com/User_API/user_login.php";
+      // String uri = "http://10.0.2.2/PRO_API/view_data.php";
+      var response = await http.get(Uri.parse(uri));
+      setState(() {
+        userdata = jsonDecode(response.body);
+        // print("$userdata\n");
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<bool> checkEmail() async {
+    final email = user_email.text;
+    try {
+      showLoading('กำลังตรวจสอบอีเมล...');
+      String url =
+          'https://project-old.000webhostapp.com/User_API/user_rest.php?checkEmail=$email';
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+        print(jsonData);
+        if (jsonData['status'] == 'success') {
+          Navigator.of(context).pop();
+          return true;
+        } else {
+          Navigator.of(context).pop();
+          return false;
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    return false;
+  }
+
+  void showLoading(String msg) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 50,
+                width: 50,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.greenAccent),
+                  strokeWidth: 10,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                msg,
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> register(BuildContext context) async {
     if (user_name.text.isNotEmpty &&
         user_idcard.text.isNotEmpty &&
         user_email.text.isNotEmpty &&
         user_password.text.isNotEmpty) {
       if (user_password.text == confirm_password.text) {
+        if (await checkEmail()) {
+          QuickAlert.show(
+            context: context,
+            title: 'ตรวจสอบอีเมล',
+            text: 'มีอีเมลนี้ในระบบแล้ว',
+            type: QuickAlertType.error,
+          );
+          return;
+        }
         if (!validateThaiID(user_idcard.text)) {
           showDialog(
             context: context,
