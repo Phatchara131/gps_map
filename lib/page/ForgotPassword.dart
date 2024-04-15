@@ -153,6 +153,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
