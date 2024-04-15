@@ -185,9 +185,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         centerTitle: true,
         backgroundColor: Colors.lightBlueAccent, // สีพื้นหลังของ AppBar
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(20.0),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.all(20),
+        alignment: Alignment.center,
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
