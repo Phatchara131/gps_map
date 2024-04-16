@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_5/insert_old.dart';
 import 'package:flutter_application_5/login.dart';
 import 'package:flutter_application_5/view_map.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomDrawer extends StatelessWidget {
+  const CustomDrawer({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
+  final String title;
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -12,10 +19,15 @@ class CustomDrawer extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.black,
+              image: DecorationImage(
+                opacity: 0.5,
+                image: AssetImage('assets/images/bg.jpg'),
+                fit: BoxFit.cover,
+              ),
             ),
             child: Text(
-              'Menu Drawer',
+              title,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -67,7 +79,10 @@ class CustomDrawer extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
+              final SharedPreferences prefs =
+                  await SharedPreferences.getInstance();
+              prefs.setBool('isLoggedIn', false);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => LoginPage()),

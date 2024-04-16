@@ -29,7 +29,7 @@ class _ViewOldState extends State<ViewOld> {
     return Scaffold(
       appBar: AppBar(title: Text("")),
       // สีดำโปงใส
-      drawer: CustomDrawer(),
+      drawer: CustomDrawer(title: 'เมนู'),
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(

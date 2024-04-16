@@ -1,5 +1,6 @@
 import 'package:flutter_application_5/login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_5/splash.dart';
 import 'package:flutter_application_5/view_mapnoti.dart';
 // import 'package:flutter_application_5/relative/view_relative.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -16,7 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
     title: "App",
-    home: LoginPage(),
+    home: SplashPage(),
     navigatorKey: navigatorKey,
     // home: ViewOld(),
   ));

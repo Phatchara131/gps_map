@@ -8,6 +8,7 @@ import 'package:flutter_application_5/view_main.dart';
 import 'package:flutter_application_5/view_mapnoti.dart';
 import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -65,6 +66,10 @@ class _LoginPageState extends State<LoginPage> {
           loginError = false;
         });
         // เพื่อความง่าย, ขอให้เราเข้าสู่หน้าจอ Register ไว้ก่อน
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool('isLoggedIn', true);
+        prefs.setString('user_email', enteredUseremail);
+        prefs.setString('user_password', enteredPassword);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const ViewOld()),
@@ -94,6 +99,7 @@ class _LoginPageState extends State<LoginPage> {
       print("ID : ${state.jsonRepresentation()}"); // print the user id
     });
     OneSignal.User.addTagWithKey("test2", "val2");
+    OneSignal.User.addTagWithKey("test3", "val3");
     //show With custom Key in SnackBar
 
     var Tage = await OneSignal.User.getTags();

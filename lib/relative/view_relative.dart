@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_5/menu/drawer.dart';
 import 'package:flutter_application_5/update_old.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewOld extends StatefulWidget {
   const ViewOld({Key? key}) : super(key: key);
@@ -18,18 +19,24 @@ class _ViewOldState extends State<ViewOld> {
   bool isDarkModeEnabled = false;
   bool isCardView = true;
   String searchText = '';
-
+  String titleDrawer = '';
   @override
   void initState() {
     super.initState();
     getrecord();
+    getEmail();
+  }
+
+  void getEmail() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    titleDrawer = prefs.getString('user_email') ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text("View Data")),
-        drawer: CustomDrawer(),
+        drawer: CustomDrawer(title: titleDrawer),
         body: RefreshIndicator(
           child: isCardView ? _buildCardView() : _buildTableView(),
           onRefresh: () async {
