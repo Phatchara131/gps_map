@@ -4,6 +4,7 @@ import 'package:flutter_application_5/main.dart';
 import 'package:flutter_application_5/page/ForgotPassword.dart';
 import 'package:flutter_application_5/people/view_people.dart';
 import 'package:flutter_application_5/register.dart';
+import 'package:flutter_application_5/relative/view_relative.dart';
 import 'package:flutter_application_5/view_main.dart';
 import 'package:flutter_application_5/view_mapnoti.dart';
 import 'package:http/http.dart' as http;
@@ -73,10 +74,17 @@ class _LoginPageState extends State<LoginPage> {
         prefs.setString('user_idcard', index['user_idcard']);
         print(index['user_idcard']);
         OneSignal.User.addTagWithKey("user_idcard", index['user_idcard']);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ViewOld()),
-        );
+        if (index['user_idcard'] == 'admin') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ViewOld()),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ViewOldRela()),
+          );
+        }
         return;
       } else {
         print("เข้าสู่ระบบล้มเหลว!");
