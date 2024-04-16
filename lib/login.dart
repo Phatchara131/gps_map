@@ -70,6 +70,8 @@ class _LoginPageState extends State<LoginPage> {
         prefs.setBool('isLoggedIn', true);
         prefs.setString('user_email', enteredUseremail);
         prefs.setString('user_password', enteredPassword);
+        print(index['user_idcard']);
+        OneSignal.User.addTagWithKey("user_idcard", index['user_idcard']);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const ViewOld()),

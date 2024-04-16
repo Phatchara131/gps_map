@@ -29,8 +29,8 @@ void main() async {
   OneSignal.User.pushSubscription.addObserver((state) {
     print("ID : ${state.jsonRepresentation()}"); // print the user id
   });
-  OneSignal.User.addTagWithKey("test2", "val2");
-  OneSignal.User.addTagWithKey("test3", "val3");
+  // OneSignal.User.addTagWithKey("test2", "val2");
+  // OneSignal.User.addTagWithKey("test3", "val3");
   //show With custom Key in SnackBar
 
   var Tage = await OneSignal.User.getTags();

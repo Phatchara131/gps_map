@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_5/insert_old.dart';
 import 'package:flutter_application_5/login.dart';
 import 'package:flutter_application_5/view_map.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -84,6 +85,12 @@ class CustomDrawer extends StatelessWidget {
                   await SharedPreferences.getInstance();
               prefs.setBool('isLoggedIn', false);
               prefs.remove('user_email');
+              Map<String, dynamic> TagsOne = await OneSignal.User.getTags();
+              print("ID : ${TagsOne}");
+              TagsOne.forEach((key, value) {
+                print("Key : $key, Value : $value");
+                OneSignal.User.removeTag(key);
+              });
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => LoginPage()),
