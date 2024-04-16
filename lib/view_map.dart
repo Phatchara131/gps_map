@@ -5,6 +5,9 @@ import 'package:flutter_application_5/menu/drawer.dart';
 import 'package:longdo_maps_api3_flutter/longdo_maps_api3_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MapTab extends StatefulWidget {
   const MapTab({Key? key}) : super(key: key);
@@ -18,29 +21,293 @@ class _MapTabState extends State<MapTab> {
   late TextEditingController _latitudeController;
   late TextEditingController _longitudeController;
   late TextEditingController _areaController;
+  int _selectedIndex = 0;
+  String _selecteddevEui = '';
+  Future<Map<String, dynamic>> authLoRa() async {
+    try {
+      String uri = "https://loraiot.cattelecom.com/portal/iotapi/auth/token";
+      var res = await http.post(Uri.parse(uri),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: json.encode({
+            "username": "wivach ",
+            "password": "BananaLavender14",
+          }));
+      if (res.statusCode == 200) {
+        var data = json.decode(res.body);
+
+        return data;
+      } else {
+        return {};
+      }
+    } catch (e) {
+      print(e);
+      return {};
+    }
+  }
+
+  Future<Map<String, dynamic>> getOldData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String user_idcard = prefs.getString('user_idcard')!;
+    // print(user_idcard);
+    try {
+      String url =
+          'https://project-old.000webhostapp.com/User_API/user_rest.php?getUserOld_by_relativeID=$user_idcard';
+      var res = await http.get(Uri.parse(url));
+      if (res.statusCode == 200) {
+        var data = json.decode(res.body);
+        return data;
+      } else {
+        return {};
+      }
+    } catch (e) {
+      print(e);
+      return {};
+    }
+  }
+
+  void showLoading(String msg) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 50,
+                width: 50,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.greenAccent),
+                  strokeWidth: 10,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                msg,
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  String stringToHex(String text) {
+    print(text);
+    var bytes = utf8.encode(text); // Encode the text as UTF-8 bytes
+    var hexString =
+        bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join();
+    return hexString;
+  }
+
+  Future<void> setDownlink(String access_token, String devEui) async {
+    print(access_token);
+    showLoading('กำลังส่งข้อมูล...');
+    String hexdata = stringToHex(
+        '${_latitudeController.text},${_longitudeController.text},${_areaController.text}');
+    print(hexdata);
+    try {
+      String uri =
+          "https://loraiot.cattelecom.com/portal/iotapi/core/devices/${devEui}/downlinkMessages";
+      var res = await http.post(Uri.parse(uri),
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer $access_token",
+          },
+          body: json.encode({"payloadHex": hexdata, "targetPorts": "8"}));
+      if (res.statusCode == 200) {
+        print(res.body);
+        var res_data = json.decode(res.body);
+        Navigator.of(context).pop();
+        if (res_data['status'] == 'QUEUED') {
+          QuickAlert.show(
+            context: context,
+            type: QuickAlertType.success,
+            title: 'สำเร็จ',
+            text: 'ส่งข้อมูลสำเร็จ',
+            confirmBtnText: 'ตกลง',
+          );
+        } else {
+          QuickAlert.show(
+            context: context,
+            type: QuickAlertType.error,
+            title: 'เกิดข้อผิดพลาด',
+            text: 'ส่งข้อมูลไม่สำเร็จ',
+            confirmBtnText: 'ตกลง',
+          );
+        }
+        // Navigator.of(context).pop();
+      } else {
+        print("Downlink Failed");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Future<void> insertRecord() async {
-    if (_latitudeController.text.isNotEmpty &&
-        _longitudeController.text.isNotEmpty &&
-        _areaController.text.isNotEmpty) {
-      try {
-        String uri = "http://10.0.2.2/GPS_API/gps_insert.php";
-        var request = http.MultipartRequest('POST', Uri.parse(uri));
-        request.fields['lat'] = _latitudeController.text;
-        request.fields['long'] = _longitudeController.text;
-        request.fields['area'] = _areaController.text;
-        var res = await request.send();
-        if (res.statusCode == 200) {
-          print("Record Inserted");
-        } else {
-          print("Some issue");
-        }
-      } catch (e) {
-        print(e);
-      }
-    } else {
-      print("Please fill all fields");
-    }
+    showLoading('กำลังโหลดข้อมูล...');
+    Map<String, dynamic> auth = await authLoRa();
+    print(auth['access_token']);
+    Map<String, dynamic> oldData = await getOldData();
+    print(oldData['data']);
+    _selectedIndex = 0;
+    Navigator.of(context).pop();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Builder(
+          builder: (BuildContext context) {
+            return StatefulBuilder(
+              builder: (context, setState) {
+                return Dialog(
+                  child: Container(
+                    height: 300,
+                    width: MediaQuery.of(context).size.height * 0.9,
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        Text(
+                          'เลือกผู้สูงอายุที่ต้องการเพิ่มข้อมูล',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: oldData['data'].length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                width: double.infinity,
+                                margin: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: _selectedIndex ==
+                                            oldData['data'][index]['old_ID']
+                                        ? Colors.green
+                                        : Colors.grey,
+                                  ),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: ListTile(
+                                  title: Text(
+                                    oldData['data'][index]['old_fname'] +
+                                        ' ' +
+                                        oldData['data'][index]['old_lname'],
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Text(
+                                    oldData['data'][index]['old_loraID'],
+                                  ),
+                                  onTap: () {
+                                    print(oldData['data'][index]['old_ID']);
+                                    setState(() {
+                                      _selectedIndex =
+                                          oldData['data'][index]['old_ID'];
+                                      _selecteddevEui =
+                                          oldData['data'][index]['old_loraID'];
+                                    });
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                if (_selectedIndex == 0) {
+                                  QuickAlert.show(
+                                    context: context,
+                                    type: QuickAlertType.error,
+                                    title: 'เกิดข้อผิดพลาด',
+                                    text:
+                                        'กรุณาเลือกผู้สูงอายุที่ต้องการเพิ่มข้อมูล',
+                                    confirmBtnText: 'ตกลง',
+                                  );
+                                  return;
+                                }
+                                print(_selecteddevEui);
+                                await setDownlink(
+                                    auth['access_token'], _selecteddevEui);
+                              },
+                              child: Text('บันทึก'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('ยกเลิก'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                          ]
+                              .expand((element) => [
+                                    SizedBox(width: 10),
+                                    element,
+                                  ])
+                              .toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+
+    // oldData['data'].forEach((element) {
+    //   print(element);
+    // });
+    // if (_latitudeController.text.isNotEmpty &&
+    //     _longitudeController.text.isNotEmpty &&
+    //     _areaController.text.isNotEmpty) {
+    //   try {
+    //     String uri = "http://10.0.2.2/GPS_API/gps_insert.php";
+    //     var request = http.MultipartRequest('POST', Uri.parse(uri));
+    //     request.fields['lat'] = _latitudeController.text;
+    //     request.fields['long'] = _longitudeController.text;
+    //     request.fields['area'] = _areaController.text;
+    //     var res = await request.send();
+    //     if (res.statusCode == 200) {
+    //       print("Record Inserted");
+    //     } else {
+    //       print("Some issue");
+    //     }
+    //   } catch (e) {
+    //     print(e);
+    //   }
+    // } else {
+    //   print("Please fill all fields");
+    // }
   }
 
   Future<Position> _determinePosition() async {
