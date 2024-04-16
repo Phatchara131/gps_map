@@ -8,14 +8,14 @@ import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ViewOld extends StatefulWidget {
-  const ViewOld({Key? key}) : super(key: key);
+class ViewOldRela extends StatefulWidget {
+  const ViewOldRela({Key? key}) : super(key: key);
 
   @override
-  State<ViewOld> createState() => _ViewOldState();
+  State<ViewOldRela> createState() => _ViewOldRelaState();
 }
 
-class _ViewOldState extends State<ViewOld> {
+class _ViewOldRelaState extends State<ViewOldRela> {
   List userdata = [];
   List idcarddata = [];
   bool isDarkModeEnabled = false;
@@ -182,13 +182,20 @@ class _ViewOldState extends State<ViewOld> {
   }
 
   Future<void> getrecord() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String user_idcard = prefs.getString('user_idcard')!;
+    print(user_idcard);
     try {
-      String uri = "https://project-old.000webhostapp.com/Old_API/old_view.php";
-      var response = await http.post(Uri.parse(uri));
-      setState(() {
-        userdata = jsonDecode(response.body);
-        print(userdata);
-      });
+      String uri =
+          'https://project-old.000webhostapp.com/User_API/user_rest.php?getUserOld_by_relativeID=$user_idcard';
+      var response = await http.get(Uri.parse(uri));
+      if (response.statusCode == 200) {
+        print(response.body);
+        var data = jsonDecode(response.body);
+        setState(() {
+          userdata = data['data'];
+        });
+      }
     } catch (e) {
       print(e);
     }

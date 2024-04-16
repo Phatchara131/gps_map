@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_5/login.dart';
 import 'package:flutter_application_5/relative/view_relative.dart';
+import 'package:flutter_application_5/view_main.dart';
 import 'package:flutter_application_5/view_mapnoti.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -67,13 +68,15 @@ class _SplashPageState extends State<SplashPage> {
   void checkLogin() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    String user_idcard = prefs.getString('user_idcard') ?? '';
     if (isLoggedIn) {
       print("clickNoti : $clickNoti");
       Future.delayed(Duration(seconds: 5), () {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => ViewOld(),
+            builder: (context) =>
+                user_idcard == 'admin' ? ViewOld() : ViewOldRela(),
           ),
         );
       });

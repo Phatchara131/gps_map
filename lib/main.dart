@@ -1,6 +1,7 @@
 import 'package:flutter_application_5/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_5/relative/view_relative.dart';
+import 'package:flutter_application_5/view_main.dart';
 import 'package:flutter_application_5/view_mapnoti.dart';
 // import 'package:flutter_application_5/relative/view_relative.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -19,6 +20,7 @@ void main() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
   // Initialize OneSignal
+  String user_idcard = prefs.getString('user_idcard') ?? '';
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   OneSignal.Debug.setAlertLevel(OSLogLevel.none);
   OneSignal.consentRequired(false);
@@ -55,7 +57,7 @@ void main() async {
   });
   runApp(MaterialApp(
     title: "App",
-    home: isLoggedIn ? ViewOld() : LoginPage(),
+    home: isLoggedIn ? user_idcard == 'admin' ? ViewOld() : ViewOldRela() : LoginPage(),
     navigatorKey: navigatorKey,
     // home: ViewOld(),
   ));
