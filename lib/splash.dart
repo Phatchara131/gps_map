@@ -108,7 +108,7 @@ class _SplashPageState extends State<SplashPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/rias_gremory_render_23_by_knd_art_de6ea1u-414w-2x.png',
+              'assets/images/png-clipart-clouds-clouds-cloud.png',
               width: 200,
             ),
             SizedBox(height: 20),

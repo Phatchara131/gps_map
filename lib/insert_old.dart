@@ -63,6 +63,63 @@ class _Insert_oldState extends State<Insert_old> {
     return true;
   }
 
+  Future<bool> checkLora() async {
+    final lora = loraController.text;
+    try {
+      showLoading('กำลังตรวจสอบข้อมูล...');
+      String url =
+          'https://project-old.000webhostapp.com/User_API/user_rest.php?checkOldLoraID=$lora';
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+        print(jsonData);
+        if (jsonData['status'] == 'success') {
+          Navigator.of(context).pop();
+          return true;
+        } else {
+          Navigator.of(context).pop();
+          return false;
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    return false;
+  }
+
+  void showLoading(String msg) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 50,
+                width: 50,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.greenAccent),
+                  strokeWidth: 10,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                msg,
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> inserrecordold() async {
     if (loraController.text.isEmpty ||
         idController.text.isEmpty ||
@@ -101,6 +158,17 @@ class _Insert_oldState extends State<Insert_old> {
         context: context,
         title: 'รหัสบัตรประจำตัว(ญาติ)ไม่ถูกต้อง',
         text: 'กรุณากรอกรหัสบัตรประจำตัว(ญาติ)ให้ถูกต้อง',
+        type: QuickAlertType.error,
+        confirmBtnText: 'ตกลง',
+        confirmBtnColor: Colors.red.shade900,
+      );
+      return;
+    }
+    if (await checkLora()) {
+      QuickAlert.show(
+        context: context,
+        title: 'รหัสอุปกรณ์ซ้ำ',
+        text: 'รหัสอุปกรณ์นี้ถูกใช้ไปแล้ว',
         type: QuickAlertType.error,
         confirmBtnText: 'ตกลง',
         confirmBtnColor: Colors.red.shade900,

@@ -306,7 +306,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             register(context);
                           },
                           child: Text(
-                            'Register',
+                            'ยืนยัน',
                             style: TextStyle(
                               fontSize: 15.0,
                               fontWeight: FontWeight.bold,
@@ -321,7 +321,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             Navigator.pop(context);
                           },
                           child: Text(
-                            'Cancel',
+                            'ยกเลิก',
                             style: TextStyle(
                               fontSize: 15.0,
                               fontWeight: FontWeight.bold,

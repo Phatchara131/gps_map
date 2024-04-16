@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_5/login.dart';
+import 'package:flutter_application_5/menu/drawer.dart';
+import 'package:flutter_application_5/people/update_people.dart';
 import 'package:flutter_application_5/update_old.dart';
 import 'package:http/http.dart' as http;
 
@@ -27,14 +28,25 @@ class _ViewOld_peopleState extends State<ViewOld_people> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("View Data"),
-      ),
-      body: RefreshIndicator(
-        child: isCardView ? _buildCardView() : _buildTableView(),
-        onRefresh: () async {
-          await Future.delayed(const Duration(seconds: 2), () => getrecord());
-        },
+      appBar: AppBar(title: Text("")),
+      // สีดำโปงใส
+      // drawer: CustomDrawer(title: 'เมนู'),
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(
+              'https://modernformhealthcare.co.th/wp-content/uploads/2024/02/happy-asian-senior-couple-smiling-outside.webp',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: RefreshIndicator(
+          child: isCardView ? _buildCardView() : _buildTableView(),
+          onRefresh: () async {
+            await Future.delayed(const Duration(seconds: 2), () => getrecord());
+          },
+        ),
       ),
     );
   }
@@ -55,12 +67,24 @@ class _ViewOld_peopleState extends State<ViewOld_people> {
           margin: EdgeInsets.all(10),
           child: ListTile(
             onTap: () {
-              _showDetailsDialog(
-                userdata[index]["old_fname"],
-                userdata[index]["old_lname"],
-                userdata[index]["old_disease"],
-                userdata[index]["old_Cname"],
-                userdata[index]["old_Ctel"],
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Update_people(
+                    userdata[index]["old_ID"],
+                    userdata[index]["old_loraID"],
+                    userdata[index]["old_userID"],
+                    userdata[index]["old_fname"],
+                    userdata[index]["old_lname"],
+                    userdata[index]["old_address"],
+                    userdata[index]["old_age"],
+                    userdata[index]["old_sex"],
+                    userdata[index]["old_disease"],
+                    userdata[index]["old_relativeID"],
+                    userdata[index]["old_Cname"],
+                    userdata[index]["old_Ctel"],
+                  ),
+                ),
               );
             },
             leading: Icon(
@@ -138,36 +162,5 @@ class _ViewOld_peopleState extends State<ViewOld_people> {
     } catch (e) {
       print(e);
     }
-  }
-
-  void _showDetailsDialog(String firstName, String lastName, String disease,
-      String contactName, String contactTel) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("User Details"),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("First Name: $firstName"),
-              Text("Last Name: $lastName"),
-              Text("Disease: $disease"),
-              Text("Contact Name: $contactName"),
-              Text("Contact Tel: $contactTel"),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("Close"),
-            ),
-          ],
-        );
-      },
-    );
   }
 }
