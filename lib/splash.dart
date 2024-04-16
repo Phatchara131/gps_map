@@ -13,6 +13,8 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  bool clickNoti = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -29,6 +31,7 @@ class _SplashPageState extends State<SplashPage> {
     OneSignal.initialize("a3781753-2e28-49b9-b782-90781230523c");
     OneSignal.Notifications.requestPermission(true);
     print("Permission accepted");
+
     OneSignal.User.pushSubscription.addObserver((state) {
       print("ID : ${state.jsonRepresentation()}"); // print the user id
     });
@@ -48,6 +51,10 @@ class _SplashPageState extends State<SplashPage> {
       print('NOTIFICATION CLICK LISTENER CALLED WITH EVENT: $event');
       print(event.notification.jsonRepresentation());
       print(event.notification.additionalData?['lon']);
+      setState(() {
+        clickNoti = true;
+      });
+      print("clickNoti : $clickNoti");
       double lat = double.parse(event.notification.additionalData?['lat']);
       double lon = double.parse(event.notification.additionalData?['lon']);
       Navigator.push(
@@ -61,6 +68,7 @@ class _SplashPageState extends State<SplashPage> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     if (isLoggedIn) {
+      print("clickNoti : $clickNoti");
       Future.delayed(Duration(seconds: 5), () {
         Navigator.pushReplacement(
           context,
@@ -91,7 +99,7 @@ class _SplashPageState extends State<SplashPage> {
           image: DecorationImage(
             opacity: 0.5,
             image: AssetImage(
-              'assets/images/bg.jpg',
+              'assets/images/shutterstock_1290393385.jpg',
             ),
             fit: BoxFit.cover,
           ),

@@ -3,7 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_5/menu/drawer.dart';
 import 'package:flutter_application_5/update_old.dart';
+import 'package:flutter_application_5/view_mapnoti.dart';
 import 'package:http/http.dart' as http;
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewOld extends StatefulWidget {
@@ -23,8 +25,30 @@ class _ViewOldState extends State<ViewOld> {
   @override
   void initState() {
     super.initState();
+    initPlatformState();
     getrecord();
     getEmail();
+  }
+
+  Future<void> initPlatformState() async {
+    var Tage = await OneSignal.User.getTags();
+
+    print("IDX : ${Tage}");
+
+    // ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(SnackBar(
+    //   content: Text("ID : ${Tage}"),
+    // ));
+    OneSignal.Notifications.addClickListener((event) async {
+      print('NOTIFICATION CLICK LISTENER CALLED WITH EVENT: $event');
+      print(event.notification.jsonRepresentation());
+      print(event.notification.additionalData?['lon']);
+      double lat = double.parse(event.notification.additionalData?['lat']);
+      double lon = double.parse(event.notification.additionalData?['lon']);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Mapnoti(lat: lat, lon: lon)),
+      );
+    });
   }
 
   void getEmail() async {
