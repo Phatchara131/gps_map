@@ -83,6 +83,7 @@ class CustomDrawer extends StatelessWidget {
               final SharedPreferences prefs =
                   await SharedPreferences.getInstance();
               prefs.setBool('isLoggedIn', false);
+              prefs.remove('user_email');
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => LoginPage()),
