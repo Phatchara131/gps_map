@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_5/relative/view_relative.dart';
 import 'package:flutter_application_5/view_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Insert_old extends StatefulWidget {
   const Insert_old({Key? key}) : super(key: key);
@@ -200,6 +202,8 @@ class _Insert_oldState extends State<Insert_old> {
 
       if (response.statusCode == 200) {
         print(await response.stream.bytesToString());
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        String user_idcard = prefs.getString('user_idcard')!;
         QuickAlert.show(
           context: context,
           title: 'บันทึกข้อมูลสำเร็จ',
@@ -208,10 +212,17 @@ class _Insert_oldState extends State<Insert_old> {
           confirmBtnText: 'ตกลง',
           confirmBtnColor: Colors.green.shade900,
           onConfirmBtnTap: () {
-            Navigator.pushAndRemoveUntil(
+            if (user_idcard == 'admin') {
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => ViewOld()),
-                (route) => false);
+              );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => ViewOldRela()),
+              );
+            }
           },
         );
       } else {
