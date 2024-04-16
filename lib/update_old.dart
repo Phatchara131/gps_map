@@ -99,155 +99,157 @@ class _Update_oldState extends State<Update_old> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Update Record")),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: loraId,
-                readOnly: true, // Set this to true to make it readonly
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'รหัสอุปกรณ์...',
+      body: Container(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.all(10),
+                child: TextFormField(
+                  controller: loraId,
+                  readOnly: true, // Set this to true to make it readonly
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'รหัสอุปกรณ์...',
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: userId,
-                readOnly: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'รหัสประจำตัว...',
+              Container(
+                margin: EdgeInsets.all(10),
+                child: TextFormField(
+                  controller: userId,
+                  readOnly: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'รหัสประจำตัว...',
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: fname,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'ชื่อ...',
+              Container(
+                margin: EdgeInsets.all(10),
+                child: TextFormField(
+                  controller: fname,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'ชื่อ...',
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: lname,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'นามสกุล...',
+              Container(
+                margin: EdgeInsets.all(10),
+                child: TextFormField(
+                  controller: lname,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'นามสกุล...',
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: address,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'ที่อยู่...',
+              Container(
+                margin: EdgeInsets.all(10),
+                child: TextFormField(
+                  controller: address,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'ที่อยู่...',
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: age,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'อายุ...',
+              Container(
+                margin: EdgeInsets.all(10),
+                child: TextFormField(
+                  controller: age,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'อายุ...',
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: gender,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'เพศ...',
+              Container(
+                margin: EdgeInsets.all(10),
+                child: TextFormField(
+                  controller: gender,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'เพศ...',
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: medicalCondition,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'โรคประจำตัว...',
+              Container(
+                margin: EdgeInsets.all(10),
+                child: TextFormField(
+                  controller: medicalCondition,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'โรคประจำตัว...',
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: relativeID,
-                readOnly: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'บัตรประจำตัว(ญาติ)...',
+              Container(
+                margin: EdgeInsets.all(10),
+                child: TextFormField(
+                  controller: relativeID,
+                  readOnly: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'บัตรประจำตัว(ญาติ)...',
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: relativeName,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'ชื่อ(ญาติ)...',
+              Container(
+                margin: EdgeInsets.all(10),
+                child: TextFormField(
+                  controller: relativeName,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'ชื่อ(ญาติ)...',
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: TextFormField(
-                controller: contactNumber,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'เบอร์ติดต่อ(ญาติ)...',
+              Container(
+                margin: EdgeInsets.all(10),
+                child: TextFormField(
+                  controller: contactNumber,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'เบอร์ติดต่อ(ญาติ)...',
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              child: ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('ยืนยันการอัพเดทข้อมูล'),
-                        content: Text('คุณต้องการที่จะอัพเดทข้อมูลหรือไม่?'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop(); // ปิด AlertDialog
-                              updaterecord(); // เรียกใช้งานฟังก์ชัน updaterecord() เมื่อยืนยัน
-                            },
-                            child: Text('ใช่'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop(); // ปิด AlertDialog
-                            },
-                            child: Text('ไม่'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                child: Text('Update Data'),
+              Container(
+                margin: EdgeInsets.all(10),
+                child: ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('ยืนยันการอัพเดทข้อมูล'),
+                          content: Text('คุณต้องการที่จะอัพเดทข้อมูลหรือไม่?'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // ปิด AlertDialog
+                                updaterecord(); // เรียกใช้งานฟังก์ชัน updaterecord() เมื่อยืนยัน
+                              },
+                              child: Text('ใช่'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // ปิด AlertDialog
+                              },
+                              child: Text('ไม่'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: Text('แก้ไขข้อมูล'),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

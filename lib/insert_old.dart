@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_5/view_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class Insert_old extends StatefulWidget {
   const Insert_old({Key? key}) : super(key: key);
@@ -41,18 +43,71 @@ class _Insert_oldState extends State<Insert_old> {
     }
   }
 
+  bool validateThaiID(String id) {
+    if (id.length != 13) {
+      return false;
+    }
+
+    if (!RegExp(r'^[0-9]*$').hasMatch(id)) {
+      return false;
+    }
+
+    int sum = 0;
+    for (int i = 0; i < 12; i++) {
+      sum += int.parse(id[i]) * (13 - i);
+    }
+    if ((11 - (sum % 11)) % 10 != int.parse(id[12])) {
+      return false;
+    }
+
+    return true;
+  }
+
   Future<void> inserrecordold() async {
-    if (loraController.text != "" ||
-        idController.text != "" ||
-        nameController.text != "" ||
-        lastNameController.text != "" ||
-        addressController.text != "" ||
-        ageController.text != "" ||
-        selectedGender != null ||
-        medicalConditionController.text != "" ||
-        relativeIDController.text != "" ||
-        relativeNameController.text != "" ||
-        contactNumberController.text != "") {
+    if (loraController.text.isEmpty ||
+        idController.text.isEmpty ||
+        nameController.text.isEmpty ||
+        lastNameController.text.isEmpty ||
+        addressController.text.isEmpty ||
+        ageController.text.isEmpty ||
+        selectedGender == null ||
+        medicalConditionController.text.isEmpty ||
+        relativeIDController.text.isEmpty ||
+        relativeNameController.text.isEmpty ||
+        contactNumberController.text.isEmpty) {
+      QuickAlert.show(
+        context: context,
+        title: 'ข้อมูลไม่ครบถ้วน',
+        text: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+        type: QuickAlertType.error,
+        confirmBtnText: 'ตกลง',
+        confirmBtnColor: Colors.red.shade900,
+      );
+      return;
+    }
+    if (!validateThaiID(idController.text)) {
+      QuickAlert.show(
+        context: context,
+        title: 'รหัสบัตรประจำตัวไม่ถูกต้อง',
+        text: 'กรุณากรอกรหัสบัตรประจำตัวให้ถูกต้อง',
+        type: QuickAlertType.error,
+        confirmBtnText: 'ตกลง',
+        confirmBtnColor: Colors.red.shade900,
+      );
+      return;
+    }
+    if (!validateThaiID(relativeIDController.text)) {
+      QuickAlert.show(
+        context: context,
+        title: 'รหัสบัตรประจำตัว(ญาติ)ไม่ถูกต้อง',
+        text: 'กรุณากรอกรหัสบัตรประจำตัว(ญาติ)ให้ถูกต้อง',
+        type: QuickAlertType.error,
+        confirmBtnText: 'ตกลง',
+        confirmBtnColor: Colors.red.shade900,
+      );
+      return;
+    }
+    try {
       var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
       var request = http.Request(
           'POST',
@@ -77,11 +132,25 @@ class _Insert_oldState extends State<Insert_old> {
 
       if (response.statusCode == 200) {
         print(await response.stream.bytesToString());
+        QuickAlert.show(
+          context: context,
+          title: 'บันทึกข้อมูลสำเร็จ',
+          text: 'ข้อมูลของคุณถูกบันทึกเรียบร้อยแล้ว',
+          type: QuickAlertType.success,
+          confirmBtnText: 'ตกลง',
+          confirmBtnColor: Colors.green.shade900,
+          onConfirmBtnTap: () {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => ViewOld()),
+                (route) => false);
+          },
+        );
       } else {
         print(response.reasonPhrase);
       }
-    } else {
-      print("Please fill all fields and select an image");
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -259,16 +328,16 @@ class _Insert_oldState extends State<Insert_old> {
                             return AlertDialog(
                               title: Text("ยืนยันการบันทึกข้อมูล"),
                               content: Text(
-                                  "คุณต้องการจะยืนยันที่จะบันทึกข้อมูลหรือไม่?"),
+                                  "ข้อมูลของคุณอาจถูกเปิดเผยแก่บุคคลอื่น\nคุณต้องการจะยืนยันที่จะบันทึกข้อมูลหรือไม่?"),
                               actions: [
                                 TextButton(
                                   onPressed: () {
                                     inserrecordold();
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ViewOld()),
-                                    );
+                                    // Navigator.pushReplacement(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //       builder: (context) => ViewOld()),
+                                    // );
                                   },
                                   child: Text("ยืนยัน"),
                                 ),

@@ -215,139 +215,145 @@ class _RegisterPageState extends State<RegisterPage> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: Color.fromARGB(255, 229, 255, 213),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.network(
-                    'https://f.ptcdn.info/691/055/000/p2n6hzgmmNMzcUSHrM7-o.gif',
-                    height: 150,
-                  ),
-                  TextField(
-                    controller: user_name,
-                    decoration: InputDecoration(
-                      labelText: 'Username',
-                      prefixIcon: Icon(Icons.person),
-                      border: OutlineInputBorder(),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                    ),
-                  ),
-                  SizedBox(height: 16.0),
-                  TextField(
-                    controller: user_idcard,
-                    decoration: InputDecoration(
-                      labelText: 'UserID',
-                      prefixIcon: Icon(Icons.add_card_rounded),
-                      border: OutlineInputBorder(),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                    ),
-                  ),
-                  SizedBox(height: 16.0),
-                  TextField(
-                    controller: user_email,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: Icon(Icons.email),
-                      border: OutlineInputBorder(),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  SizedBox(height: 16.0),
-                  TextField(
-                    controller: user_password,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.grey,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
+        body: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(
+                'https://modernformhealthcare.co.th/wp-content/uploads/2024/02/happy-asian-senior-couple-smiling-outside.webp',
+              ),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextField(
+                      controller: user_name,
+                      decoration: InputDecoration(
+                        labelText: 'Username',
+                        prefixIcon: Icon(Icons.person),
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        fillColor: Colors.grey[200],
                       ),
-                      border: OutlineInputBorder(),
-                      filled: true,
-                      fillColor: Colors.grey[200],
                     ),
-                    obscureText: _obscurePassword,
-                  ),
-                  SizedBox(height: 16.0),
-                  TextField(
-                    controller: confirm_password,
-                    decoration: InputDecoration(
-                      labelText: 'Confirm Password',
-                      prefixIcon: Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.grey,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
+                    SizedBox(height: 16.0),
+                    TextField(
+                      controller: user_idcard,
+                      decoration: InputDecoration(
+                        labelText: 'UserID',
+                        prefixIcon: Icon(Icons.add_card_rounded),
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        fillColor: Colors.grey[200],
                       ),
-                      border: OutlineInputBorder(),
-                      filled: true,
-                      fillColor: Colors.grey[200],
                     ),
-                    obscureText: _obscurePassword,
-                  ),
-                  SizedBox(height: 32.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          register(context);
-                        },
-                        child: Text(
-                          'Register',
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
+                    SizedBox(height: 16.0),
+                    TextField(
+                      controller: user_email,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        prefixIcon: Icon(Icons.email),
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    SizedBox(height: 16.0),
+                    TextField(
+                      controller: user_password,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        prefixIcon: Icon(Icons.lock),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.grey,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                      ),
+                      obscureText: _obscurePassword,
+                    ),
+                    SizedBox(height: 16.0),
+                    TextField(
+                      controller: confirm_password,
+                      decoration: InputDecoration(
+                        labelText: 'Confirm Password',
+                        prefixIcon: Icon(Icons.lock),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.grey,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                      ),
+                      obscureText: _obscurePassword,
+                    ),
+                    SizedBox(height: 32.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            register(context);
+                          },
+                          child: Text(
+                            'Register',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromARGB(255, 0, 255, 157),
                           ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 0, 255, 157),
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          'Cancel',
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 248, 86, 75),
                           ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 248, 86, 75),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

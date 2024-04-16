@@ -78,7 +78,7 @@ class CustomDrawer extends StatelessWidget {
                 Icon(Icons.logout),
                 SizedBox(width: 15),
                 Text(
-                  'ออกจกระบบ',
+                  'ออกจากระบบ',
                   style: TextStyle(
                     fontSize: 16,
                   ),
