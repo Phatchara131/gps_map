@@ -107,7 +107,7 @@ flutter:
 flutter_native_splash:
   color: "#ffffff"
   image: assets/images/app_logo.png
-  # branding: assets/branding-development.png
+  branding: assets/images/pngwing.com.png
   color_dark: "#121212"
   image_dark: assets/images/app_logo.png
   # branding_dark: assets/branding-development.png
@@ -117,5 +117,6 @@ flutter_native_splash:
     icon_background_color: "#ffffff"
     image_dark: assets/images/app_logo.png
     icon_background_color_dark: "#121212"
+    branding: assets/images/pngwing.com.png
 
   web: false
