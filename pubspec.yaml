@@ -48,6 +48,7 @@ dependencies:
   quickalert: ^1.1.0
   shared_preferences: ^2.2.3
   numberpicker: ^2.1.2
+  flutter_native_splash: ^2.4.0
 
 dev_dependencies:
   flutter_test:
@@ -102,3 +103,19 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/app_logo.png
+  # branding: assets/branding-development.png
+  color_dark: "#121212"
+  image_dark: assets/images/app_logo.png
+  # branding_dark: assets/branding-development.png
+
+  android_12:
+    image: assets/images/app_logo.png
+    icon_background_color: "#ffffff"
+    image_dark: assets/images/app_logo.png
+    icon_background_color_dark: "#121212"
+
+  web: false
