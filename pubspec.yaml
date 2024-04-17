@@ -49,6 +49,7 @@ dependencies:
   shared_preferences: ^2.2.3
   numberpicker: ^2.1.2
   flutter_native_splash: ^2.4.0
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -120,3 +121,9 @@ flutter_native_splash:
     branding: assets/images/pngwing.com.png
 
   web: false
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app_logo.png"
+  icon_size: 1024
