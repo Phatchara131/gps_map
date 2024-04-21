@@ -107,16 +107,16 @@ flutter:
 
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/images/app_logo.png
+  image: assets/images/Google__G__logo.png
   branding: assets/images/vrendder.png
   color_dark: "#121212"
-  image_dark: assets/images/app_logo.png
+  image_dark: assets/images/Google__G__logo.png
   # branding_dark: assets/branding-development.png
 
   android_12:
-    image: assets/images/app_logo.png
+    image: assets/images/Google__G__logo.png
     icon_background_color: "#ffffff"
-    image_dark: assets/images/app_logo.png
+    image_dark: assets/images/Google__G__logo.png
     icon_background_color_dark: "#121212"
     branding: assets/images/vrendder.png
 
@@ -125,5 +125,4 @@ flutter_native_splash:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/app_logo.png"
-  icon_size: 1024
+  image_path: "assets/images/app_logoxxx.png"
