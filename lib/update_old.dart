@@ -98,7 +98,7 @@ class _Update_oldState extends State<Update_old> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Update Record")),
+      appBar: AppBar(title: Text("ข้อมูลผู้สูงอายุ")),
       body: Container(
         child: SingleChildScrollView(
           child: Column(

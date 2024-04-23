@@ -59,7 +59,7 @@ class _ViewOldRelaState extends State<ViewOldRela> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("View Data")),
+        appBar: AppBar(title: Text("รายชื่อผู้สูงอายุ")),
         drawer: CustomDrawer(title: titleDrawer),
         body: RefreshIndicator(
           child: isCardView ? _buildCardView() : _buildTableView(),

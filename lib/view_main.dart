@@ -51,7 +51,7 @@ class _ViewOldState extends State<ViewOld> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("")),
+      appBar: AppBar(title: Text("รายชื่อผู้สูงอายุ")),
       // สีดำโปงใส
       drawer: CustomDrawer(title: 'เมนู'),
       body: Container(

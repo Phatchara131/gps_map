@@ -350,6 +350,9 @@ class _MapTabState extends State<MapTab> {
     _latitudeController = TextEditingController();
     _longitudeController = TextEditingController();
     _areaController = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showLoading('กำลังโหลดข้อมูล...');
+    });
   }
 
   @override
@@ -373,7 +376,7 @@ class _MapTabState extends State<MapTab> {
             children: [
               Icon(Icons.map),
               SizedBox(width: 5),
-              Text('View Map'),
+              Text('กำหนดจุดที่อยู่อาศัย'),
             ],
           ),
         ),
@@ -401,7 +404,12 @@ class _MapTabState extends State<MapTab> {
                           var latlon = _determinePosition();
                           print(latlon);
                           latlon.then((value) => {
+                                Navigator.of(context).pop(),
                                 setState(() {
+                                  _latitudeController.text =
+                                      value.latitude.toStringAsFixed(6);
+                                  _longitudeController.text =
+                                      value.longitude.toStringAsFixed(6);
                                   map.currentState?.call("location", args: [
                                     {
                                       "lon": value.longitude,
@@ -509,6 +517,7 @@ class _MapTabState extends State<MapTab> {
                             controller: _areaController,
                             decoration: InputDecoration(
                               labelText: 'Area',
+                              hintText: 'เมตร',
                               border: OutlineInputBorder(),
                             ),
                           ),
@@ -528,14 +537,14 @@ class _MapTabState extends State<MapTab> {
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(70, 50),
                       ),
-                      child: Text('Confirm'),
+                      child: Text('ยืนยัน'),
                     ),
                     ElevatedButton(
                       onPressed: () {
                         _latitudeController.clear();
                         _longitudeController.clear();
                       },
-                      child: Text('Cancel'),
+                      child: Text('ยกเลิก'),
                     ),
                   ],
                 ),
