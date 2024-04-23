@@ -243,6 +243,7 @@ class _Update_oldState extends State<Update_old> {
                       showConfirmBtn: true,
                       confirmBtnText: 'ใช่',
                       confirmBtnColor: Colors.green,
+                      cancelBtnText: 'ไม่',
                       onConfirmBtnTap: () {
                         Navigator.of(context).pop(); // ปิด AlertDialog
                         updaterecord(); // เรียกใช้งานฟังก์ชัน

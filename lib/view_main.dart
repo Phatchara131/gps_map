@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_5/menu/drawer.dart';
@@ -48,6 +49,38 @@ class _ViewOldState extends State<ViewOld> {
     });
   }
 
+  bool isEnglish(String text) {
+    // รายการตัวอักษรที่ใช้ในภาษาอังกฤษ
+    final englishChars = RegExp(r'[a-zA-Z]');
+
+    // ตรวจสอบว่าข้อความมีตัวอักษรอังกฤษหรือไม่
+    return englishChars.hasMatch(text);
+  }
+
+  Color getRandomColor() {
+    Random random = Random();
+    Color color;
+    do {
+      color = Color.fromARGB(
+        255,
+        random.nextInt(256),
+        random.nextInt(256),
+        random.nextInt(256),
+      );
+    } while (!_isColorReadableOnWhite(color));
+
+    return color;
+  }
+
+  bool _isColorReadableOnWhite(Color color) {
+    // ค่าความเข้มของสี
+    double darkness = 1 -
+        (0.299 * color.red + 0.587 * color.green + 0.114 * color.blue) / 255;
+
+    // ถ้าความเข้มมากกว่าหรือเท่ากับ 0.5 สีจะอ่านได้ดีกับพื้นหลังสีขาว
+    return darkness < 0.5;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,9 +118,25 @@ class _ViewOldState extends State<ViewOld> {
                 .contains(searchText.toLowerCase())) {
           return Container();
         }
-        return Card(
-          color: isDarkModeEnabled ? Colors.grey[800] : Colors.white,
+        return Container(
           margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: isDarkModeEnabled ? Colors.black : Colors.white,
+            border: Border.all(
+              color: isDarkModeEnabled ? Colors.white : Colors.grey,
+            ),
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: isDarkModeEnabled
+                    ? Colors.black
+                    : Colors.black.withOpacity(0.5),
+                blurRadius: 5,
+                spreadRadius: 1,
+                offset: Offset(2, 5),
+              ),
+            ],
+          ),
           child: ListTile(
             onTap: () {
               Navigator.push(
@@ -110,9 +159,29 @@ class _ViewOldState extends State<ViewOld> {
                 ),
               );
             },
-            leading: Icon(
-              CupertinoIcons.heart,
-              color: Colors.red,
+            leading: Container(
+              width: 50,
+              height: 50,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: getRandomColor(),
+              ),
+              child: Center(
+                child: Text(
+                  isEnglish(userdata[index]["old_fname"].toString())
+                      ? userdata[index]["old_fname"]
+                          .toString()
+                          .substring(0, 1)
+                          .toUpperCase()
+                      : userdata[index]["old_fname"].toString().substring(0, 1),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
             title: Text(
               userdata[index]["old_fname"],
