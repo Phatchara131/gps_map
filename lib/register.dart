@@ -13,7 +13,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   List userdata = [];
   bool _obscurePassword = true;
-
+  List<bool> _isSelected = [false, false, false];
   final TextEditingController user_name = TextEditingController();
   final TextEditingController user_idcard = TextEditingController();
   final TextEditingController user_email = TextEditingController();
@@ -21,6 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController confirm_password = TextEditingController();
 
   bool validateThaiID(String id) {
+    print("ID: $id");
     if (id.length != 13) {
       return false;
     }
@@ -38,6 +39,43 @@ class _RegisterPageState extends State<RegisterPage> {
     }
 
     return true;
+  }
+
+  void checkPassword(String password) {
+    // ตรวจสอบว่ามีความยาวอย่างน้อย 6 ตัว
+    if (password.length < 6) {
+      setState(() {
+        _isSelected[0] = false;
+      });
+    } else {
+      setState(() {
+        _isSelected[0] = true;
+      });
+    }
+
+    // ตรวจสอบว่ามีตัวเลขอย่างน้อย 1 ตัว
+    if (!password.contains(RegExp(r'[0-9]'))) {
+      setState(() {
+        _isSelected[1] = false;
+      });
+    } else {
+      setState(() {
+        _isSelected[1] = true;
+      });
+    }
+
+    // ตรวจสอบว่ามีตัวอักษรพิเศษอย่างน้อย 1 ตัว
+    if (!password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>\_-]'))) {
+      setState(() {
+        _isSelected[2] = false;
+      });
+    } else {
+      setState(() {
+        _isSelected[2] = true;
+      });
+    }
+
+    print(_isSelected);
   }
 
   Future<void> getrecord() async {
@@ -129,11 +167,32 @@ class _RegisterPageState extends State<RegisterPage> {
             );
             return;
           }
+          print("Registering... ${user_idcard.text}");
           if (!validateThaiID(user_idcard.text)) {
             QuickAlert.show(
               context: context,
               title: 'ตรวจสอบบัตรประชาชน',
               text: 'กรุณาใส่บัตรประชาชนให้ถูกต้อง',
+              type: QuickAlertType.error,
+              confirmBtnText: "ยืนยัน",
+            );
+            return;
+          }
+          if (!_isSelected[0] || !_isSelected[1] || !_isSelected[2]) {
+            QuickAlert.show(
+              context: context,
+              title: 'ตรวจสอบรหัสผ่าน',
+              text: 'กรุณาใส่รหัสให้ถูกต้อง',
+              type: QuickAlertType.error,
+              confirmBtnText: "ยืนยัน",
+            );
+            return;
+          }
+          if (user_password.text != confirm_password.text) {
+            QuickAlert.show(
+              context: context,
+              title: 'ตรวจสอบรหัสผ่าน',
+              text: 'รหัสผ่านไม่ตรงกัน',
               type: QuickAlertType.error,
               confirmBtnText: "ยืนยัน",
             );
@@ -248,6 +307,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     SizedBox(height: 16.0),
                     TextField(
+                      style: TextStyle(color: Colors.white),
                       cursorColor: Colors.white,
                       controller: user_name,
                       decoration: InputDecoration(
@@ -268,6 +328,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     SizedBox(height: 16.0),
                     TextField(
+                      style: TextStyle(color: Colors.white),
                       cursorColor: Colors.white,
                       controller: user_idcard,
                       keyboardType: TextInputType.number,
@@ -289,6 +350,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     SizedBox(height: 16.0),
                     TextField(
+                      style: TextStyle(color: Colors.white),
                       cursorColor: Colors.white,
                       controller: user_email,
                       decoration: InputDecoration(
@@ -310,8 +372,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     SizedBox(height: 16.0),
                     TextField(
+                      onChanged: (value) {
+                        checkPassword(value);
+                      },
                       cursorColor: Colors.white,
                       controller: user_password,
+                      style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         labelText: 'Password',
                         prefixIcon: Icon(Icons.lock),
@@ -344,6 +410,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     SizedBox(height: 16.0),
                     TextField(
+                      style: TextStyle(color: Colors.white),
                       cursorColor: Colors.white,
                       controller: confirm_password,
                       decoration: InputDecoration(
@@ -424,6 +491,79 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                       ],
+                    ),
+                    SizedBox(height: 10.0),
+                    Container(
+                      width: double.infinity,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                _isSelected[0]
+                                    ? Icons.check_circle_sharp
+                                    : Icons.check_circle_outline,
+                                color: Colors.greenAccent,
+                                size: 20,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                'รหัสผ่านต้องมีความยาว 6 ตัวอักษรขึ้นไป',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                          // ตรวจสอบว่ามีตัวเลขอย่างน้อย 1 ตัว
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                _isSelected[1]
+                                    ? Icons.check_circle_sharp
+                                    : Icons.check_circle_outline,
+                                color: Colors.greenAccent,
+                                size: 20,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                'ต้องมีตัวเลขอย่างน้อย 1 ตัว',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                          // ตรวจสอบว่ามีตัวอักษรพิเศษอย่างน้อย 1 ตัว
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                _isSelected[2]
+                                    ? Icons.check_circle_sharp
+                                    : Icons.check_circle_outline,
+                                color: Colors.greenAccent,
+                                size: 20,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                'ต้องมีตัวอักษรพิเศษอย่างน้อย 1 ตัว',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ]
+                            .expand(
+                                (element) => [element, SizedBox(height: 10)])
+                            .toList(),
+                      ),
                     ),
                   ],
                 ),
