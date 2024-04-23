@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_5/relative/view_relative.dart';
 import 'package:flutter_application_5/view_main.dart';
 import 'package:http/http.dart' as http;
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Update_old extends StatefulWidget {
   String old_id;
@@ -66,10 +70,20 @@ class _Update_oldState extends State<Update_old> {
       var response = jsonDecode(res.body);
       if (response["success"] == "true") {
         print("update");
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ViewOld()),
-        );
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        String user_idcard = prefs.getString('user_idcard') ?? '';
+        print(user_idcard);
+        if (user_idcard == 'admin') {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => ViewOld()),
+              (route) => false);
+        } else {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => ViewOldRela()),
+              (route) => false);
+        }
       } else {
         print("some issue");
       }
@@ -218,34 +232,62 @@ class _Update_oldState extends State<Update_old> {
               ),
               Container(
                 margin: EdgeInsets.all(10),
+                width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    showDialog(
+                    QuickAlert.show(
                       context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('ยืนยันการอัพเดทข้อมูล'),
-                          content: Text('คุณต้องการที่จะอัพเดทข้อมูลหรือไม่?'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop(); // ปิด AlertDialog
-                                updaterecord(); // เรียกใช้งานฟังก์ชัน updaterecord() เมื่อยืนยัน
-                              },
-                              child: Text('ใช่'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop(); // ปิด AlertDialog
-                              },
-                              child: Text('ไม่'),
-                            ),
-                          ],
-                        );
+                      type: QuickAlertType.confirm,
+                      title: 'ยืนยันการอัพเดทข้อมูล',
+                      text: 'คุณต้องการที่จะอัพเดทข้อมูลหรือไม่?',
+                      showConfirmBtn: true,
+                      confirmBtnText: 'ใช่',
+                      confirmBtnColor: Colors.green,
+                      onConfirmBtnTap: () {
+                        Navigator.of(context).pop(); // ปิด AlertDialog
+                        updaterecord(); // เรียกใช้งานฟังก์ชัน
                       },
                     );
+                    // showDialog(
+                    //   context: context,
+                    //   builder: (BuildContext context) {
+                    //     return AlertDialog(
+                    //       title: Text('ยืนยันการอัพเดทข้อมูล'),
+                    //       content: Text('คุณต้องการที่จะอัพเดทข้อมูลหรือไม่?'),
+                    //       actions: <Widget>[
+                    //         TextButton(
+                    //           onPressed: () async {
+                    //             Navigator.of(context).pop(); // ปิด AlertDialog
+                    //             updaterecord(); // เรียกใช้งานฟังก์ชัน updaterecord() เมื่อยืนยัน
+                    //             //กลับไปหน้าแสดงข้อมูล
+                    //           },
+                    //           child: Text('ใช่'),
+                    //         ),
+                    //         TextButton(
+                    //           onPressed: () {
+                    //             Navigator.of(context).pop(); // ปิด AlertDialog
+                    //           },
+                    //           child: Text('ไม่'),
+                    //         ),
+                    //       ],
+                    //     );
+                    //   },
+                    // );
                   },
                   child: Text('แก้ไขข้อมูล'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.green,
+                    side: BorderSide(color: Colors.green, width: 2),
+                    padding: EdgeInsets.all(10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    textStyle: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ],

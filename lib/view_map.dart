@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_application_5/menu/drawer.dart';
 import 'package:longdo_maps_api3_flutter/longdo_maps_api3_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -372,185 +373,213 @@ class _MapTabState extends State<MapTab> {
       textDirection: TextDirection.ltr,
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
           title: Row(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.map),
-              SizedBox(width: 5),
               Text('กำหนดจุดที่อยู่อาศัย'),
             ],
           ),
         ),
-        body: Container(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  child: LongdoMapWidget(
-                    apiKey: "556e31e859f72e9ec99600ae7135f479",
-                    key: map,
-                    eventName: [
-                      JavascriptChannel(
-                        name: "ready",
-                        onMessageReceived: (message) {
-                          var lay = map.currentState
-                              ?.LongdoStatic("Layers", 'RASTER_POI');
-                          if (lay != null) {
-                            print("ready");
-                            map.currentState
-                                ?.call('Layers.setBase', args: [lay]);
-                          }
-                          var latlon = _determinePosition();
-                          print(latlon);
-                          latlon.then((value) => {
-                                Navigator.of(context).pop(),
-                                setState(() {
-                                  _latitudeController.text =
-                                      value.latitude.toStringAsFixed(6);
-                                  _longitudeController.text =
-                                      value.longitude.toStringAsFixed(6);
-                                  map.currentState?.call("location", args: [
-                                    {
-                                      "lon": value.longitude,
-                                      "lat": value.latitude,
-                                    }
-                                  ]);
-                                  var marker = Longdo.LongdoObject(
-                                    "Marker",
-                                    args: [
-                                      {
-                                        "lon": value.longitude,
-                                        "lat": value.latitude,
-                                      },
-                                    ],
-                                  );
-                                  map.currentState
-                                      ?.call("Overlays.add", args: [marker]);
-                                })
-                              });
-                        },
-                      ),
-                      JavascriptChannel(
-                        name: "click",
-                        onMessageReceived: (message) {
-                          var jsonObj = json.decode(message.message);
-                          var lat = jsonObj['data']['lat'];
-                          var lon = jsonObj['data']['lon'];
-                          print("lat: $lat, lon: $lon");
-                          print(lat.runtimeType);
-                          setState(() {
-                            _latitudeController.text = lat.toStringAsFixed(6);
-                            _longitudeController.text = lon.toStringAsFixed(6);
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: LongdoMapWidget(
+                apiKey: "556e31e859f72e9ec99600ae7135f479",
+                key: map,
+                eventName: [
+                  JavascriptChannel(
+                    name: "ready",
+                    onMessageReceived: (message) {
+                      var lay = map.currentState
+                          ?.LongdoStatic("Layers", 'RASTER_POI');
+                      if (lay != null) {
+                        print("ready");
+                        map.currentState?.call('Layers.setBase', args: [lay]);
+                      }
+                      var latlon = _determinePosition();
+                      print(latlon);
+                      latlon.then((value) => {
+                            Navigator.of(context).pop(),
+                            setState(() {
+                              _latitudeController.text =
+                                  value.latitude.toStringAsFixed(6);
+                              _longitudeController.text =
+                                  value.longitude.toStringAsFixed(6);
+                              map.currentState?.call("location", args: [
+                                {
+                                  "lon": value.longitude,
+                                  "lat": value.latitude,
+                                }
+                              ]);
+                              var marker = Longdo.LongdoObject(
+                                "Marker",
+                                args: [
+                                  {
+                                    "lon": value.longitude,
+                                    "lat": value.latitude,
+                                  },
+                                ],
+                              );
+                              map.currentState
+                                  ?.call("Overlays.add", args: [marker]);
+                            })
                           });
-                          var marker = Longdo.LongdoObject(
-                            "Marker",
-                            args: [
-                              {
-                                "lon": lon,
-                                "lat": lat,
-                              },
-                              {"draggable": true}
-                            ],
-                          );
-                          map.currentState
-                              ?.call("Overlays.add", args: [marker]);
-                          final id = marker["\$id"];
-                          markerMap[id] = marker;
-                        },
-                      ),
-                      JavascriptChannel(
-                        name: "overlayClick",
-                        onMessageReceived: (message) {
-                          var jsonObj = json.decode(message.message);
-                          map.currentState?.call("Overlays.remove",
-                              args: [jsonObj["data"]]);
-                          final id = jsonObj["data"]["\$id"];
-                          markerMap.remove(id);
-                        },
-                      ),
-                      JavascriptChannel(
-                        name: "overlayDrop",
-                        onMessageReceived: (message) async {
-                          var obj = json.decode(message.message);
-                          final location = await map.currentState
-                              ?.objectCall(obj["data"], "location");
-                          print(location);
-                        },
-                      ),
-                    ],
+                    },
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: _latitudeController,
-                            decoration: InputDecoration(
-                              labelText: 'Latitude',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: _longitudeController,
-                            decoration: InputDecoration(
-                              labelText: 'Longitude',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: _areaController,
-                            decoration: InputDecoration(
-                              labelText: 'Area',
-                              hintText: 'เมตร',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                  JavascriptChannel(
+                    name: "click",
+                    onMessageReceived: (message) {
+                      var jsonObj = json.decode(message.message);
+                      var lat = jsonObj['data']['lat'];
+                      var lon = jsonObj['data']['lon'];
+                      print("lat: $lat, lon: $lon");
+                      print(lat.runtimeType);
+                      setState(() {
+                        _latitudeController.text = lat.toStringAsFixed(6);
+                        _longitudeController.text = lon.toStringAsFixed(6);
+                      });
+                      var marker = Longdo.LongdoObject(
+                        "Marker",
+                        args: [
+                          {
+                            "lon": lon,
+                            "lat": lat,
+                          },
+                          {"draggable": true}
+                        ],
+                      );
+                      map.currentState?.call("Overlays.add", args: [marker]);
+                      final id = marker["\$id"];
+                      markerMap[id] = marker;
+                    },
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
+                  JavascriptChannel(
+                    name: "overlayClick",
+                    onMessageReceived: (message) {
+                      var jsonObj = json.decode(message.message);
+                      map.currentState
+                          ?.call("Overlays.remove", args: [jsonObj["data"]]);
+                      final id = jsonObj["data"]["\$id"];
+                      markerMap.remove(id);
+                    },
+                  ),
+                  JavascriptChannel(
+                    name: "overlayDrop",
+                    onMessageReceived: (message) async {
+                      var obj = json.decode(message.message);
+                      final location = await map.currentState
+                          ?.objectCall(obj["data"], "location");
+                      print(location);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: _latitudeController,
+                        decoration: InputDecoration(
+                          labelText: 'ละติจูด',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: _longitudeController,
+                        decoration: InputDecoration(
+                          labelText: 'ลองจิจูด',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: _areaController,
+                        decoration: InputDecoration(
+                          labelText: 'พื้นที่',
+                          hintText: 'เมตร',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+                bottom: 10,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
                       onPressed: () {
                         move_location();
                         insertRecord();
                       },
+                      icon: Icon(Icons.save),
+                      label: Text('บันทึก'),
                       style: ElevatedButton.styleFrom(
-                        minimumSize: Size(70, 50),
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.green,
+                        shadowColor: Colors.transparent,
+                        side: BorderSide(color: Colors.green, width: 2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                      child: Text('ยืนยัน'),
                     ),
-                    ElevatedButton(
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton.icon(
                       onPressed: () {
                         _latitudeController.clear();
                         _longitudeController.clear();
                       },
-                      child: Text('ยกเลิก'),
+                      icon: Icon(Icons.close),
+                      label: Text('ยกเลิก'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.red,
+                        shadowColor: Colors.transparent,
+                        side: BorderSide(color: Colors.red, width: 2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
