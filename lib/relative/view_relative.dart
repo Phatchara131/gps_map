@@ -151,19 +151,6 @@ class _ViewOldRelaState extends State<ViewOldRela> {
                 MaterialPageRoute(
                   builder: (context) => Update_old(
                     userdata[index]["old_ID"].toString(),
-<<<<<<< HEAD
-                    userdata[index]["old_loraID"],
-                    userdata[index]["old_userID"],
-                    userdata[index]["old_fname"],
-                    userdata[index]["old_lname"],
-                    userdata[index]["old_address"],
-                    userdata[index]["old_age"].toString(),
-                    userdata[index]["old_sex"],
-                    userdata[index]["old_disease"],
-                    userdata[index]["old_relativeID"],
-                    userdata[index]["old_Cname"],
-                    userdata[index]["old_Ctel"],
-=======
                     userdata[index]["old_loraID"].toString(),
                     userdata[index]["old_userID"].toString(),
                     userdata[index]["old_fname"].toString(),
@@ -175,7 +162,6 @@ class _ViewOldRelaState extends State<ViewOldRela> {
                     userdata[index]["old_relativeID"].toString(),
                     userdata[index]["old_Cname"].toString(),
                     userdata[index]["old_Ctel"].toString(),
->>>>>>> feb37cf5ff5f2361ef806810d7618411f947c2d6
                   ),
                 ),
               );
