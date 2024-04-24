@@ -11,12 +11,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:socket_io_client/socket_io_client.dart';
 // import 'package:socket_io_client/socket_io_client.dart' as IO;
 // import 'package:socket_io_client/socket_io_client.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(
+      widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
   // Initialize OneSignal
@@ -55,9 +58,15 @@ void main() async {
       MaterialPageRoute(builder: (context) => Mapnoti(lat: lat, lon: lon)),
     );
   });
+  await Future.delayed(Duration(seconds: 2));
+  FlutterNativeSplash.remove();
   runApp(MaterialApp(
     title: "App",
-    home: isLoggedIn ? user_idcard == 'admin' ? ViewOld() : ViewOldRela() : LoginPage(),
+    home: isLoggedIn
+        ? user_idcard == 'admin'
+            ? ViewOld()
+            : ViewOldRela()
+        : LoginPage(),
     navigatorKey: navigatorKey,
     // home: ViewOld(),
   ));

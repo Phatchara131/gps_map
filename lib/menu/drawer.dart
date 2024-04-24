@@ -56,6 +56,11 @@ class CustomDrawer extends StatelessWidget {
                 ),
               ],
             ),
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -77,6 +82,11 @@ class CustomDrawer extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
+              ),
             ),
           ),
           ElevatedButton(
@@ -107,6 +117,11 @@ class CustomDrawer extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
+              ),
             ),
           ),
           // Add more buttons as needed

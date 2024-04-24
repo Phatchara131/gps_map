@@ -48,6 +48,8 @@ dependencies:
   quickalert: ^1.1.0
   shared_preferences: ^2.2.3
   numberpicker: ^2.1.2
+  flutter_native_splash: ^2.4.0
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -102,3 +104,25 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/Google__G__logo.png
+  branding: assets/images/vrendder.png
+  color_dark: "#121212"
+  image_dark: assets/images/Google__G__logo.png
+  # branding_dark: assets/branding-development.png
+
+  android_12:
+    image: assets/images/Google__G__logo.png
+    icon_background_color: "#ffffff"
+    image_dark: assets/images/Google__G__logo.png
+    icon_background_color_dark: "#121212"
+    branding: assets/images/vrendder.png
+
+  web: false
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app_logoxxx.png"

@@ -1,7 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_application_5/relative/view_relative.dart';
 import 'package:flutter_application_5/view_main.dart';
 import 'package:http/http.dart' as http;
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Update_old extends StatefulWidget {
   String old_id;
@@ -45,6 +50,8 @@ class _Update_oldState extends State<Update_old> {
   TextEditingController relativeID = TextEditingController();
   TextEditingController relativeName = TextEditingController();
   TextEditingController contactNumber = TextEditingController();
+  TextEditingController passwordCheck = TextEditingController();
+  FocusNode focusNode = new FocusNode();
   Future<void> updaterecord() async {
     try {
       String uri =
@@ -66,10 +73,20 @@ class _Update_oldState extends State<Update_old> {
       var response = jsonDecode(res.body);
       if (response["success"] == "true") {
         print("update");
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ViewOld()),
-        );
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        String user_idcard = prefs.getString('user_idcard') ?? '';
+        print(user_idcard);
+        if (user_idcard == 'admin') {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => ViewOld()),
+              (route) => false);
+        } else {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => ViewOldRela()),
+              (route) => false);
+        }
       } else {
         print("some issue");
       }
@@ -95,10 +112,134 @@ class _Update_oldState extends State<Update_old> {
     super.initState();
   }
 
+  Future<void> delrecord(String id) async {
+    try {
+      String uri =
+          "https://project-old.000webhostapp.com/Old_API/old_delete.php";
+      var res = await http.post(Uri.parse(uri), body: {"id": id});
+      var response = jsonDecode(res.body);
+      if (response["success"] == "true") {
+        // print(userdata);
+        print("record deleted");
+        // getrecord();
+      } else {
+        print("some issue");
+      }
+    } catch (e) {
+      print(e);
+      print("Error");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Update Record")),
+      appBar: AppBar(
+        title: Text("ข้อมูลผู้สูงอายุ"),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              QuickAlert.show(
+                context: context,
+                type: QuickAlertType.confirm,
+                title: 'ยืนยันการอัพเดทข้อมูล',
+                text: 'คุณต้องการที่จะอัพเดทข้อมูลหรือไม่?',
+                showConfirmBtn: true,
+                confirmBtnText: 'ใช่',
+                confirmBtnColor: Colors.green,
+                cancelBtnText: 'ไม่',
+                onConfirmBtnTap: () {
+                  Navigator.of(context).pop(); // ปิด AlertDialog
+                  updaterecord(); // เรียกใช้งานฟังก์ชัน
+                },
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.green,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: EdgeInsets.all(0),
+              minimumSize: Size(40, 40),
+            ),
+            child: Icon(Icons.save),
+          ),
+          //delete btn
+          ElevatedButton(
+            onPressed: () {
+              QuickAlert.show(
+                context: context,
+                type: QuickAlertType.confirm,
+                title: 'ยืนยันการลบข้อมูล',
+                text: 'คุณต้องการที่จะลบข้อมูลหรือไม่?',
+                showConfirmBtn: true,
+                confirmBtnText: 'ใช่',
+                confirmBtnColor: Colors.red,
+                cancelBtnText: 'ไม่',
+                widget: Container(
+                  margin: EdgeInsets.only(top: 10),
+                  width: double.infinity,
+                  child: TextField(
+                    controller: passwordCheck,
+                    focusNode: focusNode,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'กรอกรหัสผ่านเพื่อลบข้อมูล',
+                      labelStyle: TextStyle(
+                        color: focusNode.hasFocus ? Colors.green : Colors.grey,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.green, width: 2),
+                      ),
+                      hintText: 'รหัสผ่าน...',
+                    ),
+                  ),
+                ),
+                onConfirmBtnTap: () async {
+                  // Navigator.of(context).pop(); // ปิด AlertDialog
+                  // delrecord(widget.old_id); // เรียกใช้งานฟังก์ชัน
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  String password = prefs.getString('user_password') ?? '';
+                  print(password);
+                  if (passwordCheck.text == password) {
+                    Navigator.of(context).pop(); // ปิด AlertDialog
+                    delrecord(widget.old_id); // เรียกใช้งานฟังก์ชัน
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => ViewOld()),
+                        (route) => false);
+                  } else {
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.error,
+                      title: 'รหัสผ่านไม่ถูกต้อง',
+                      text: 'กรุณากรอกรหัสผ่านให้ถูกต้อง',
+                      showConfirmBtn: true,
+                      confirmBtnText: 'ตกลง',
+                      confirmBtnColor: Colors.red,
+                    );
+                  }
+                },
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.red,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: EdgeInsets.all(0),
+              minimumSize: Size(40, 40),
+            ),
+            child: Icon(Icons.delete),
+          ),
+        ],
+      ),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
@@ -216,38 +357,67 @@ class _Update_oldState extends State<Update_old> {
                   ),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.all(10),
-                child: ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('ยืนยันการอัพเดทข้อมูล'),
-                          content: Text('คุณต้องการที่จะอัพเดทข้อมูลหรือไม่?'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop(); // ปิด AlertDialog
-                                updaterecord(); // เรียกใช้งานฟังก์ชัน updaterecord() เมื่อยืนยัน
-                              },
-                              child: Text('ใช่'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop(); // ปิด AlertDialog
-                              },
-                              child: Text('ไม่'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  child: Text('แก้ไขข้อมูล'),
-                ),
-              ),
+              // Container(
+              //   margin: EdgeInsets.all(10),
+              //   width: double.infinity,
+              //   child: ElevatedButton(
+              //     onPressed: () {
+              //       QuickAlert.show(
+              //         context: context,
+              //         type: QuickAlertType.confirm,
+              //         title: 'ยืนยันการอัพเดทข้อมูล',
+              //         text: 'คุณต้องการที่จะอัพเดทข้อมูลหรือไม่?',
+              //         showConfirmBtn: true,
+              //         confirmBtnText: 'ใช่',
+              //         confirmBtnColor: Colors.green,
+              //         cancelBtnText: 'ไม่',
+              //         onConfirmBtnTap: () {
+              //           Navigator.of(context).pop(); // ปิด AlertDialog
+              //           updaterecord(); // เรียกใช้งานฟังก์ชัน
+              //         },
+              //       );
+              //       // showDialog(
+              //       //   context: context,
+              //       //   builder: (BuildContext context) {
+              //       //     return AlertDialog(
+              //       //       title: Text('ยืนยันการอัพเดทข้อมูล'),
+              //       //       content: Text('คุณต้องการที่จะอัพเดทข้อมูลหรือไม่?'),
+              //       //       actions: <Widget>[
+              //       //         TextButton(
+              //       //           onPressed: () async {
+              //       //             Navigator.of(context).pop(); // ปิด AlertDialog
+              //       //             updaterecord(); // เรียกใช้งานฟังก์ชัน updaterecord() เมื่อยืนยัน
+              //       //             //กลับไปหน้าแสดงข้อมูล
+              //       //           },
+              //       //           child: Text('ใช่'),
+              //       //         ),
+              //       //         TextButton(
+              //       //           onPressed: () {
+              //       //             Navigator.of(context).pop(); // ปิด AlertDialog
+              //       //           },
+              //       //           child: Text('ไม่'),
+              //       //         ),
+              //       //       ],
+              //       //     );
+              //       //   },
+              //       // );
+              //     },
+              //     child: Text('แก้ไขข้อมูล'),
+              //     style: ElevatedButton.styleFrom(
+              //       backgroundColor: Colors.white,
+              //       foregroundColor: Colors.green,
+              //       side: BorderSide(color: Colors.green, width: 2),
+              //       padding: EdgeInsets.all(10),
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(10),
+              //       ),
+              //       textStyle: TextStyle(
+              //         fontSize: 20,
+              //         fontWeight: FontWeight.bold,
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

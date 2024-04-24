@@ -113,190 +113,109 @@ class _MapnotiState extends State<Mapnoti> {
             ],
           ),
         ),
-        body: Container(
-          height: double.infinity,
-          width: double.infinity,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.91,
-                  child: LongdoMapWidget(
-                    apiKey: "556e31e859f72e9ec99600ae7135f479",
-                    key: map,
-                    eventName: [
-                      JavascriptChannel(
-                        name: "ready",
-                        onMessageReceived: (message) {
-                          var lay = map.currentState
-                              ?.LongdoStatic("Layers", 'RASTER_POI');
-                          if (lay != null) {
-                            print("ready");
-                            map.currentState
-                                ?.call('Layers.setBase', args: [lay]);
-                          }
-                          var latlon = _determinePosition();
-                          print(latlon);
-                          map.currentState?.call("location", args: [
-                            {
-                              "lon": widget.lon,
-                              "lat": widget.lat,
-                            }
-                          ]);
-                          var marker = Longdo.LongdoObject(
-                            "Marker",
-                            args: [
-                              {
-                                "lon": widget.lon,
-                                "lat": widget.lat,
-                              },
-                            ],
-                          );
-                          map.currentState
-                              ?.call("Overlays.add", args: [marker]);
-
-                          // latlon.then((value) => {
-                          //       setState(() {
-                          //         map.currentState?.call("location", args: [
-                          //           {
-                          //             "lon": widget.lon,
-                          //             "lat": widget.lat,
-                          //           }
-                          //         ]);
-                          //         var marker = Longdo.LongdoObject(
-                          //           "Marker",
-                          //           args: [
-                          //             {
-                          //               "lon": widget.lon,
-                          //               "lat": widget.lat,
-                          //             },
-                          //           ],
-                          //         );
-                          //         map.currentState
-                          //             ?.call("Overlays.add", args: [marker]);
-                          //       })
-                          //     });
-                        },
-                      ),
-                      JavascriptChannel(
-                        name: "click",
-                        onMessageReceived: (message) {
-                          var jsonObj = json.decode(message.message);
-                          var lat = jsonObj['data']['lat'];
-                          var lon = jsonObj['data']['lon'];
-                          print("lat: $lat, lon: $lon");
-                          print(lat.runtimeType);
-                          setState(() {
-                            _latitudeController.text = lat.toStringAsFixed(6);
-                            _longitudeController.text = lon.toStringAsFixed(6);
-                          });
-                          var marker = Longdo.LongdoObject(
-                            "Marker",
-                            args: [
-                              {
-                                "lon": lon,
-                                "lat": lat,
-                              },
-                              {"draggable": true}
-                            ],
-                          );
-                          map.currentState
-                              ?.call("Overlays.add", args: [marker]);
-                          final id = marker["\$id"];
-                          markerMap[id] = marker;
-                        },
-                      ),
-                      JavascriptChannel(
-                        name: "overlayClick",
-                        onMessageReceived: (message) {
-                          var jsonObj = json.decode(message.message);
-                          map.currentState?.call("Overlays.remove",
-                              args: [jsonObj["data"]]);
-                          final id = jsonObj["data"]["\$id"];
-                          markerMap.remove(id);
-                        },
-                      ),
-                      JavascriptChannel(
-                        name: "overlayDrop",
-                        onMessageReceived: (message) async {
-                          var obj = json.decode(message.message);
-                          final location = await map.currentState
-                              ?.objectCall(obj["data"], "location");
-                          print(location);
-                        },
-                      ),
+        body: Expanded(
+          child: LongdoMapWidget(
+            apiKey: "556e31e859f72e9ec99600ae7135f479",
+            key: map,
+            eventName: [
+              JavascriptChannel(
+                name: "ready",
+                onMessageReceived: (message) {
+                  var lay =
+                      map.currentState?.LongdoStatic("Layers", 'RASTER_POI');
+                  if (lay != null) {
+                    print("ready");
+                    map.currentState?.call('Layers.setBase', args: [lay]);
+                  }
+                  var latlon = _determinePosition();
+                  print(latlon);
+                  map.currentState?.call("location", args: [
+                    {
+                      "lon": widget.lon,
+                      "lat": widget.lat,
+                    }
+                  ]);
+                  var marker = Longdo.LongdoObject(
+                    "Marker",
+                    args: [
+                      {
+                        "lon": widget.lon,
+                        "lat": widget.lat,
+                      },
                     ],
-                  ),
-                ),
-                // Padding(
-                //   padding: const EdgeInsets.all(8.0),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //     children: [
-                //       Expanded(
-                //         child: Padding(
-                //           padding: const EdgeInsets.all(8.0),
-                //           child: TextField(
-                //             controller: _latitudeController,
-                //             decoration: InputDecoration(
-                //               labelText: 'Latitude',
-                //               border: OutlineInputBorder(),
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //       Expanded(
-                //         child: Padding(
-                //           padding: const EdgeInsets.all(8.0),
-                //           child: TextField(
-                //             controller: _longitudeController,
-                //             decoration: InputDecoration(
-                //               labelText: 'Longitude',
-                //               border: OutlineInputBorder(),
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //       Expanded(
-                //         child: Padding(
-                //           padding: const EdgeInsets.all(8.0),
-                //           child: TextField(
-                //             controller: _areaController,
-                //             decoration: InputDecoration(
-                //               labelText: 'Area',
-                //               border: OutlineInputBorder(),
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //   children: [
-                //     ElevatedButton(
-                //       onPressed: () {
-                //         move_location();
-                //         insertRecord();
-                //       },
-                //       style: ElevatedButton.styleFrom(
-                //         minimumSize: Size(70, 50),
-                //       ),
-                //       child: Text('Confirm'),
-                //     ),
-                //     ElevatedButton(
-                //       onPressed: () {
-                //         _latitudeController.clear();
-                //         _longitudeController.clear();
-                //       },
-                //       child: Text('Cancel'),
-                //     ),
-                //   ],
-                // ),
-              ],
-            ),
+                  );
+                  map.currentState?.call("Overlays.add", args: [marker]);
+
+                  // latlon.then((value) => {
+                  //       setState(() {
+                  //         map.currentState?.call("location", args: [
+                  //           {
+                  //             "lon": widget.lon,
+                  //             "lat": widget.lat,
+                  //           }
+                  //         ]);
+                  //         var marker = Longdo.LongdoObject(
+                  //           "Marker",
+                  //           args: [
+                  //             {
+                  //               "lon": widget.lon,
+                  //               "lat": widget.lat,
+                  //             },
+                  //           ],
+                  //         );
+                  //         map.currentState
+                  //             ?.call("Overlays.add", args: [marker]);
+                  //       })
+                  //     });
+                },
+              ),
+              JavascriptChannel(
+                name: "click",
+                onMessageReceived: (message) {
+                  var jsonObj = json.decode(message.message);
+                  var lat = jsonObj['data']['lat'];
+                  var lon = jsonObj['data']['lon'];
+                  print("lat: $lat, lon: $lon");
+                  print(lat.runtimeType);
+                  setState(() {
+                    _latitudeController.text = lat.toStringAsFixed(6);
+                    _longitudeController.text = lon.toStringAsFixed(6);
+                  });
+                  var marker = Longdo.LongdoObject(
+                    "Marker",
+                    args: [
+                      {
+                        "lon": lon,
+                        "lat": lat,
+                      },
+                      {"draggable": true}
+                    ],
+                  );
+                  map.currentState?.call("Overlays.add", args: [marker]);
+                  final id = marker["\$id"];
+                  markerMap[id] = marker;
+                },
+              ),
+              JavascriptChannel(
+                name: "overlayClick",
+                onMessageReceived: (message) {
+                  var jsonObj = json.decode(message.message);
+                  map.currentState
+                      ?.call("Overlays.remove", args: [jsonObj["data"]]);
+                  final id = jsonObj["data"]["\$id"];
+                  markerMap.remove(id);
+                },
+              ),
+              JavascriptChannel(
+                name: "overlayDrop",
+                onMessageReceived: (message) async {
+                  var obj = json.decode(message.message);
+                  final location = await map.currentState
+                      ?.objectCall(obj["data"], "location");
+                  print(location);
+                },
+              ),
+            ],
           ),
         ),
       ),

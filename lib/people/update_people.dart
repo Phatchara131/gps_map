@@ -98,7 +98,7 @@ class _Update_peopleState extends State<Update_people> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("View Data")),
+      appBar: AppBar(title: Text("ข้อมูลผู้สูงอายุ")),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
