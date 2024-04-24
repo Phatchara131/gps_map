@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_5/menu/drawer.dart';
+import 'package:flutter_application_5/relative/view_relative.dart';
+import 'package:flutter_application_5/view_main.dart';
 import 'package:longdo_maps_api3_flutter/longdo_maps_api3_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
@@ -136,6 +138,23 @@ class _MapTabState extends State<MapTab> {
             title: 'สำเร็จ',
             text: 'ส่งข้อมูลสำเร็จ',
             confirmBtnText: 'ตกลง',
+            onConfirmBtnTap: () async {
+              Navigator.of(context).pop();
+              final SharedPreferences prefs =
+                  await SharedPreferences.getInstance();
+              String user_idcard = prefs.getString('user_idcard')!;
+              if (user_idcard == 'admin') {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => ViewOld()),
+                    (route) => false);
+              } else {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => ViewOldRela()),
+                    (route) => false);
+              }
+            },
           );
         } else {
           QuickAlert.show(

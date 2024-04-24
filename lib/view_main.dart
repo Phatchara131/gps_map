@@ -193,18 +193,18 @@ class _ViewOldState extends State<ViewOld> {
               style: TextStyle(
                   color: isDarkModeEnabled ? Colors.white : Colors.black),
             ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    showDeleteConfirmationDialog(userdata[index]["old_ID"]);
-                  },
-                  icon: Icon(Icons.delete),
-                  color: Colors.red,
-                ),
-              ],
-            ),
+            // trailing: Row(
+            //   mainAxisSize: MainAxisSize.min,
+            //   children: [
+            //     IconButton(
+            //       onPressed: () {
+            //         showDeleteConfirmationDialog(userdata[index]["old_ID"]);
+            //       },
+            //       icon: Icon(Icons.delete),
+            //       color: Colors.red,
+            //     ),
+            //   ],
+            // ),
           ),
         );
       },
