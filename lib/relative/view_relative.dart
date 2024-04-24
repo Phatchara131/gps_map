@@ -61,11 +61,23 @@ class _ViewOldRelaState extends State<ViewOldRela> {
     return Scaffold(
         appBar: AppBar(title: Text("View Data")),
         drawer: CustomDrawer(title: titleDrawer),
-        body: RefreshIndicator(
-          child: isCardView ? _buildCardView() : _buildTableView(),
-          onRefresh: () async {
-            await Future.delayed(const Duration(seconds: 2), () => getrecord());
-          },
+        body: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(
+                'https://modernformhealthcare.co.th/wp-content/uploads/2024/02/happy-asian-senior-couple-smiling-outside.webp',
+              ),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: RefreshIndicator(
+            child: isCardView ? _buildCardView() : _buildTableView(),
+            onRefresh: () async {
+              await Future.delayed(
+                  const Duration(seconds: 2), () => getrecord());
+            },
+          ),
         ));
   }
 
@@ -89,13 +101,13 @@ class _ViewOldRelaState extends State<ViewOldRela> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => Update_old(
-                    userdata[index]["old_ID"],
+                    userdata[index]["old_ID"].toString(),
                     userdata[index]["old_loraID"],
                     userdata[index]["old_userID"],
                     userdata[index]["old_fname"],
                     userdata[index]["old_lname"],
                     userdata[index]["old_address"],
-                    userdata[index]["old_age"],
+                    userdata[index]["old_age"].toString(),
                     userdata[index]["old_sex"],
                     userdata[index]["old_disease"],
                     userdata[index]["old_relativeID"],
@@ -125,6 +137,7 @@ class _ViewOldRelaState extends State<ViewOldRela> {
                 IconButton(
                   onPressed: () {
                     showDeleteConfirmationDialog(userdata[index]["old_ID"]);
+                    // print(userdata[index]["old_ID"].runtimeType);
                   },
                   icon: Icon(Icons.delete),
                   color: Colors.red,
@@ -162,11 +175,12 @@ class _ViewOldRelaState extends State<ViewOldRela> {
     );
   }
 
-  Future<void> delrecord(String id) async {
+  Future<void> delrecord(int id) async {
     try {
       String uri =
           "https://project-old.000webhostapp.com/Old_API/old_delete.php";
-      var res = await http.post(Uri.parse(uri), body: {"id": id});
+      String str_id = id.toString();
+      var res = await http.post(Uri.parse(uri), body: {"id": str_id});
       var response = jsonDecode(res.body);
       if (response["success"] == "true") {
         print(userdata);
@@ -215,7 +229,7 @@ class _ViewOldRelaState extends State<ViewOldRela> {
     }
   }
 
-  void showDeleteConfirmationDialog(String id) {
+  void showDeleteConfirmationDialog(int id) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
