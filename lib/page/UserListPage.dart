@@ -316,7 +316,11 @@ class _UserListPageState extends State<UserListPage> {
           Expanded(
             child: isLoading
                 ? Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(
+                      color: Colors.green,
+                      backgroundColor: Colors.grey.shade300,
+                      strokeWidth: 5,
+                    ),
                   )
                 : RefreshIndicator(
                     onRefresh: _loadData,
