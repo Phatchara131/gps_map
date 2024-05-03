@@ -72,6 +72,8 @@ class _LoginPageState extends State<LoginPage> {
         prefs.setString('user_email', enteredUseremail);
         prefs.setString('user_password', enteredPassword);
         prefs.setString('user_idcard', index['user_idcard']);
+        prefs.setString('user_name', index['user_name']);
+        prefs.setString('user_ID', index['user_ID']);
         print(index['user_idcard']);
         OneSignal.User.addTagWithKey("user_idcard", index['user_idcard']);
         if (index['user_idcard'] == 'admin') {

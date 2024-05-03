@@ -23,6 +23,7 @@ class _ViewOldRelaState extends State<ViewOldRela> {
   bool isCardView = true;
   String searchText = '';
   String titleDrawer = '';
+  String emailDrawer = '';
   @override
   void initState() {
     super.initState();
@@ -54,7 +55,8 @@ class _ViewOldRelaState extends State<ViewOldRela> {
 
   void getEmail() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    titleDrawer = prefs.getString('user_email') ?? '';
+    titleDrawer = prefs.getString('user_name') ?? '';
+    emailDrawer = prefs.getString('user_email') ?? '';
   }
 
   bool isEnglish(String text) {
@@ -92,30 +94,205 @@ class _ViewOldRelaState extends State<ViewOldRela> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("รายชื่อผู้สูงอายุ")),
-        drawer: CustomDrawer(title: titleDrawer),
-        body: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(
-                'https://modernformhealthcare.co.th/wp-content/uploads/2024/02/happy-asian-senior-couple-smiling-outside.webp',
+      // appBar: AppBar(title: Text("รายชื่อผู้สูงอายุ")),
+      drawer: CustomDrawer(title: titleDrawer, email: emailDrawer),
+      body: Builder(
+        builder: (BuildContext innerContext) {
+          return Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+                // image: DecorationImage(
+                //   image: NetworkImage(
+                //     'https://modernformhealthcare.co.th/wp-content/uploads/2024/02/happy-asian-senior-couple-smiling-outside.webp',
+                //   ),
+                //   fit: BoxFit.cover,
+                // ),
+                ),
+            child: RefreshIndicator(
+              color: Colors.green,
+              // backgroundColor: Colors.blue,
+              child: Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 240,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                      ),
+                      image: DecorationImage(
+                        image: AssetImage(
+                          'assets/images/wengang-zhai-DEg6mbiK6DI-unsplash.jpg',
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      SizedBox(height: 32),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              Scaffold.of(innerContext).openDrawer();
+                            },
+                            icon: Icon(
+                              Icons.menu,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            "รายชื่อผู้สูงอายุ",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black,
+                                  blurRadius: 5,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "รายชื่อผู้สูงอายุทั้งหมด ${userdata.length} รายการ",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black,
+                              blurRadius: 5,
+                              offset: Offset(2, 2),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.touch_app_rounded,
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            "แตะที่รายชื่อเพื่อแก้ไขข้อมูล",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black,
+                                  blurRadius: 5,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Container(
+                          child: TextField(
+                            cursorColor: Colors.white,
+                            style: TextStyle(
+                              color: Colors.white,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black,
+                                  blurRadius: 5,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                searchText = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              hintText: "ค้นหาผู้สูงอายุ",
+                              hintStyle: TextStyle(color: Colors.white),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              prefixIcon:
+                                  Icon(Icons.search, color: Colors.white),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text("รายการแสดงผลแบบ: "),
+                          CupertinoSwitch(
+                            activeColor: Colors.cyanAccent,
+                            value: isCardView,
+                            onChanged: (value) {
+                              setState(() {
+                                isCardView = value;
+                              });
+                            },
+                          ),
+                          Text(isCardView ? "การ์ด" : "ตาราง"),
+                          SizedBox(width: 20),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Expanded(
+                        child:
+                            isCardView ? _buildCardView() : _buildTableView(),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              fit: BoxFit.cover,
+              onRefresh: () async {
+                await Future.delayed(
+                    const Duration(seconds: 2), () => getrecord());
+              },
             ),
-          ),
-          child: RefreshIndicator(
-            child: isCardView ? _buildCardView() : _buildTableView(),
-            onRefresh: () async {
-              await Future.delayed(
-                  const Duration(seconds: 2), () => getrecord());
-            },
-          ),
-        ));
+          );
+        },
+      ),
+    );
   }
 
   Widget _buildCardView() {
-    return ListView.builder(
+    return GridView.builder(
+      padding: EdgeInsets.zero,
+      // shrinkWrap: true,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 1,
+      ),
       itemCount: userdata.length,
       itemBuilder: (context, index) {
         if (searchText.isNotEmpty &&
@@ -125,91 +302,81 @@ class _ViewOldRelaState extends State<ViewOldRela> {
                 .contains(searchText.toLowerCase())) {
           return Container();
         }
-        return Container(
-          margin: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: isDarkModeEnabled ? Colors.black : Colors.white,
-            border: Border.all(
-              color: isDarkModeEnabled ? Colors.white : Colors.grey,
-            ),
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: isDarkModeEnabled
-                    ? Colors.black
-                    : Colors.black.withOpacity(0.5),
-                blurRadius: 5,
-                spreadRadius: 1,
-                offset: Offset(2, 5),
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Update_old(
+                  userdata[index]["old_ID"].toString(),
+                  userdata[index]["old_loraID"].toString(),
+                  userdata[index]["old_userID"].toString(),
+                  userdata[index]["old_fname"].toString(),
+                  userdata[index]["old_lname"].toString(),
+                  userdata[index]["old_address"].toString(),
+                  userdata[index]["old_age"].toString(),
+                  userdata[index]["old_sex"].toString(),
+                  userdata[index]["old_disease"].toString(),
+                  userdata[index]["user_ID"].toString(),
+                  userdata[index]["user_name"].toString(),
+                  userdata[index]["old_ID"].toString(),
+                ),
               ),
-            ],
-          ),
-          child: ListTile(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Update_old(
-                    userdata[index]["old_ID"].toString(),
-                    userdata[index]["old_loraID"].toString(),
-                    userdata[index]["old_userID"].toString(),
-                    userdata[index]["old_fname"].toString(),
-                    userdata[index]["old_lname"].toString(),
-                    userdata[index]["old_address"].toString(),
-                    userdata[index]["old_age"].toString(),
-                    userdata[index]["old_sex"].toString(),
-                    userdata[index]["old_disease"].toString(),
-                    userdata[index]["old_relativeID"].toString(),
-                    userdata[index]["old_Cname"].toString(),
-                    userdata[index]["old_Ctel"].toString(),
+            );
+          },
+          child: Container(
+            margin: EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 20,
+            ),
+            decoration: BoxDecoration(
+              color: isDarkModeEnabled ? Colors.black : Colors.white,
+              border: Border.all(
+                color: isDarkModeEnabled ? Colors.white : Colors.grey,
+              ),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: isDarkModeEnabled
+                      ? Colors.black
+                      : Colors.black.withOpacity(0.5),
+                  blurRadius: 5,
+                  spreadRadius: 1,
+                  offset: Offset(2, 5),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 40,
+                  backgroundColor: getRandomColor(),
+                  child: Text(
+                    isEnglish(userdata[index]["old_fname"].toString())
+                        ? userdata[index]["old_fname"]
+                            .toString()
+                            .substring(0, 1)
+                            .toUpperCase()
+                        : userdata[index]["old_fname"]
+                            .toString()
+                            .substring(0, 1),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              );
-            },
-            leading: Container(
-              width: 50,
-              height: 50,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: getRandomColor(),
-              ),
-              child: Center(
-                child: Text(
-                  isEnglish(userdata[index]["old_fname"].toString())
-                      ? userdata[index]["old_fname"]
-                          .toString()
-                          .substring(0, 1)
-                          .toUpperCase()
-                      : userdata[index]["old_fname"].toString().substring(0, 1),
+                SizedBox(height: 10),
+                Text(
+                  "${userdata[index]["old_fname"]} ${userdata[index]["old_lname"]}",
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+                    color: isDarkModeEnabled ? Colors.white : Colors.black,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
-                ),
-              ),
-            ),
-            title: Text(
-              userdata[index]["old_fname"],
-              style: TextStyle(
-                  color: isDarkModeEnabled ? Colors.white : Colors.black),
-            ),
-            subtitle: Text(
-              userdata[index]["old_lname"],
-              style: TextStyle(
-                  color: isDarkModeEnabled ? Colors.white : Colors.black),
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    showDeleteConfirmationDialog(userdata[index]["old_ID"]);
-                    // print(userdata[index]["old_ID"].runtimeType);
-                  },
-                  icon: Icon(Icons.delete),
-                  color: Colors.red,
                 ),
               ],
             ),
@@ -225,20 +392,106 @@ class _ViewOldRelaState extends State<ViewOldRela> {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
+          // columnSpacing: 20, // เพิ่มระยะห่างระหว่างคอลัมน์
           columns: [
-            DataColumn(label: Text('ID')),
-            DataColumn(label: Text('First Name')),
-            DataColumn(label: Text('Last Name')),
-            DataColumn(label: Text('Age')),
+            DataColumn(
+              label: Text(
+                'รหัส',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16), // เพิ่มสไตล์ข้อความ
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                'ชื่อ',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16), // เพิ่มสไตล์ข้อความ
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                'นามสกุล',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16), // เพิ่มสไตล์ข้อความ
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                'อายุ',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16), // เพิ่มสไตล์ข้อความ
+              ),
+            ),
           ],
-          rows: userdata.map((user) {
-            return DataRow(cells: [
-              DataCell(Text(user["old_ID"].toString())),
-              DataCell(Text(user["old_fname"].toString())),
-              DataCell(Text(user["old_lname"].toString())),
-              DataCell(Text(user["old_age"].toString())),
-            ]);
-          }).toList(),
+          rows: List.generate(userdata.length, (index) {
+            final user = userdata[index];
+            final bool isEven = index % 2 == 0;
+
+            return DataRow(
+              color: MaterialStateColor.resolveWith((states) =>
+                  isEven ? Colors.grey.withOpacity(0.1) : Colors.transparent),
+              cells: [
+                DataCell(
+                  Text(
+                    user["old_ID"].toString(),
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  onTap: () {
+                    movepageEdit(user);
+                  },
+                ),
+                DataCell(
+                  Text(
+                    user["old_fname"].toString(),
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  onTap: () => movepageEdit(user),
+                ),
+                DataCell(
+                  Text(
+                    user["old_lname"].toString(),
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  onTap: () => movepageEdit(user),
+                ),
+                DataCell(
+                  Text(
+                    user["old_age"].toString(),
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  onTap: () => movepageEdit(user),
+                ),
+              ],
+            );
+          }),
+        ),
+      ),
+    );
+  }
+
+  void movepageEdit(
+    Map<String, dynamic> userdata,
+  ) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Update_old(
+          userdata["old_ID"].toString(),
+          userdata["old_loraID"].toString(),
+          userdata["old_userID"].toString(),
+          userdata["old_fname"].toString(),
+          userdata["old_lname"].toString(),
+          userdata["old_address"].toString(),
+          userdata["old_age"].toString(),
+          userdata["old_sex"].toString(),
+          userdata["old_disease"].toString(),
+          userdata["old_relativeID"].toString(),
+          userdata["old_Cname"].toString(),
+          userdata["old_Ctel"].toString(),
         ),
       ),
     );
@@ -275,9 +528,13 @@ class _ViewOldRelaState extends State<ViewOldRela> {
       if (response.statusCode == 200) {
         print(response.body);
         var data = jsonDecode(response.body);
-        setState(() {
-          userdata = data['data'];
-        });
+        if (data['status'] == 'error') {
+          userdata = [];
+        } else {
+          setState(() {
+            userdata = data['data'];
+          });
+        }
       }
     } catch (e) {
       print(e);

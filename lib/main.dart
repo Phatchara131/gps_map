@@ -60,6 +60,7 @@ void main() async {
   });
   await Future.delayed(Duration(seconds: 2));
   FlutterNativeSplash.remove();
+  isLoggedIn ? print("Logged In") : print("Not Logged In");
   runApp(MaterialApp(
     title: "App",
     home: isLoggedIn

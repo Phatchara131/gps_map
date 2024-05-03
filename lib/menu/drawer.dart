@@ -9,7 +9,9 @@ class CustomDrawer extends StatelessWidget {
   const CustomDrawer({
     Key? key,
     required this.title,
+    required this.email,
   }) : super(key: key);
+  final String email;
   final String title;
 
   @override
@@ -23,16 +25,65 @@ class CustomDrawer extends StatelessWidget {
               color: Colors.black,
               image: DecorationImage(
                 opacity: 0.5,
-                image: AssetImage('assets/images/shutterstock_1290393385.jpg'),
+                image: NetworkImage(
+                    'https://source.unsplash.com/random/900×700/?family'),
                 fit: BoxFit.cover,
               ),
             ),
-            child: Text(
-              title,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 60,
+                  height: 60,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 2,
+                    ),
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: NetworkImage(
+                          'https://source.unsplash.com/random/100×100/?graphic'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                      ),
+                      child: Text(
+                        email == 'admin' ? 'A' : title[0].toUpperCase(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  title.length > 20 ? title.substring(0, 20) : title,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                ),
+                Text(
+                  email,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                  ),
+                ),
+              ],
             ),
           ),
           ElevatedButton(

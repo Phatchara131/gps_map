@@ -26,6 +26,7 @@ class _MapTabState extends State<MapTab> {
   late TextEditingController _areaController;
   int _selectedIndex = 0;
   String _selecteddevEui = '';
+  bool isShowTutorialMap = false;
   Future<Map<String, dynamic>> authLoRa() async {
     try {
       String uri = "https://loraiot.cattelecom.com/portal/iotapi/auth/token";
@@ -175,6 +176,16 @@ class _MapTabState extends State<MapTab> {
   }
 
   Future<void> insertRecord() async {
+    if (_areaController.text.isEmpty) {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'เกิดข้อผิดพลาด',
+        text: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+        confirmBtnText: 'ตกลง',
+      );
+      return;
+    }
     showLoading('กำลังโหลดข้อมูล...');
     Map<String, dynamic> auth = await authLoRa();
     print(auth['access_token']);
@@ -415,7 +426,7 @@ class _MapTabState extends State<MapTab> {
                 eventName: [
                   JavascriptChannel(
                     name: "ready",
-                    onMessageReceived: (message) {
+                    onMessageReceived: (message) async {
                       var lay = map.currentState
                           ?.LongdoStatic("Layers", 'RASTER_POI');
                       if (lay != null) {
@@ -424,8 +435,91 @@ class _MapTabState extends State<MapTab> {
                       }
                       var latlon = _determinePosition();
                       print(latlon);
+                      final SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      isShowTutorialMap =
+                          prefs.getBool('isShowTutorialMap') ?? false;
+                      // prefs.setBool('isShowTutorialMap', false);
+                      print("isShowTutorialMap: $isShowTutorialMap");
                       latlon.then((value) => {
                             Navigator.of(context).pop(),
+                            !isShowTutorialMap
+                                ? QuickAlert.show(
+                                    context: context,
+                                    type: QuickAlertType.info,
+                                    title: 'การใช้งาน',
+                                    text: '',
+                                    confirmBtnText: 'ตกลง',
+                                    showConfirmBtn: false,
+                                    widget: StatefulBuilder(
+                                      builder: (context, setState) {
+                                        return Column(
+                                          children: [
+                                            Text(
+                                              '1. กดที่แผนที่เพื่อเลือกตำแหน่งที่ต้องการ',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                                // wordSpacing: 2,
+                                              ),
+                                            ),
+                                            Text(
+                                              '2. กรอกข้อมูลละติจูด ลองจิจูด และพื้นที่ระยะห่าง',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                                // wordSpacing: 2,
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                  'ไม่ต้องการแสดงข้อความนี้อีก',
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                Checkbox(
+                                                  activeColor: Colors.green,
+                                                  value: isShowTutorialMap,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      isShowTutorialMap =
+                                                          value!;
+                                                      prefs.setBool(
+                                                          'isShowTutorialMap',
+                                                          isShowTutorialMap);
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('ตกลง'),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.green,
+                                                foregroundColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.9,
+                                  )
+                                : null,
                             setState(() {
                               _latitudeController.text =
                                   value.latitude.toStringAsFixed(6);
@@ -474,6 +568,8 @@ class _MapTabState extends State<MapTab> {
                           {"draggable": true}
                         ],
                       );
+                      //clear all marker
+                      map.currentState?.call("Overlays.clear");
                       map.currentState?.call("Overlays.add", args: [marker]);
                       final id = marker["\$id"];
                       markerMap[id] = marker;
