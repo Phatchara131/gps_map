@@ -62,10 +62,12 @@ class _Update_oldState extends State<Update_old> {
   FocusNode focusNode = FocusNode();
 
   Future<void> updaterecord() async {
+    showLoading('กำลังอัพเดทข้อมูล...');
     try {
       String uri =
-          "https://project-old.000webhostapp.com/Old_API/old_update.php";
+          "https://project-old.000webhostapp.com/User_API/user_rest.php";
       var res = await http.post(Uri.parse(uri), body: {
+        "action": "update_old_data",
         "old_ID": widget.old_id,
         "old_loraID": loraId.text,
         "old_userID": userId.text,
@@ -75,30 +77,54 @@ class _Update_oldState extends State<Update_old> {
         "old_age": age.text,
         "old_sex": gender.text,
         "old_disease": medicalCondition.text,
-        "old_relativeID": relativeID.text,
-        "old_Cname": relativeName.text,
-        "old_Ctel": contactNumber.text,
+        // "old_relativeID": relativeID.text,
+        // "old_Cname": relativeName.text,
+        // "old_Ctel": contactNumber.text,
       });
-      var response = jsonDecode(res.body);
-      if (response["success"] == "true") {
-        print("update");
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        String user_idcard = prefs.getString('user_idcard') ?? '';
-        print(user_idcard);
-        if (user_idcard == 'admin') {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => ViewOld()),
-              (route) => false);
+      if (res.statusCode == 200) {
+        print(res.body);
+        var response = jsonDecode(res.body);
+        if (response["status"] == "success") {
+          print("update");
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          String user_idcard = prefs.getString('user_idcard') ?? '';
+          print(user_idcard);
+          Navigator.of(context).pop();
+          if (user_idcard == 'admin') {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => ViewOld()),
+                (route) => false);
+          } else {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => ViewOldRela()),
+                (route) => false);
+          }
         } else {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => ViewOldRela()),
-              (route) => false);
+          print("some issue");
         }
-      } else {
-        print("some issue");
       }
+      // var response = jsonDecode(res.body);
+      // if (response["success"] == "true") {
+      //   print("update");
+      //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+      //   String user_idcard = prefs.getString('user_idcard') ?? '';
+      //   print(user_idcard);
+      //   if (user_idcard == 'admin') {
+      //     Navigator.pushAndRemoveUntil(
+      //         context,
+      //         MaterialPageRoute(builder: (context) => ViewOld()),
+      //         (route) => false);
+      //   } else {
+      //     Navigator.pushAndRemoveUntil(
+      //         context,
+      //         MaterialPageRoute(builder: (context) => ViewOldRela()),
+      //         (route) => false);
+      //   }
+      // } else {
+      //   print("some issue");
+      // }
     } catch (e) {
       print(e);
     }
