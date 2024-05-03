@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_5/insert_old.dart';
 import 'package:flutter_application_5/login.dart';
+import 'package:flutter_application_5/page/UserListPage.dart';
 import 'package:flutter_application_5/view_map.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,8 +87,11 @@ class CustomDrawer extends StatelessWidget {
               ],
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
+          ListTile(
+            splashColor: Colors.grey,
+            title: Text('แผนที่'),
+            leading: Icon(Icons.map),
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -95,26 +99,25 @@ class CustomDrawer extends StatelessWidget {
                 ),
               );
             },
-            child: Row(
-              children: [
-                Icon(Icons.map),
-                SizedBox(width: 15),
-                Text(
-                  'แผนที่',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
-              ),
-            ),
           ),
-          ElevatedButton(
-            onPressed: () {
+          email == 'admin'
+              ? ListTile(
+                  title: Text('จัดการผู้ใช้'),
+                  leading: Icon(Icons.person),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UserListPage(),
+                      ),
+                    );
+                  },
+                )
+              : SizedBox(),
+          ListTile(
+            title: Text('บันทึกข้อมูลผู้สูงอายุ'),
+            leading: Icon(Icons.person_3_outlined),
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -122,26 +125,11 @@ class CustomDrawer extends StatelessWidget {
                 ),
               );
             },
-            child: Row(
-              children: [
-                Icon(Icons.perm_identity_sharp),
-                SizedBox(width: 15),
-                Text(
-                  'บันทึกข้อมูล',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
-              ),
-            ),
           ),
-          ElevatedButton(
-            onPressed: () async {
+          ListTile(
+            title: Text('ออกจากระบบ'),
+            leading: Icon(Icons.logout),
+            onTap: () async {
               final SharedPreferences prefs =
                   await SharedPreferences.getInstance();
               prefs.setBool('isLoggedIn', false);
@@ -157,24 +145,96 @@ class CustomDrawer extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => LoginPage()),
               );
             },
-            child: Row(
-              children: [
-                Icon(Icons.logout),
-                SizedBox(width: 15),
-                Text(
-                  'ออกจากระบบ',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
-              ),
-            ),
           ),
+          // ElevatedButton(
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => MapTab(),
+          //       ),
+          //     );
+          //   },
+          //   child: Row(
+          //     children: [
+          //       Icon(Icons.map),
+          //       SizedBox(width: 15),
+          //       Text(
+          //         'แผนที่',
+          //         style: TextStyle(
+          //           fontSize: 16,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          //   style: ElevatedButton.styleFrom(
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(0),
+          //     ),
+          //   ),
+          // ),
+          // ElevatedButton(
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => Insert_old(),
+          //       ),
+          //     );
+          //   },
+          //   child: Row(
+          //     children: [
+          //       Icon(Icons.perm_identity_sharp),
+          //       SizedBox(width: 15),
+          //       Text(
+          //         'บันทึกข้อมูล',
+          //         style: TextStyle(
+          //           fontSize: 16,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          //   style: ElevatedButton.styleFrom(
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(0),
+          //     ),
+          //   ),
+          // ),
+          // ElevatedButton(
+          //   onPressed: () async {
+          //     final SharedPreferences prefs =
+          //         await SharedPreferences.getInstance();
+          //     prefs.setBool('isLoggedIn', false);
+          //     prefs.remove('user_email');
+          //     Map<String, dynamic> TagsOne = await OneSignal.User.getTags();
+          //     print("ID : ${TagsOne}");
+          //     TagsOne.forEach((key, value) {
+          //       print("Key : $key, Value : $value");
+          //       OneSignal.User.removeTag(key);
+          //     });
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => LoginPage()),
+          //     );
+          //   },
+          //   child: Row(
+          //     children: [
+          //       Icon(Icons.logout),
+          //       SizedBox(width: 15),
+          //       Text(
+          //         'ออกจากระบบ',
+          //         style: TextStyle(
+          //           fontSize: 16,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          //   style: ElevatedButton.styleFrom(
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(0),
+          //     ),
+          //   ),
+          // ),
           // Add more buttons as needed
         ],
       ),
