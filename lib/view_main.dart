@@ -107,6 +107,7 @@ class _ViewOldState extends State<ViewOld> {
                   width: double.infinity,
                   height: 240,
                   decoration: BoxDecoration(
+                    color: Colors.grey,
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(20),
                       bottomRight: Radius.circular(20),

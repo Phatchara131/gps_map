@@ -17,7 +17,7 @@ class _UserListPageState extends State<UserListPage> {
   List<bool> selectedDelete = [];
   List<Map<String, dynamic>> usersBackup = [];
   TextEditingController searchController = TextEditingController();
-
+  bool isLoading = true;
   Future<void> _loadData() async {
     try {
       String url =
@@ -68,6 +68,17 @@ class _UserListPageState extends State<UserListPage> {
     // TODO: implement initState
     super.initState();
     _loadData();
+    showLoading();
+  }
+
+  void showLoading() {
+    // print('showLoading');
+    //รอ 2 วินาที
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
 
   @override
@@ -84,6 +95,7 @@ class _UserListPageState extends State<UserListPage> {
             // padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               // color: Colors.blue,
+              color: Colors.grey,
               image: DecorationImage(
                 image: AssetImage(
                     'assets/images/roel-dierckens-SsuQQAaZoZQ-unsplash.jpg'),
@@ -302,23 +314,28 @@ class _UserListPageState extends State<UserListPage> {
             ),
           ),
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: _loadData,
-              child: viewtype == 'grid'
-                  ? GridView.builder(
-                      padding: EdgeInsets.all(0),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1,
-                        mainAxisExtent: 200,
-                      ),
-                      itemCount: users.length,
-                      itemBuilder: (context, index) {
-                        return _buildUserCard(users[index]);
-                      },
-                    )
-                  : _buildUserTable(),
-            ),
+            child: isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : RefreshIndicator(
+                    onRefresh: _loadData,
+                    child: viewtype == 'grid'
+                        ? GridView.builder(
+                            padding: EdgeInsets.all(0),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 1,
+                              mainAxisExtent: 200,
+                            ),
+                            itemCount: users.length,
+                            itemBuilder: (context, index) {
+                              return _buildUserCard(users[index]);
+                            },
+                          )
+                        : _buildUserTable(),
+                  ),
           ),
         ],
       ),
@@ -508,28 +525,48 @@ class _UserListPageState extends State<UserListPage> {
               });
             },
           )),
-          DataColumn(label: Text('ชื่อ')),
-          DataColumn(label: Text('อีเมล')),
-          DataColumn(label: Text('บัตรประชาชน')),
+          DataColumn(
+            label: Text(
+              'ชื่อ',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          DataColumn(
+            label: Text(
+              'อีเมล',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          DataColumn(
+            label: Text(
+              'บัตรประชาชน',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
         ],
         rows: users
-            .map(
-              (user) => DataRow(
-                cells: [
-                  DataCell(Checkbox(
-                    value: selectedDelete[users.indexOf(user)],
-                    onChanged: (value) {
-                      setState(() {
-                        selectedDelete[users.indexOf(user)] = value!;
-                      });
-                    },
-                  )),
-                  DataCell(Text(user['user_name'])),
-                  DataCell(Text(user['user_email'])),
-                  DataCell(Text(user['user_idcard'])),
-                ],
-              ),
-            )
+            .asMap()
+            .map((index, user) => MapEntry(
+                  index,
+                  DataRow(
+                    color: MaterialStateColor.resolveWith((states) =>
+                        index % 2 == 0 ? Colors.grey[200]! : Colors.white),
+                    cells: [
+                      DataCell(Checkbox(
+                        value: selectedDelete[index],
+                        onChanged: (value) {
+                          setState(() {
+                            selectedDelete[index] = value!;
+                          });
+                        },
+                      )),
+                      DataCell(Text(user['user_name'])),
+                      DataCell(Text(user['user_email'])),
+                      DataCell(Text(user['user_idcard'])),
+                    ],
+                  ),
+                ))
+            .values
             .toList(),
       ),
     );
