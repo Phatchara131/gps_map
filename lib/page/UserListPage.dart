@@ -18,10 +18,15 @@ class _UserListPageState extends State<UserListPage> {
   List<Map<String, dynamic>> usersBackup = [];
   TextEditingController searchController = TextEditingController();
   bool isLoading = true;
+  ScrollController _scrollController = ScrollController();
+  int _page = 0;
+  int _limit = 6;
+  bool isLoadMore = false;
+
   Future<void> _loadData() async {
     try {
       String url =
-          'https://project-old.000webhostapp.com/User_API/user_rest.php?getAllUser';
+          'https://project-old.000webhostapp.com/User_API/user_rest.php?getAllUser&page=$_page&limit=$_limit';
       var response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         // print(response.body);
@@ -33,6 +38,50 @@ class _UserListPageState extends State<UserListPage> {
           usersBackup = List<Map<String, dynamic>>.from(jsonData['data']);
         });
         print(users);
+      } else {
+        print('Failed to load data!');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _loadMoreData() async {
+    setState(() {
+      _page += 6;
+      _limit += 6;
+    });
+    try {
+      String url =
+          'https://project-old.000webhostapp.com/User_API/user_rest.php?getAllUser&page=$_page&limit=$_limit';
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        // print(response.body);
+        var jsonData = json.decode(response.body);
+        // print(jsonData['data']);
+        if (jsonData['status'] == 'success') {
+          setState(() {
+            users.addAll(List<Map<String, dynamic>>.from(jsonData['data']));
+            usersBackup
+                .addAll(List<Map<String, dynamic>>.from(jsonData['data']));
+            selectedDelete = List<bool>.filled(users.length, false);
+            isLoadMore = false;
+          });
+          print(users);
+        } else {
+          print('No more data');
+          //show SnackBar
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('ไม่มีข้อมูลเพิ่มเติม'),
+              duration: Duration(seconds: 2),
+              backgroundColor: Colors.black.withOpacity(0.5),
+            ),
+          );
+          setState(() {
+            isLoadMore = false;
+          });
+        }
       } else {
         print('Failed to load data!');
       }
@@ -69,6 +118,16 @@ class _UserListPageState extends State<UserListPage> {
     super.initState();
     _loadData();
     showLoading();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        print('Load more data');
+        setState(() {
+          isLoadMore = true;
+        });
+        _loadMoreData();
+      }
+    });
   }
 
   void showLoading() {
@@ -326,6 +385,7 @@ class _UserListPageState extends State<UserListPage> {
                     onRefresh: _loadData,
                     child: viewtype == 'grid'
                         ? GridView.builder(
+                            controller: _scrollController,
                             padding: EdgeInsets.all(0),
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
@@ -338,9 +398,21 @@ class _UserListPageState extends State<UserListPage> {
                               return _buildUserCard(users[index]);
                             },
                           )
-                        : _buildUserTable(),
+                        : RefreshIndicator(
+                            onRefresh: _loadData,
+                            child: _buildUserTable(),
+                          ),
                   ),
           ),
+          isLoadMore
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.green,
+                    backgroundColor: Colors.grey.shade300,
+                    strokeWidth: 5,
+                  ),
+                )
+              : Container(),
         ],
       ),
     );
@@ -515,63 +587,66 @@ class _UserListPageState extends State<UserListPage> {
   }
 
   Widget _buildUserTable() {
-    //use datatable
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        columns: [
-          DataColumn(
+      scrollDirection: Axis.vertical,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          columns: [
+            DataColumn(
               label: Checkbox(
-            value: selectedDelete.every((element) => element),
-            onChanged: (value) {
-              setState(() {
-                selectedDelete = List<bool>.filled(users.length, value!);
-              });
-            },
-          )),
-          DataColumn(
-            label: Text(
-              'ชื่อ',
-              style: TextStyle(fontWeight: FontWeight.bold),
+                value: selectedDelete.every((element) => element),
+                onChanged: (value) {
+                  setState(() {
+                    selectedDelete = List<bool>.filled(users.length, value!);
+                  });
+                },
+              ),
             ),
-          ),
-          DataColumn(
-            label: Text(
-              'อีเมล',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            DataColumn(
+              label: Text(
+                'ชื่อ',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          DataColumn(
-            label: Text(
-              'บัตรประชาชน',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            DataColumn(
+              label: Text(
+                'อีเมล',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-        ],
-        rows: users
-            .asMap()
-            .map((index, user) => MapEntry(
-                  index,
-                  DataRow(
-                    color: MaterialStateColor.resolveWith((states) =>
-                        index % 2 == 0 ? Colors.grey[200]! : Colors.white),
-                    cells: [
-                      DataCell(Checkbox(
-                        value: selectedDelete[index],
-                        onChanged: (value) {
-                          setState(() {
-                            selectedDelete[index] = value!;
-                          });
-                        },
-                      )),
-                      DataCell(Text(user['user_name'])),
-                      DataCell(Text(user['user_email'])),
-                      DataCell(Text(user['user_idcard'])),
-                    ],
-                  ),
-                ))
-            .values
-            .toList(),
+            DataColumn(
+              label: Text(
+                'บัตรประชาชน',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+          rows: users
+              .asMap()
+              .map((index, user) => MapEntry(
+                    index,
+                    DataRow(
+                      color: MaterialStateColor.resolveWith((states) =>
+                          index % 2 == 0 ? Colors.grey[200]! : Colors.white),
+                      cells: [
+                        DataCell(Checkbox(
+                          value: selectedDelete[index],
+                          onChanged: (value) {
+                            setState(() {
+                              selectedDelete[index] = value!;
+                            });
+                          },
+                        )),
+                        DataCell(Text(user['user_name'])),
+                        DataCell(Text(user['user_email'])),
+                        DataCell(Text(user['user_idcard'])),
+                      ],
+                    ),
+                  ))
+              .values
+              .toList(),
+        ),
       ),
     );
   }
