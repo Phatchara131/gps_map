@@ -179,26 +179,22 @@ class _UserListPageState extends State<UserListPage> {
   void delUser() async {
     Navigator.pop(context);
     showLoadingMsg('กำลังลบข้อมูล...');
-    int countselectedTrue =
-        selectedDelete.where((element) => element == true).length;
-    int count = 0;
+    List<int> selectedDeleteID = [];
     for (int i = 0; i < selectedDelete.length; i++) {
       if (selectedDelete[i]) {
-        print(users[i]['user_ID']);
-        bool checkdel = await deleteUser(users[i]['user_ID'].toString());
-        if (checkdel) {
-          count++;
-        }
+        selectedDeleteID.add(users[i]['user_ID']);
       }
     }
-    if (countselectedTrue == count) {
+    print(selectedDeleteID);
+    bool checkdel = await deleteUser(selectedDeleteID);
+    if (checkdel) {
       await loadData();
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('ลบข้อมูลสำเร็จ'),
           duration: Duration(seconds: 2),
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.green.shade800,
         ),
       );
     } else {
@@ -207,28 +203,30 @@ class _UserListPageState extends State<UserListPage> {
         SnackBar(
           content: Text('ลบข้อมูลไม่สำเร็จ'),
           duration: Duration(seconds: 2),
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.red.shade700,
         ),
       );
     }
   }
 
-  Future<bool> deleteUser(String userId) async {
+  Future<bool> deleteUser(List<int> userIdData) async {
     try {
       String url =
-          'https://project-old.000webhostapp.com/User_API/user_rest.php?deleteUserByID=$userId';
-      var response = await http.get(Uri.parse(url));
+          'https://project-old.000webhostapp.com/User_API/user_rest.php?deleteUserByID';
+      var response = await http.post(Uri.parse(url), body: {
+        'user_id': json.encode(userIdData),
+        'action': 'deleteUserByID',
+      });
       if (response.statusCode == 200) {
+        print(response.body);
         var jsonData = json.decode(response.body);
+        // print(jsonData);
         if (jsonData['status'] == 'success') {
-          print('Delete success');
           return true;
         } else {
-          print('Delete failed');
           return false;
         }
       } else {
-        print('Failed to delete data!');
         return false;
       }
     } catch (e) {
