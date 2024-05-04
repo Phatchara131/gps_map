@@ -24,6 +24,34 @@ class _UserListPageState extends State<UserListPage> {
   int _page = 0;
   int _limit = 6;
   bool isLoadMore = false;
+  List<Map<String, dynamic>> ColorsUsername = [
+    {'A': Colors.red.shade700},
+    {'B': Colors.blue.shade700},
+    {'C': Colors.green.shade700},
+    {'D': Colors.orange.shade700},
+    {'E': Colors.yellow.shade700},
+    {'F': Colors.purple.shade700},
+    {'G': Colors.teal.shade700},
+    {'H': Colors.pink.shade700},
+    {'I': Colors.cyan.shade700},
+    {'J': Colors.deepOrange.shade700},
+    {'K': Colors.indigo.shade700},
+    {'L': Colors.amber.shade700},
+    {'M': Colors.lightBlue.shade700},
+    {'N': Colors.deepPurple.shade700},
+    {'O': Colors.lime.shade700},
+    {'P': Colors.brown.shade700},
+    {'Q': Colors.grey.shade700},
+    {'R': Colors.blueGrey.shade700},
+    {'S': Colors.redAccent.shade700},
+    {'T': Colors.blueAccent.shade700},
+    {'U': Colors.greenAccent.shade700},
+    {'V': Colors.orangeAccent.shade700},
+    {'W': Colors.yellowAccent.shade700},
+    {'X': Colors.purpleAccent.shade700},
+    {'Y': Colors.tealAccent.shade700},
+    {'Z': Colors.pinkAccent.shade700},
+  ];
 
   Future<void> loadData() async {
     print('Load data');
@@ -572,14 +600,12 @@ class _UserListPageState extends State<UserListPage> {
                     height: 70,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(100)),
-                      gradient: LinearGradient(
-                        colors: [
-                          generateRandomCoolColor(),
-                          generateRandomCoolColor(),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+                      color: ColorsUsername.where((element) =>
+                              element.keys.first ==
+                              user['user_name'][0].toUpperCase())
+                          .first
+                          .values
+                          .first,
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
@@ -588,7 +614,7 @@ class _UserListPageState extends State<UserListPage> {
                         width: 70,
                         height: 70,
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
+                          color: Colors.black.withOpacity(0.3),
                         ),
                         child: Text(
                           user['user_name'][0].toUpperCase(),
