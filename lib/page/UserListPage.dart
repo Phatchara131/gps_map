@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_5/add_user.dart';
 import 'package:http/http.dart' as http;
 
 class UserListPage extends StatefulWidget {
@@ -23,7 +24,8 @@ class _UserListPageState extends State<UserListPage> {
   int _limit = 6;
   bool isLoadMore = false;
 
-  Future<void> _loadData() async {
+  Future<void> loadData() async {
+    print('Load data');
     try {
       String url =
           'https://project-old.000webhostapp.com/User_API/user_rest.php?getAllUser&page=$_page&limit=$_limit';
@@ -71,13 +73,13 @@ class _UserListPageState extends State<UserListPage> {
         } else {
           print('No more data');
           //show SnackBar
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('ไม่มีข้อมูลเพิ่มเติม'),
-              duration: Duration(seconds: 2),
-              backgroundColor: Colors.black.withOpacity(0.5),
-            ),
-          );
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text('ไม่มีข้อมูลเพิ่มเติม'),
+          //     duration: Duration(seconds: 2),
+          //     backgroundColor: Colors.black.withOpacity(0.5),
+          //   ),
+          // );
           setState(() {
             isLoadMore = false;
           });
@@ -116,7 +118,7 @@ class _UserListPageState extends State<UserListPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadData();
+    loadData();
     showLoading();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -335,7 +337,11 @@ class _UserListPageState extends State<UserListPage> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    print('Add');
+                    // print('Add');
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return RegisterUserPage(updateData: loadData);
+                    }));
                   },
                   child: Icon(Icons.add),
                   style: ElevatedButton.styleFrom(
@@ -382,7 +388,7 @@ class _UserListPageState extends State<UserListPage> {
                     ),
                   )
                 : RefreshIndicator(
-                    onRefresh: _loadData,
+                    onRefresh: loadData,
                     child: viewtype == 'grid'
                         ? GridView.builder(
                             controller: _scrollController,
@@ -399,7 +405,7 @@ class _UserListPageState extends State<UserListPage> {
                             },
                           )
                         : RefreshIndicator(
-                            onRefresh: _loadData,
+                            onRefresh: loadData,
                             child: _buildUserTable(),
                           ),
                   ),
