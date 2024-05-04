@@ -20,12 +20,22 @@ class _ViewOldState extends State<ViewOld> {
   bool isDarkModeEnabled = false;
   bool isCardView = true;
   String searchText = '';
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     initPlatformState();
     getrecord();
+    _showLoading();
+  }
+
+  void _showLoading() {
+    Future.delayed(Duration(seconds: 3), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
 
   Future<void> initPlatformState() async {
@@ -114,7 +124,7 @@ class _ViewOldState extends State<ViewOld> {
                     ),
                     image: DecorationImage(
                       image: AssetImage(
-                        'assets/images/wengang-zhai-MJ_0PxIuquI-unsplash.jpg',
+                        'assets/images/olduser.jpg',
                       ),
                       fit: BoxFit.cover,
                     ),
@@ -256,7 +266,21 @@ class _ViewOldState extends State<ViewOld> {
                     ),
                     SizedBox(height: 10),
                     Expanded(
-                      child: isCardView ? _buildCardView() : _buildTableView(),
+                      child: isLoading
+                          ? Center(
+                              child: SizedBox(
+                                width: 50,
+                                height: 50,
+                                child: CircularProgressIndicator(
+                                  color: Colors.green,
+                                  backgroundColor: Colors.grey.shade300,
+                                  strokeWidth: 10,
+                                ),
+                              ),
+                            )
+                          : isCardView
+                              ? _buildCardView()
+                              : _buildTableView(),
                     ),
                   ],
                 ),

@@ -280,7 +280,7 @@ class _UserListPageState extends State<UserListPage> {
               color: Colors.grey,
               image: DecorationImage(
                 image: AssetImage(
-                    'assets/images/roel-dierckens-SsuQQAaZoZQ-unsplash.jpg'),
+                    'assets/images/userpage.jpg'),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.only(
