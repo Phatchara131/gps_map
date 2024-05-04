@@ -707,6 +707,7 @@ class _UserListPageState extends State<UserListPage> {
               top: -3,
               left: -5,
               child: Checkbox(
+                activeColor: Colors.red.shade800,
                 value: selectedDelete[users.indexOf(user)],
                 onChanged: (value) {
                   print(user);
