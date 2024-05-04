@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_5/add_user.dart';
 import 'package:http/http.dart' as http;
+import 'package:quickalert/quickalert.dart';
 
 class UserListPage extends StatefulWidget {
   const UserListPage({super.key});
@@ -111,6 +112,100 @@ class _UserListPageState extends State<UserListPage> {
         }).toList();
         selectedDelete = List<bool>.filled(users.length, false);
       });
+    }
+  }
+
+  void showLoadingMsg(String msg) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 50,
+                width: 50,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.greenAccent),
+                  strokeWidth: 10,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                msg,
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void delUser() async {
+    Navigator.pop(context);
+    showLoadingMsg('กำลังลบข้อมูล...');
+    int countselectedTrue =
+        selectedDelete.where((element) => element == true).length;
+    int count = 0;
+    for (int i = 0; i < selectedDelete.length; i++) {
+      if (selectedDelete[i]) {
+        print(users[i]['user_ID']);
+        bool checkdel = await deleteUser(users[i]['user_ID'].toString());
+        if (checkdel) {
+          count++;
+        }
+      }
+    }
+    if (countselectedTrue == count) {
+      await loadData();
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('ลบข้อมูลสำเร็จ'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('ลบข้อมูลไม่สำเร็จ'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<bool> deleteUser(String userId) async {
+    try {
+      String url =
+          'https://project-old.000webhostapp.com/User_API/user_rest.php?deleteUserByID=$userId';
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        if (jsonData['status'] == 'success') {
+          print('Delete success');
+          return true;
+        } else {
+          print('Delete failed');
+          return false;
+        }
+      } else {
+        print('Failed to delete data!');
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
     }
   }
 
@@ -356,13 +451,22 @@ class _UserListPageState extends State<UserListPage> {
                 ),
                 SizedBox(width: 10),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     // print('Delete');
-                    for (int i = 0; i < selectedDelete.length; i++) {
-                      if (selectedDelete[i]) {
-                        print(users[i]['user_name']);
-                      }
-                    }
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.confirm,
+                      title: 'ยืนยันการลบข้อมูล',
+                      text: 'คุณต้องการลบข้อมูลที่เลือกหรือไม่?',
+                      showCancelBtn: true,
+                      cancelBtnText: 'ยกเลิก',
+                      confirmBtnText: 'ยืนยัน',
+                      confirmBtnColor: Colors.red,
+                      onConfirmBtnTap: () async {
+                        delUser();
+                        // Navigator.pop(context);
+                      },
+                    );
                   },
                   child: Icon(Icons.delete),
                   style: ElevatedButton.styleFrom(
