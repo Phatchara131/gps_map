@@ -46,17 +46,21 @@ void main() async {
   //   content: Text("ID : ${Tage}"),
   // ));
 
+  double lat = 0.0;
+  double lon = 0.0;
+
   OneSignal.Notifications.addClickListener((event) async {
+    print('Clecked main.dart');
     print('NOTIFICATION CLICK LISTENER CALLED WITH EVENT: $event');
     print(event.notification.jsonRepresentation());
     print(event.notification.additionalData?['lon']);
 
-    double lat = double.parse(event.notification.additionalData?['lat']);
-    double lon = double.parse(event.notification.additionalData?['lon']);
-    Navigator.push(
-      navigatorKey.currentContext!,
-      MaterialPageRoute(builder: (context) => Mapnoti(lat: lat, lon: lon)),
-    );
+    lat = double.parse(event.notification.additionalData?['lat']);
+    lon = double.parse(event.notification.additionalData?['lon']);
+    // Navigator.push(
+    //   navigatorKey.currentContext!,
+    //   MaterialPageRoute(builder: (context) => Mapnoti(lat: lat, lon: lon)),
+    // );
   });
   // await Future.delayed(Duration(seconds: 2));
   FlutterNativeSplash.remove();
@@ -64,9 +68,11 @@ void main() async {
   runApp(MaterialApp(
     title: "App",
     home: isLoggedIn
-        ? user_idcard == 'admin'
-            ? ViewOld()
-            : ViewOldRela()
+        ? lat != 0.0
+            ? Mapnoti(lat: lat, lon: lon)
+            : user_idcard == 'admin'
+                ? ViewOld()
+                : ViewOldRela()
         : LoginPage(),
     navigatorKey: navigatorKey,
     // home: ViewOld(),
