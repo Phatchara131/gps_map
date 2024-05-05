@@ -636,64 +636,67 @@ class _UserListPageState extends State<UserListPage> {
                     width: double.infinity,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.person,
-                                color: Colors.black,
-                                size: 14,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                user['user_name'],
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.person,
+                                  color: Colors.black,
+                                  size: 14,
                                 ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.email,
-                                color: Colors.black,
-                                size: 14,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                user['user_email'],
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
+                                SizedBox(width: 5),
+                                Text(
+                                  user['user_name'],
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          //idcard
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.credit_card,
-                                color: Colors.black,
-                                size: 14,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                user['user_idcard'],
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.email,
+                                  color: Colors.black,
+                                  size: 14,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                                SizedBox(width: 5),
+                                Text(
+                                  user['user_email'],
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            //idcard
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.credit_card,
+                                  color: Colors.black,
+                                  size: 14,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  user['user_idcard'],
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

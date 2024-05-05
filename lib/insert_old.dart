@@ -276,9 +276,13 @@ class _Insert_oldState extends State<Insert_old> {
                   MaterialPageRoute(builder: (context) => ViewOld()),
                 );
               } else {
+                String titleDrawer = prefs.getString('user_name') ?? '';
+                String emailDrawer = prefs.getString('user_email') ?? '';
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => ViewOldRela()),
+                  MaterialPageRoute(
+                      builder: (context) => ViewOldRela(
+                          titleDrawer: titleDrawer, emailDrawer: emailDrawer)),
                 );
               }
             },

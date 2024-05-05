@@ -7,6 +7,7 @@ import 'package:flutter_application_5/update_old.dart';
 import 'package:flutter_application_5/view_mapnoti.dart';
 import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewOld extends StatefulWidget {
   const ViewOld({Key? key}) : super(key: key);
@@ -138,7 +139,14 @@ class _ViewOldState extends State<ViewOld> {
                       children: [
                         IconButton(
                           padding: EdgeInsets.zero,
-                          onPressed: () {
+                          onPressed: () async {
+                            final SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            String strlat = prefs.getString('lat') ?? '';
+                            String strlon = prefs.getString('lon') ?? '';
+                            print("lat : $strlat");
+                            print("lon : $strlon");
+
                             Scaffold.of(innerContext).openDrawer();
                           },
                           icon: Icon(

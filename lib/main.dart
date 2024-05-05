@@ -46,93 +46,35 @@ void main() async {
   //   content: Text("ID : ${Tage}"),
   // ));
 
-  double lat = 0.0;
-  double lon = 0.0;
-
   OneSignal.Notifications.addClickListener((event) async {
     print('Clecked main.dart');
     print('NOTIFICATION CLICK LISTENER CALLED WITH EVENT: $event');
     print(event.notification.jsonRepresentation());
     print(event.notification.additionalData?['lon']);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('lat', event.notification.additionalData?['lat']);
+    prefs.setString('lon', event.notification.additionalData?['lon']);
 
-    lat = double.parse(event.notification.additionalData?['lat']);
-    lon = double.parse(event.notification.additionalData?['lon']);
-    // Navigator.push(
-    //   navigatorKey.currentContext!,
-    //   MaterialPageRoute(builder: (context) => Mapnoti(lat: lat, lon: lon)),
-    // );
+    double lat = double.parse(event.notification.additionalData?['lat']);
+    double lon = double.parse(event.notification.additionalData?['lon']);
+    Navigator.push(
+      navigatorKey.currentContext!,
+      MaterialPageRoute(builder: (context) => Mapnoti(lat: lat, lon: lon)),
+    );
   });
+  String titleDrawer = prefs.getString('user_name') ?? '';
+  String emailDrawer = prefs.getString('user_email') ?? '';
   // await Future.delayed(Duration(seconds: 2));
   FlutterNativeSplash.remove();
   isLoggedIn ? print("Logged In") : print("Not Logged In");
   runApp(MaterialApp(
     title: "App",
     home: isLoggedIn
-        ? lat != 0.0
-            ? Mapnoti(lat: lat, lon: lon)
-            : user_idcard == 'admin'
-                ? ViewOld()
-                : ViewOldRela()
+        ? user_idcard == 'admin'
+            ? ViewOld()
+            : ViewOldRela(titleDrawer: titleDrawer, emailDrawer: emailDrawer)
         : LoginPage(),
     navigatorKey: navigatorKey,
     // home: ViewOld(),
   ));
 }
-
-//init socket io
-
-// void initSocket() {
-//   print('init socket');
-//   IO.Socket socket = IO.io('https://socket-location.onrender.com/',
-//       OptionBuilder().setTransports(['websocket']).build());
-//   socket.onConnect((_) {
-//     print('connect to server');
-//     socket.on('message', (data) {
-//       print(data);
-//       _showLocalNotification(data);
-//     });
-//   });
-//   //ถ้าเชื่อมต่อกับ Server ไม่ได้
-//   socket.onConnectError((data) {
-//     print("Connect Error: $data");
-//   });
-// }
-
-// void _showLocalNotification(String message) async {
-//   const String channelId = "HEE";
-//   const String channelName = "HEEYAI";
-//   final Person person = const Person(name: 'Heeyai', key: '1');
-//   final AndroidNotificationDetails androidNotificationDetails =
-//       AndroidNotificationDetails(
-//     channelId,
-//     channelName,
-//     channelDescription: 'KUY',
-//     importance: Importance.max,
-//     priority: Priority.high,
-//     ticker: 'ticker',
-//     icon: '@mipmap/ic_launcher',
-//     styleInformation: MessagingStyleInformation(
-//       person,
-//       conversationTitle: 'แจ้งเตือนจาก HEE',
-//       groupConversation: true,
-//       messages: [
-//         Message(
-//           message,
-//           DateTime.now(),
-//           person,
-//         )
-//       ],
-//     ),
-//   );
-
-//   final NotificationDetails notificationDetails =
-//       NotificationDetails(android: androidNotificationDetails);
-
-//   flutterLocalNotificationsPlugin.show(
-//     0,
-//     'HEEXD',
-//     'HEEYAIMAK',
-//     notificationDetails,
-//     payload: 'XDXD',
-//   );
-// }

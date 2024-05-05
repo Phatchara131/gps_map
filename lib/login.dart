@@ -69,11 +69,13 @@ class _LoginPageState extends State<LoginPage> {
         // เพื่อความง่าย, ขอให้เราเข้าสู่หน้าจอ Register ไว้ก่อน
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setBool('isLoggedIn', true);
-        prefs.setString('user_email', enteredUseremail);
+        prefs.setString('user_email', index['user_email']);
         prefs.setString('user_password', enteredPassword);
         prefs.setString('user_idcard', index['user_idcard']);
         prefs.setString('user_name', index['user_name']);
         prefs.setString('user_ID', index['user_ID']);
+        String titleDrawer = index['user_name'];
+        String emailDrawer = index['user_email'];
         print(index['user_idcard']);
         OneSignal.User.addTagWithKey("user_idcard", index['user_idcard']);
         if (index['user_idcard'] == 'admin') {
@@ -84,7 +86,10 @@ class _LoginPageState extends State<LoginPage> {
         } else {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ViewOldRela()),
+            MaterialPageRoute(
+              builder: (context) => ViewOldRela(
+                  titleDrawer: titleDrawer, emailDrawer: emailDrawer),
+            ),
           );
         }
         return;

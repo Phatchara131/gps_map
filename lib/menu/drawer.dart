@@ -61,6 +61,7 @@ class CustomDrawer extends StatelessWidget {
                       ),
                       child: Text(
                         email == 'admin' ? 'A' : title[0].toUpperCase(),
+                        // "A",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 30,
@@ -71,7 +72,8 @@ class CustomDrawer extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  title.length > 20 ? title.substring(0, 20) : title,
+                  title,
+                  // "สวัสดี $title",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,

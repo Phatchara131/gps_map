@@ -150,9 +150,14 @@ class _MapTabState extends State<MapTab> {
                     MaterialPageRoute(builder: (context) => ViewOld()),
                     (route) => false);
               } else {
+                String titleDrawer = prefs.getString('user_name') ?? '';
+                String emailDrawer = prefs.getString('user_email') ?? '';
                 Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => ViewOldRela()),
+                    MaterialPageRoute(
+                        builder: (context) => ViewOldRela(
+                            titleDrawer: titleDrawer,
+                            emailDrawer: emailDrawer)),
                     (route) => false);
               }
             },

@@ -10,7 +10,13 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewOldRela extends StatefulWidget {
-  const ViewOldRela({Key? key}) : super(key: key);
+  const ViewOldRela({
+    Key? key,
+    required this.titleDrawer,
+    required this.emailDrawer,
+  }) : super(key: key);
+  final titleDrawer;
+  final emailDrawer;
 
   @override
   State<ViewOldRela> createState() => _ViewOldRelaState();
@@ -22,14 +28,14 @@ class _ViewOldRelaState extends State<ViewOldRela> {
   bool isDarkModeEnabled = false;
   bool isCardView = true;
   String searchText = '';
-  String titleDrawer = '';
-  String emailDrawer = '';
+  // String titleDrawer = '';
+  // String emailDrawer = '';
   @override
   void initState() {
     super.initState();
     initPlatformState();
     getrecord();
-    getEmail();
+    // getEmail();
   }
 
   Future<void> initPlatformState() async {
@@ -54,11 +60,13 @@ class _ViewOldRelaState extends State<ViewOldRela> {
     });
   }
 
-  void getEmail() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    titleDrawer = prefs.getString('user_name') ?? '';
-    emailDrawer = prefs.getString('user_email') ?? '';
-  }
+  // void getEmail() async {
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   titleDrawer = prefs.getString('user_name') ?? '';
+  //   emailDrawer = prefs.getString('user_email') ?? '';
+  //   print(emailDrawer);
+  //   print(titleDrawer);
+  // }
 
   bool isEnglish(String text) {
     // รายการตัวอักษรที่ใช้ในภาษาอังกฤษ
@@ -96,7 +104,8 @@ class _ViewOldRelaState extends State<ViewOldRela> {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(title: Text("รายชื่อผู้สูงอายุ")),
-      drawer: CustomDrawer(title: titleDrawer, email: emailDrawer),
+      drawer:
+          CustomDrawer(title: widget.titleDrawer, email: widget.emailDrawer),
       body: Builder(
         builder: (BuildContext innerContext) {
           return Container(
