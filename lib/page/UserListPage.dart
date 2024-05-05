@@ -54,6 +54,11 @@ class _UserListPageState extends State<UserListPage> {
   ];
 
   Future<void> loadData() async {
+    setState(() {
+      _page = 0;
+      _limit = 6;
+      isLoading = true;
+    });
     print('Load data');
     try {
       String url =
@@ -63,10 +68,16 @@ class _UserListPageState extends State<UserListPage> {
         // print(response.body);
         var jsonData = json.decode(response.body);
         // print(jsonData['data']);
+        // selectedDelete = [];
+        // users = [];
+        // usersBackup = [];
+        print(jsonData['data'].length);
         setState(() {
+          print("Load data success ${jsonData['data'].length}");
           selectedDelete = List<bool>.filled(jsonData['data'].length, false);
           users = List<Map<String, dynamic>>.from(jsonData['data']);
           usersBackup = List<Map<String, dynamic>>.from(jsonData['data']);
+          isLoading = false;
         });
         print(users);
       } else {
@@ -189,6 +200,13 @@ class _UserListPageState extends State<UserListPage> {
     bool checkdel = await deleteUser(selectedDeleteID);
     if (checkdel) {
       await loadData();
+      // setState(() {
+      //   users.removeWhere((user) => selectedDeleteID.contains(user['user_ID']));
+      //   usersBackup
+      //       .removeWhere((user) => selectedDeleteID.contains(user['user_ID']));
+      //   selectedDelete = List<bool>.filled(users.length, false);
+      // });
+      print('Delete success');
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -587,6 +605,7 @@ class _UserListPageState extends State<UserListPage> {
         child: Stack(
           children: [
             Container(
+              height: 200,
               padding: EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -633,10 +652,13 @@ class _UserListPageState extends State<UserListPage> {
                   ),
                   Divider(),
                   Container(
+                    height: 60,
                     width: double.infinity,
                     child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
+                      scrollDirection:
+                          Axis.vertical, // เปลี่ยนเป็น Axis.vertical
                       child: SingleChildScrollView(
+                        // ใช้ SingleChildScrollView ชั้นในเพื่อเลื่อนแนวนอน
                         scrollDirection: Axis.horizontal,
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
