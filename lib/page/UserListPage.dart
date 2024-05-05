@@ -593,6 +593,23 @@ class _UserListPageState extends State<UserListPage> {
     );
   }
 
+  Future<List<Map<String, dynamic>>> loaduserDataById(String user_id) async {
+    try {
+      String url =
+          'https://project-old.000webhostapp.com/User_API/user_rest.php?getUserByID=$user_id';
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        return List<Map<String, dynamic>>.from(jsonData['data']);
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   Future<List<Map<String, dynamic>>> loadoldData(String user_id) async {
     try {
       String url =
@@ -671,7 +688,7 @@ class _UserListPageState extends State<UserListPage> {
     print('Edit user $user_id');
     showLoadingMsg('กำลังโหลดข้อมูล...');
     var oldData = await loadoldData(user_id);
-    print(oldData);
+    var userData = await loaduserDataById(user_id);
     Navigator.pop(context);
     showDialog(
       context: context,
@@ -708,7 +725,7 @@ class _UserListPageState extends State<UserListPage> {
                           TextField(
                             cursorColor: Colors.black,
                             controller: nameController
-                              ..text = oldData[0]['user_name'],
+                              ..text = userData[0]['user_name'],
                             decoration: InputDecoration(
                               labelText: 'ชื่อ-สกุล',
                               hintText: 'ชื่อ-สกุล',
@@ -730,7 +747,7 @@ class _UserListPageState extends State<UserListPage> {
                           TextField(
                             cursorColor: Colors.black,
                             controller: emailController
-                              ..text = oldData[0]['user_email'],
+                              ..text = userData[0]['user_email'],
                             decoration: InputDecoration(
                               labelText: 'อีเมล',
                               hintText: 'อีเมล',
@@ -752,7 +769,7 @@ class _UserListPageState extends State<UserListPage> {
                           TextField(
                             cursorColor: Colors.black,
                             controller: idcardController
-                              ..text = oldData[0]['user_idcard'],
+                              ..text = userData[0]['user_idcard'],
                             decoration: InputDecoration(
                               labelText: 'เลขบัตรประชาชน',
                               hintText: 'เลขบัตรประชาชน',
@@ -771,109 +788,120 @@ class _UserListPageState extends State<UserListPage> {
                               ),
                             ),
                           ),
-                          Text(
-                            'รายการญาติ',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Container(
-                            width: double.infinity,
-                            child: Text(
-                              "*กดเพื่อดูและแก้ไขข้อมูลผู้สูงอายุ",
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: double.infinity,
-                            height: 100,
-                            child: ListView.builder(
-                              itemCount: oldData.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  margin: EdgeInsets.only(bottom: 10),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
+                          oldData.length != 0
+                              ? Text(
+                                  'รายการญาติ',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  child: ListTile(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Update_old(
-                                            oldData[index]["old_ID"].toString(),
-                                            oldData[index]["old_loraID"]
-                                                .toString(),
-                                            oldData[index]["old_userID"]
-                                                .toString(),
-                                            oldData[index]["old_fname"]
-                                                .toString(),
-                                            oldData[index]["old_lname"]
-                                                .toString(),
-                                            oldData[index]["old_address"]
-                                                .toString(),
-                                            oldData[index]["old_age"]
-                                                .toString(),
-                                            oldData[index]["old_sex"]
-                                                .toString(),
-                                            oldData[index]["old_disease"]
-                                                .toString(),
-                                            oldData[index]["old_relativeID"]
-                                                .toString(),
-                                            oldData[index]["old_Cname"]
-                                                .toString(),
-                                            oldData[index]["old_Ctel"]
-                                                .toString(),
-                                            "userpage",
-                                            oldData[0]['user_idcard']
-                                                .toString(),
+                                )
+                              : Container(),
+                          oldData.length != 0
+                              ? Container(
+                                  width: double.infinity,
+                                  child: Text(
+                                    "*กดเพื่อดูและแก้ไขข้อมูลผู้สูงอายุ",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                          oldData.length != 0
+                              ? Container(
+                                  width: double.infinity,
+                                  height: 100,
+                                  child: ListView.builder(
+                                    itemCount: oldData.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        margin: EdgeInsets.only(bottom: 10),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.grey,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: ListTile(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Update_old(
+                                                  oldData[index]["old_ID"]
+                                                      .toString(),
+                                                  oldData[index]["old_loraID"]
+                                                      .toString(),
+                                                  oldData[index]["old_userID"]
+                                                      .toString(),
+                                                  oldData[index]["old_fname"]
+                                                      .toString(),
+                                                  oldData[index]["old_lname"]
+                                                      .toString(),
+                                                  oldData[index]["old_address"]
+                                                      .toString(),
+                                                  oldData[index]["old_age"]
+                                                      .toString(),
+                                                  oldData[index]["old_sex"]
+                                                      .toString(),
+                                                  oldData[index]["old_disease"]
+                                                      .toString(),
+                                                  oldData[index]
+                                                          ["old_relativeID"]
+                                                      .toString(),
+                                                  oldData[index]["old_Cname"]
+                                                      .toString(),
+                                                  oldData[index]["old_Ctel"]
+                                                      .toString(),
+                                                  "userpage",
+                                                  userData[0]['user_idcard']
+                                                      .toString(),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          title: Text(
+                                              "${oldData[index]['old_fname']} ${oldData[index]['old_lname']}"),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  "ที่อยู่ ${oldData[index]['old_address']} โทร ${oldData[index]['or_phone']}"),
+                                              Text(
+                                                  "อายุ ${oldData[index]['old_age']} เพศ ${oldData[index]['old_sex']}"),
+                                            ],
+                                          ),
+                                          leading: CircleAvatar(
+                                            backgroundColor: ColorsUsername
+                                                    .where((element) =>
+                                                        element.keys.first ==
+                                                        oldData[index]
+                                                                ['old_fname'][0]
+                                                            .toUpperCase())
+                                                .first
+                                                .values
+                                                .first,
+                                            child: Text(
+                                              oldData[index]['old_fname'][0]
+                                                  .toUpperCase(),
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       );
                                     },
-                                    title: Text(
-                                        "${oldData[index]['old_fname']} ${oldData[index]['old_lname']}"),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            "ที่อยู่ ${oldData[index]['old_address']} โทร ${oldData[index]['or_phone']}"),
-                                        Text(
-                                            "อายุ ${oldData[index]['old_age']} เพศ ${oldData[index]['old_sex']}"),
-                                      ],
-                                    ),
-                                    leading: CircleAvatar(
-                                      backgroundColor: ColorsUsername.where(
-                                              (element) =>
-                                                  element.keys.first ==
-                                                  oldData[index]['old_fname'][0]
-                                                      .toUpperCase())
-                                          .first
-                                          .values
-                                          .first,
-                                      child: Text(
-                                        oldData[index]['old_fname'][0]
-                                            .toUpperCase(),
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
                                   ),
-                                );
-                              },
-                            ),
-                          ),
+                                )
+                              : Container(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -893,7 +921,7 @@ class _UserListPageState extends State<UserListPage> {
                               ElevatedButton(
                                 onPressed: () {
                                   updateUserData(
-                                      oldData[0]['user_ID'].toString());
+                                      userData[0]['user_ID'].toString());
                                   // Navigator.pop(context);
                                 },
                                 child: Icon(Icons.save),
