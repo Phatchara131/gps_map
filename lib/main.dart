@@ -87,19 +87,19 @@ void main() async {
   isLoggedIn ? print("Logged In") : print("Not Logged In");
   runApp(MaterialApp(
     title: "App",
-    // home: isLoggedIn
-    //     ? user_idcard == 'admin'
-    //         ? ViewOld()
-    //         : ViewOldRela(titleDrawer: titleDrawer, emailDrawer: emailDrawer)
-    //     : LoginPage(),
     home: isLoggedIn
-        ? lonx != 0.0
-            ? Mapnoti(lat: latx, lon: lonx)
-            : user_idcard == 'admin'
-                ? ViewOld()
-                : ViewOldRela(
-                    titleDrawer: titleDrawer, emailDrawer: emailDrawer)
+        ? user_idcard == 'admin'
+            ? ViewOld()
+            : ViewOldRela(titleDrawer: titleDrawer, emailDrawer: emailDrawer)
         : LoginPage(),
+    // home: isLoggedIn
+    //     ? lonx != 0.0
+    //         ? Mapnoti(lat: latx, lon: lonx)
+    //         : user_idcard == 'admin'
+    //             ? ViewOld()
+    //             : ViewOldRela(
+    //                 titleDrawer: titleDrawer, emailDrawer: emailDrawer)
+    //     : LoginPage(),
     navigatorKey: navigatorKey,
     // home: ViewOld(),
   ));

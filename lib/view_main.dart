@@ -27,8 +27,23 @@ class _ViewOldState extends State<ViewOld> {
   void initState() {
     super.initState();
     // initPlatformState();
+    _movemapPage();
     getrecord();
     _showLoading();
+  }
+
+  void _movemapPage() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String strlat = prefs.getString('lat') ?? '';
+    String strlon = prefs.getString('lon') ?? '';
+    if (strlat != '' && strlon != '') {
+      double lat = double.parse(strlat);
+      double lon = double.parse(strlon);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Mapnoti(lat: lat, lon: lon)),
+      );
+    }
   }
 
   void _showLoading() {

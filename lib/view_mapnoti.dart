@@ -5,6 +5,7 @@ import 'package:flutter_application_5/menu/drawer.dart';
 import 'package:longdo_maps_api3_flutter/longdo_maps_api3_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Mapnoti extends StatefulWidget {
   const Mapnoti({Key? key, required this.lat, required this.lon})
@@ -83,6 +84,7 @@ class _MapnotiState extends State<Mapnoti> {
   @override
   void initState() {
     super.initState();
+    removelatlon();
     _latitudeController = TextEditingController();
     _longitudeController = TextEditingController();
     _areaController = TextEditingController();
@@ -94,6 +96,12 @@ class _MapnotiState extends State<Mapnoti> {
     _longitudeController.dispose();
     _areaController.dispose();
     super.dispose();
+  }
+
+  void removelatlon() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('lat');
+    prefs.remove('lon');
   }
 
   @override
