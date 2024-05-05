@@ -146,6 +146,12 @@ class _ViewOldState extends State<ViewOld> {
                             String strlon = prefs.getString('lon') ?? '';
                             print("lat : $strlat");
                             print("lon : $strlon");
+                            //show snackbar
+                            ScaffoldMessenger.of(innerContext).showSnackBar(
+                              SnackBar(
+                                content: Text("lat : $strlat lon : $strlon"),
+                              ),
+                            );
 
                             Scaffold.of(innerContext).openDrawer();
                           },
