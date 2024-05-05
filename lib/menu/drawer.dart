@@ -110,7 +110,7 @@ class CustomDrawer extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => UserListPage(),
+                        builder: (context) => UserListPage(user_idz: 0),
                       ),
                     );
                   },

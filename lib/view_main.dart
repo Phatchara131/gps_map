@@ -345,6 +345,8 @@ class _ViewOldState extends State<ViewOld> {
                   userdata[index]["old_relativeID"].toString(),
                   userdata[index]["old_Cname"].toString(),
                   userdata[index]["old_Ctel"].toString(),
+                  "viewmain",
+                  "0",
                 ),
               ),
             );
@@ -517,6 +519,8 @@ class _ViewOldState extends State<ViewOld> {
           userdata["old_relativeID"].toString(),
           userdata["old_Cname"].toString(),
           userdata["old_Ctel"].toString(),
+          "viewmain",
+          "0",
         ),
       ),
     );

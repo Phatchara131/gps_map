@@ -330,6 +330,8 @@ class _ViewOldRelaState extends State<ViewOldRela> {
                   userdata[index]["user_ID"].toString(),
                   userdata[index]["user_name"].toString(),
                   userdata[index]["old_ID"].toString(),
+                  "view_old_rela",
+                  "0",
                 ),
               ),
             );
@@ -502,6 +504,8 @@ class _ViewOldRelaState extends State<ViewOldRela> {
           userdata["old_relativeID"].toString(),
           userdata["old_Cname"].toString(),
           userdata["old_Ctel"].toString(),
+          "view_old_rela",
+          "0",
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_5/page/UserListPage.dart';
 import 'package:flutter_application_5/relative/view_relative.dart';
 import 'package:flutter_application_5/view_main.dart';
 import 'package:http/http.dart' as http;
@@ -21,24 +22,31 @@ class Update_old extends StatefulWidget {
   String relativeID;
   String relativeName;
   String contactNumber;
+  String action;
+  String relativeIDCARD;
+
   Update_old(
-      this.old_id,
-      this.loraId,
-      this.userId,
-      this.fname,
-      this.lname,
-      this.address,
-      this.age,
-      this.gender,
-      this.medicalCondition,
-      this.relativeID,
-      this.relativeName,
-      this.contactNumber);
+    this.old_id,
+    this.loraId,
+    this.userId,
+    this.fname,
+    this.lname,
+    this.address,
+    this.age,
+    this.gender,
+    this.medicalCondition,
+    this.relativeID,
+    this.relativeName,
+    this.contactNumber,
+    this.action,
+    this.relativeIDCARD,
+  );
   @override
   State<Update_old> createState() => _Update_oldState();
 }
 
 class _Update_oldState extends State<Update_old> {
+  String? selectedGender;
   TextEditingController loraId = TextEditingController();
   TextEditingController userId = TextEditingController();
   TextEditingController fname = TextEditingController();
@@ -75,7 +83,7 @@ class _Update_oldState extends State<Update_old> {
         "old_lname": lname.text,
         "old_address": address.text,
         "old_age": age.text,
-        "old_sex": gender.text,
+        "old_sex": selectedGender,
         "old_disease": medicalCondition.text,
         // "old_relativeID": relativeID.text,
         // "old_Cname": relativeName.text,
@@ -90,20 +98,30 @@ class _Update_oldState extends State<Update_old> {
           String user_idcard = prefs.getString('user_idcard') ?? '';
           print(user_idcard);
           Navigator.of(context).pop();
-          if (user_idcard == 'admin') {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => ViewOld()),
-                (route) => false);
-          } else {
-            String titleDrawer = prefs.getString('user_name') ?? '';
-            String emailDrawer = prefs.getString('user_email') ?? '';
-            Navigator.pushAndRemoveUntil(
+          if (widget.action == 'userpage') {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ViewOldRela(
-                        titleDrawer: titleDrawer, emailDrawer: emailDrawer)),
-                (route) => false);
+                    builder: (context) => UserListPage(
+                        user_idz: int.parse(widget.relativeIDCARD))));
+          } else {
+            if (user_idcard == 'admin') {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => ViewOld()),
+                  (route) => false);
+            } else {
+              String titleDrawer = prefs.getString('user_name') ?? '';
+              String emailDrawer = prefs.getString('user_email') ?? '';
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ViewOldRela(
+                          titleDrawer: titleDrawer, emailDrawer: emailDrawer)),
+                  (route) => false);
+            }
           }
         } else {
           print("some issue");
@@ -314,6 +332,7 @@ class _Update_oldState extends State<Update_old> {
     relativeID.text = widget.relativeID;
     relativeName.text = widget.relativeName;
     contactNumber.text = widget.contactNumber;
+    selectedGender = widget.gender;
     // print(widget.relativeID);
     // print(widget.relativeName);
     print(widget.old_id);
@@ -543,13 +562,41 @@ class _Update_oldState extends State<Update_old> {
               ),
               Container(
                 margin: EdgeInsets.all(10),
-                child: TextFormField(
-                  controller: gender,
-                  decoration: const InputDecoration(
+                child: DropdownButtonFormField<String>(
+                  value: selectedGender,
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
+                    filled: true,
                     labelText: 'เพศ...',
+                    labelStyle: TextStyle(color: Colors.black),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    fillColor: Colors.transparent,
+                    // prefixIcon: Icon(Icons.wc),
                   ),
+                  items: ['ชาย', 'หญิง', 'อื่นๆ'].map((String gender) {
+                    return DropdownMenuItem<String>(
+                      value: gender,
+                      child: Text(gender),
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedGender = value;
+                    });
+                  },
                 ),
+
+                // child: TextFormField(
+                //   controller: gender,
+                //   decoration: const InputDecoration(
+                //     border: OutlineInputBorder(),
+                //     labelText: 'เพศ...',
+                //   ),
+                // ),
               ),
               Container(
                 margin: EdgeInsets.all(10),

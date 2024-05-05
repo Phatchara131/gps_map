@@ -3,11 +3,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_5/add_user.dart';
+import 'package:flutter_application_5/update_old.dart';
 import 'package:http/http.dart' as http;
 import 'package:quickalert/quickalert.dart';
 
 class UserListPage extends StatefulWidget {
-  const UserListPage({super.key});
+  const UserListPage({Key? key, required this.user_idz}) : super(key: key);
+  final int user_idz;
 
   @override
   State<UserListPage> createState() => _UserListPageState();
@@ -21,6 +23,9 @@ class _UserListPageState extends State<UserListPage> {
   TextEditingController searchController = TextEditingController();
   bool isLoading = true;
   ScrollController _scrollController = ScrollController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController idcardController = TextEditingController();
   int _page = 0;
   int _limit = 6;
   bool isLoadMore = false;
@@ -257,6 +262,8 @@ class _UserListPageState extends State<UserListPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    print('User ID: ${widget.user_idz}');
+
     loadData();
     showLoading();
     _scrollController.addListener(() {
@@ -269,6 +276,11 @@ class _UserListPageState extends State<UserListPage> {
         _loadMoreData();
       }
     });
+    if (widget.user_idz != 0) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        dialogEditUser(widget.user_idz.toString());
+      });
+    }
   }
 
   void showLoading() {
@@ -581,10 +593,350 @@ class _UserListPageState extends State<UserListPage> {
     );
   }
 
+  Future<List<Map<String, dynamic>>> loadoldData(String user_id) async {
+    try {
+      String url =
+          'https://project-old.000webhostapp.com/User_API/user_rest.php?getUserOld_by_relativeID=$user_id';
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        return List<Map<String, dynamic>>.from(jsonData['data']);
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<void> updateUserData(String user_id) async {
+    showLoadingMsg('กำลังแก้ไขข้อมูล...');
+    try {
+      String url =
+          'https://project-old.000webhostapp.com/User_API/user_rest.php?updateUser';
+      var response = await http.post(Uri.parse(url), body: {
+        'user_ID': user_id,
+        'user_name': nameController.text,
+        'user_email': emailController.text,
+        'user_idcard': idcardController.text,
+        'action': 'updateuser',
+      });
+      if (response.statusCode == 200) {
+        print(response.body);
+        var jsonData = json.decode(response.body);
+        if (jsonData['status'] == 'success') {
+          Navigator.pop(context);
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('แก้ไขข้อมูลสำเร็จ'),
+              duration: Duration(seconds: 2),
+              backgroundColor: Colors.green.shade800,
+            ),
+          );
+          // loadData();
+        } else {
+          Navigator.pop(context);
+          QuickAlert.show(
+            context: context,
+            type: QuickAlertType.error,
+            title: 'แก้ไขข้อมูลไม่สำเร็จ',
+            text: jsonData['message'],
+            showCancelBtn: false,
+            confirmBtnText: 'ตกลง',
+            confirmBtnColor: Colors.red,
+            onConfirmBtnTap: () {
+              Navigator.pop(context);
+            },
+          );
+        }
+      } else {
+        print('Update failed');
+      }
+    } catch (e) {
+      print(e);
+      // Navigator.pop(context);
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text('แก้ไขข้อมูลไม่สำเร็จ'),
+      //     duration: Duration(seconds: 2),
+      //     backgroundColor: Colors.red.shade700,
+      //   ),
+      // );
+    }
+  }
+
+  void dialogEditUser(String user_id) async {
+    print('Edit user $user_id');
+    showLoadingMsg('กำลังโหลดข้อมูล...');
+    var oldData = await loadoldData(user_id);
+    print(oldData);
+    Navigator.pop(context);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return (Dialog(
+              backgroundColor: Colors.transparent,
+              insetPadding: EdgeInsets.all(10),
+              child: Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: <Widget>[
+                  Container(
+                    width: double.infinity,
+                    // height: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.white,
+                    ),
+                    padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'แก้ไขข้อมูลผู้ใช้',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextField(
+                            cursorColor: Colors.black,
+                            controller: nameController
+                              ..text = oldData[0]['user_name'],
+                            decoration: InputDecoration(
+                              labelText: 'ชื่อ-สกุล',
+                              hintText: 'ชื่อ-สกุล',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+                              labelStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          TextField(
+                            cursorColor: Colors.black,
+                            controller: emailController
+                              ..text = oldData[0]['user_email'],
+                            decoration: InputDecoration(
+                              labelText: 'อีเมล',
+                              hintText: 'อีเมล',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+                              labelStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          TextField(
+                            cursorColor: Colors.black,
+                            controller: idcardController
+                              ..text = oldData[0]['user_idcard'],
+                            decoration: InputDecoration(
+                              labelText: 'เลขบัตรประชาชน',
+                              hintText: 'เลขบัตรประชาชน',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+                              labelStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'รายการญาติ',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            child: Text(
+                              "*กดเพื่อดูและแก้ไขข้อมูลผู้สูงอายุ",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            height: 100,
+                            child: ListView.builder(
+                              itemCount: oldData.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  margin: EdgeInsets.only(bottom: 10),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ListTile(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Update_old(
+                                            oldData[index]["old_ID"].toString(),
+                                            oldData[index]["old_loraID"]
+                                                .toString(),
+                                            oldData[index]["old_userID"]
+                                                .toString(),
+                                            oldData[index]["old_fname"]
+                                                .toString(),
+                                            oldData[index]["old_lname"]
+                                                .toString(),
+                                            oldData[index]["old_address"]
+                                                .toString(),
+                                            oldData[index]["old_age"]
+                                                .toString(),
+                                            oldData[index]["old_sex"]
+                                                .toString(),
+                                            oldData[index]["old_disease"]
+                                                .toString(),
+                                            oldData[index]["old_relativeID"]
+                                                .toString(),
+                                            oldData[index]["old_Cname"]
+                                                .toString(),
+                                            oldData[index]["old_Ctel"]
+                                                .toString(),
+                                            "userpage",
+                                            oldData[0]['user_idcard']
+                                                .toString(),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    title: Text(
+                                        "${oldData[index]['old_fname']} ${oldData[index]['old_lname']}"),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            "ที่อยู่ ${oldData[index]['old_address']} โทร ${oldData[index]['or_phone']}"),
+                                        Text(
+                                            "อายุ ${oldData[index]['old_age']} เพศ ${oldData[index]['old_sex']}"),
+                                      ],
+                                    ),
+                                    leading: CircleAvatar(
+                                      backgroundColor: ColorsUsername.where(
+                                              (element) =>
+                                                  element.keys.first ==
+                                                  oldData[index]['old_fname'][0]
+                                                      .toUpperCase())
+                                          .first
+                                          .values
+                                          .first,
+                                      child: Text(
+                                        oldData[index]['old_fname'][0]
+                                            .toUpperCase(),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Icon(Icons.close),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red.shade800,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: Size(50, 50),
+                                  padding: EdgeInsets.zero,
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              ElevatedButton(
+                                onPressed: () {
+                                  updateUserData(
+                                      oldData[0]['user_ID'].toString());
+                                  // Navigator.pop(context);
+                                },
+                                child: Icon(Icons.save),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green.shade800,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: Size(50, 50),
+                                  padding: EdgeInsets.zero,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ]
+                            .expand((widget) => [
+                                  widget,
+                                  SizedBox(height: 15),
+                                ])
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: -100,
+                    child: Image.asset(
+                      "assets/images/app_logo.png",
+                      width: 150,
+                      height: 150,
+                    ),
+                  )
+                ],
+              ),
+            ));
+          },
+        );
+      },
+    );
+  }
+
   _buildUserCard(Map<String, dynamic> user) {
     return GestureDetector(
       onTap: () {
-        print(user);
+        // print(user);
+        dialogEditUser(user['user_idcard'].toString());
       },
       child: Container(
         alignment: Alignment.center,
