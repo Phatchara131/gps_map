@@ -58,7 +58,7 @@ void main() async {
       MaterialPageRoute(builder: (context) => Mapnoti(lat: lat, lon: lon)),
     );
   });
-  await Future.delayed(Duration(seconds: 2));
+  // await Future.delayed(Duration(seconds: 2));
   FlutterNativeSplash.remove();
   isLoggedIn ? print("Logged In") : print("Not Logged In");
   runApp(MaterialApp(

@@ -279,8 +279,7 @@ class _UserListPageState extends State<UserListPage> {
               // color: Colors.blue,
               color: Colors.grey,
               image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/userpage.jpg'),
+                image: AssetImage('assets/images/userpage.jpg'),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.only(
@@ -407,49 +406,49 @@ class _UserListPageState extends State<UserListPage> {
               ],
             ),
           ),
-          SizedBox(height: 10),
-          Container(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  "แสดงรายการแบบ",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    // fontWeight: FontWeight.bold,
-                  ),
-                ),
-                //icon grid and table
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      viewtype = 'grid';
-                    });
-                  },
-                  child: Icon(
-                    Icons.grid_view,
-                    color: viewtype == 'grid' ? Colors.green : Colors.black,
-                  ),
-                ),
-                // SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      viewtype = 'table';
-                    });
-                  },
-                  child: Icon(
-                    Icons.table_rows,
-                    color: viewtype == 'grid' ? Colors.black : Colors.green,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // SizedBox(height: 10),
+          // Container(
+          //   padding: EdgeInsets.only(left: 10, right: 10),
+          //   width: double.infinity,
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.end,
+          //     crossAxisAlignment: CrossAxisAlignment.end,
+          //     children: [
+          //       Text(
+          //         "แสดงรายการแบบ",
+          //         style: TextStyle(
+          //           color: Colors.black,
+          //           fontSize: 20,
+          //           // fontWeight: FontWeight.bold,
+          //         ),
+          //       ),
+          //       //icon grid and table
+          //       GestureDetector(
+          //         onTap: () {
+          //           setState(() {
+          //             viewtype = 'grid';
+          //           });
+          //         },
+          //         child: Icon(
+          //           Icons.grid_view,
+          //           color: viewtype == 'grid' ? Colors.green : Colors.black,
+          //         ),
+          //       ),
+          //       // SizedBox(width: 10),
+          //       GestureDetector(
+          //         onTap: () {
+          //           setState(() {
+          //             viewtype = 'table';
+          //           });
+          //         },
+          //         child: Icon(
+          //           Icons.table_rows,
+          //           color: viewtype == 'grid' ? Colors.black : Colors.green,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           // SizedBox(height: 10),
           Container(
             padding: EdgeInsets.all(10),
@@ -522,7 +521,7 @@ class _UserListPageState extends State<UserListPage> {
                     child: viewtype == 'grid'
                         ? GridView.builder(
                             controller: _scrollController,
-                            padding: EdgeInsets.all(0),
+                            padding: EdgeInsets.only(bottom: 40),
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,

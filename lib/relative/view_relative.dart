@@ -40,6 +40,7 @@ class _ViewOldRelaState extends State<ViewOldRela> {
     // ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(SnackBar(
     //   content: Text("ID : ${Tage}"),
     // ));
+    // OneSignal.Notifications.addForegroundWillDisplayListener((event) { })
     OneSignal.Notifications.addClickListener((event) async {
       print('NOTIFICATION CLICK LISTENER CALLED WITH EVENT: $event');
       print(event.notification.jsonRepresentation());
