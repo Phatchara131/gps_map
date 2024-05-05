@@ -45,7 +45,25 @@ void main() async {
   // ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(SnackBar(
   //   content: Text("ID : ${Tage}"),
   // ));
-
+  double latx = 0.0;
+  double lonx = 0.0;
+  OneSignal.Notifications.addForegroundWillDisplayListener((event) {
+    print('FOREGROUND WILL DISPLAY LISTENER CALLED WITH EVENT: $event');
+    print(event.notification.jsonRepresentation());
+    print(event.notification.additionalData?['lon']);
+    latx = double.parse(event.notification.additionalData?['lat']);
+    lonx = double.parse(event.notification.additionalData?['lon']);
+    // final SharedPreferences prefs =
+    //     SharedPreferences.getInstance() as SharedPreferences;
+    // prefs.setString('lat', event.notification.additionalData?['lat']);
+    // prefs.setString('lon', event.notification.additionalData?['lon']);
+    // double lat = double.parse(event.notification.additionalData?['lat']);
+    // double lon = double.parse(event.notification.additionalData?['lon']);
+    // Navigator.push(
+    //   navigatorKey.currentContext!,
+    //   MaterialPageRoute(builder: (context) => Mapnoti(lat: lat, lon: lon)),
+    // );
+  });
   OneSignal.Notifications.addClickListener((event) async {
     print('Clecked main.dart');
     print('NOTIFICATION CLICK LISTENER CALLED WITH EVENT: $event');
@@ -69,10 +87,18 @@ void main() async {
   isLoggedIn ? print("Logged In") : print("Not Logged In");
   runApp(MaterialApp(
     title: "App",
+    // home: isLoggedIn
+    //     ? user_idcard == 'admin'
+    //         ? ViewOld()
+    //         : ViewOldRela(titleDrawer: titleDrawer, emailDrawer: emailDrawer)
+    //     : LoginPage(),
     home: isLoggedIn
-        ? user_idcard == 'admin'
-            ? ViewOld()
-            : ViewOldRela(titleDrawer: titleDrawer, emailDrawer: emailDrawer)
+        ? lonx != 0.0
+            ? Mapnoti(lat: latx, lon: lonx)
+            : user_idcard == 'admin'
+                ? ViewOld()
+                : ViewOldRela(
+                    titleDrawer: titleDrawer, emailDrawer: emailDrawer)
         : LoginPage(),
     navigatorKey: navigatorKey,
     // home: ViewOld(),

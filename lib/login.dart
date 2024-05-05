@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
     getrecord();
     super.initState();
     print(userdata);
-    initPlatformState();
+    // initPlatformState();
     // เรียก getrecord เมื่อหน้าจอเริ่มแสดงผล
   }
 

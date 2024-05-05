@@ -26,7 +26,7 @@ class _ViewOldState extends State<ViewOld> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    // initPlatformState();
     getrecord();
     _showLoading();
   }

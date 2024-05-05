@@ -33,7 +33,7 @@ class _ViewOldRelaState extends State<ViewOldRela> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    // initPlatformState();
     getrecord();
     // getEmail();
   }

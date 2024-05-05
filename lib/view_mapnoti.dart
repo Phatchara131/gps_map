@@ -121,6 +121,7 @@ class _MapnotiState extends State<Mapnoti> {
               JavascriptChannel(
                 name: "ready",
                 onMessageReceived: (message) {
+                  print("lat: ${widget.lat} lon: ${widget.lon} loaded");
                   var lay =
                       map.currentState?.LongdoStatic("Layers", 'RASTER_POI');
                   if (lay != null) {
