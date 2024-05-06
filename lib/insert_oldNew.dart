@@ -875,7 +875,22 @@ class _Insert_oldNewState extends State<Insert_oldNew> {
                         decoration: InputDecoration(
                           labelText: 'รหัสอุปกรณ์',
                           hintText: 'กรอกรหัสอุปกรณ์',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
                           prefixIcon: Icon(Icons.qr_code),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(height: 10),
@@ -884,25 +899,23 @@ class _Insert_oldNewState extends State<Insert_oldNew> {
                         decoration: InputDecoration(
                           labelText: 'รหัสบัตรประจำตัว',
                           hintText: 'กรอกรหัสบัตรประจำตัว',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
                           prefixIcon: Icon(Icons.credit_card),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
-                        onChanged: (value) {
-                          if (value.length == 13) {
-                            if (validateThaiID(value)) {
-                              setState(() {
-                                ischeckIDCARD = true;
-                              });
-                            } else {
-                              setState(() {
-                                ischeckIDCARD = false;
-                              });
-                            }
-                          } else {
-                            setState(() {
-                              ischeckIDCARD = false;
-                            });
-                          }
-                        },
                       ),
                       SizedBox(height: 10),
                       TextField(
@@ -910,7 +923,22 @@ class _Insert_oldNewState extends State<Insert_oldNew> {
                         decoration: InputDecoration(
                           labelText: 'ชื่อ',
                           hintText: 'กรอกชื่อ',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
                           prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(height: 10),
@@ -919,10 +947,671 @@ class _Insert_oldNewState extends State<Insert_oldNew> {
                         decoration: InputDecoration(
                           labelText: 'นามสกุล',
                           hintText: 'กรอกนามสกุล',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
                           prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(height: 10),
+                      TextField(
+                        controller: addressController,
+                        decoration: InputDecoration(
+                          labelText: 'ที่อยู่',
+                          hintText: 'กรอกที่อยู่',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          prefixIcon: Icon(Icons.home),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      TextField(
+                        controller: ageController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'อายุ',
+                          hintText: 'กรอกอายุ',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          labelText: 'เพศ',
+                          hintText: 'เลือกเพศ',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        value: selectedGender,
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedGender = value;
+                          });
+                        },
+                        items: <String>['ชาย', 'หญิง']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                      SizedBox(height: 10),
+                      TextField(
+                        controller: medicalConditionController,
+                        decoration: InputDecoration(
+                          labelText: 'โรคประจำตัว',
+                          hintText: 'กรอกโรคประจำตัว',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          prefixIcon: Icon(Icons.medical_services),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            ischeckIDCARD = false;
+                            //clear Textfield
+                            relativeIDController.clear();
+                            relativeNameController.clear();
+                            contactNumberController.clear();
+                          });
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return StatefulBuilder(
+                                builder: (context, setStatex) {
+                                  return Dialog(
+                                    insetPadding: EdgeInsets.all(10),
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      alignment: Alignment.center,
+                                      children: <Widget>[
+                                        Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color: Colors.white,
+                                          ),
+                                          padding: EdgeInsets.fromLTRB(
+                                              20, 50, 20, 20),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                "เพิ่มญาติ",
+                                                style: TextStyle(fontSize: 24),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              SizedBox(height: 10),
+                                              TextFormField(
+                                                readOnly: ischeckIDCARD,
+                                                controller:
+                                                    relativeIDController,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                decoration: InputDecoration(
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(),
+                                                  filled: true,
+                                                  labelText:
+                                                      'บัตรประจำตัว(ญาติ)...',
+                                                  labelStyle: TextStyle(
+                                                      color: Colors.black),
+                                                  prefixIcon:
+                                                      Icon(Icons.perm_identity),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              //ตรวจสอบรหัสบัตรประจำตัว
+                                              SizedBox(height: 10),
+                                              ElevatedButton(
+                                                onPressed: ischeckIDCARD
+                                                    ? null
+                                                    : () async {
+                                                        if (relativeIDController
+                                                            .text.isEmpty) {
+                                                          QuickAlert.show(
+                                                            context: context,
+                                                            title:
+                                                                'ข้อมูลไม่ครบถ้วน',
+                                                            text:
+                                                                'กรุณากรอกข้อมูลให้ครบถ้วน',
+                                                            type: QuickAlertType
+                                                                .error,
+                                                            confirmBtnText:
+                                                                'ตกลง',
+                                                            confirmBtnColor:
+                                                                Colors.red
+                                                                    .shade900,
+                                                          );
+                                                          return;
+                                                        }
+                                                        if (!validateThaiID(
+                                                            relativeIDController
+                                                                .text)) {
+                                                          QuickAlert.show(
+                                                            context: context,
+                                                            title:
+                                                                'รหัสบัตรประจำตัวไม่ถูกต้อง',
+                                                            text:
+                                                                'กรุณากรอกรหัสบัตรประจำตัวให้ถูกต้อง',
+                                                            type: QuickAlertType
+                                                                .error,
+                                                            confirmBtnText:
+                                                                'ตกลง',
+                                                            confirmBtnColor:
+                                                                Colors.red
+                                                                    .shade900,
+                                                          );
+                                                          return;
+                                                        }
+                                                        QuickAlert.show(
+                                                          context: context,
+                                                          title:
+                                                              'กำลังตรวจสอบ...',
+                                                          text:
+                                                              'กรุณารอสักครู่',
+                                                          type: QuickAlertType
+                                                              .loading,
+                                                        );
+                                                        bool isRelativeExist =
+                                                            await checkRelative(
+                                                                relativeIDController
+                                                                    .text);
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        print(
+                                                            "isRelativeExist: $isRelativeExist");
+                                                        if (!isRelativeExist) {
+                                                          QuickAlert.show(
+                                                            context: context,
+                                                            title:
+                                                                'ไม่พบข้อมูลญาติ',
+                                                            text:
+                                                                'ไม่พบข้อมูลญาติในระบบ',
+                                                            type: QuickAlertType
+                                                                .error,
+                                                            confirmBtnText:
+                                                                'ตกลง',
+                                                            confirmBtnColor:
+                                                                Colors.red
+                                                                    .shade900,
+                                                          );
+                                                          return;
+                                                        }
+                                                        QuickAlert.show(
+                                                          context: context,
+                                                          title:
+                                                              'รหัสบัตรประจำตัวถูกต้อง',
+                                                          text:
+                                                              'รหัสบัตรประจำตัวนี้สามารถใช้ได้',
+                                                          type: QuickAlertType
+                                                              .success,
+                                                          confirmBtnText:
+                                                              'ตกลง',
+                                                          confirmBtnColor:
+                                                              Colors.green,
+                                                        );
+                                                        setStatex(() {
+                                                          ischeckIDCARD = true;
+                                                        });
+                                                      },
+                                                child: Text('ตรวจสอบ'),
+                                                style: ElevatedButton.styleFrom(
+                                                  minimumSize:
+                                                      Size(double.infinity, 50),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  foregroundColor: Colors.blue,
+                                                  backgroundColor: Colors.white,
+                                                  shadowColor: Colors.white,
+                                                  side: BorderSide(
+                                                      color: Colors.blue),
+                                                  textStyle: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                              ischeckIDCARD
+                                                  ? SizedBox(height: 20)
+                                                  : Container(),
+                                              ischeckIDCARD
+                                                  ? TextFormField(
+                                                      readOnly: true,
+                                                      controller:
+                                                          relativeNameController,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        filled: true,
+                                                        fillColor: Colors.white,
+                                                        labelText:
+                                                            'ชื่อ(ญาติ)...',
+                                                        labelStyle: TextStyle(
+                                                            color:
+                                                                Colors.black),
+                                                        prefixIcon:
+                                                            Icon(Icons.person),
+                                                        focusedBorder:
+                                                            OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Container(),
+                                              ischeckIDCARD
+                                                  ? SizedBox(height: 10)
+                                                  : Container(),
+                                              ischeckIDCARD
+                                                  ? TextFormField(
+                                                      keyboardType:
+                                                          TextInputType.phone,
+                                                      controller:
+                                                          contactNumberController,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        filled: true,
+                                                        fillColor: Colors.white,
+                                                        labelText:
+                                                            'เบอร์ติดต่อ(ญาติ)...',
+                                                        labelStyle: TextStyle(
+                                                            color:
+                                                                Colors.black),
+                                                        prefixIcon:
+                                                            Icon(Icons.phone),
+                                                        focusedBorder:
+                                                            OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Container(),
+                                              ischeckIDCARD
+                                                  ? SizedBox(height: 10)
+                                                  : Container(),
+                                              ischeckIDCARD
+                                                  ? ElevatedButton(
+                                                      onPressed: () async {
+                                                        if (relativeIDController.text.isEmpty ||
+                                                            relativeNameController
+                                                                .text.isEmpty ||
+                                                            contactNumberController
+                                                                .text.isEmpty) {
+                                                          QuickAlert.show(
+                                                            context: context,
+                                                            title:
+                                                                'ข้อมูลไม่ครบถ้วน',
+                                                            text:
+                                                                'กรุณากรอกข้อมูลให้ครบถ้วน',
+                                                            type: QuickAlertType
+                                                                .error,
+                                                            confirmBtnText:
+                                                                'ตกลง',
+                                                            confirmBtnColor:
+                                                                Colors.red
+                                                                    .shade900,
+                                                          );
+                                                          return;
+                                                        }
+                                                        if (!validateThaiID(
+                                                            relativeIDController
+                                                                .text)) {
+                                                          QuickAlert.show(
+                                                            context: context,
+                                                            title:
+                                                                'รหัสบัตรประจำตัวไม่ถูกต้อง',
+                                                            text:
+                                                                'กรุณากรอกรหัสบัตรประจำตัวให้ถูกต้อง',
+                                                            type: QuickAlertType
+                                                                .error,
+                                                            confirmBtnText:
+                                                                'ตกลง',
+                                                            confirmBtnColor:
+                                                                Colors.red
+                                                                    .shade900,
+                                                          );
+                                                          return;
+                                                        }
+                                                        if (contactNumberController
+                                                                .text.length !=
+                                                            10) {
+                                                          QuickAlert.show(
+                                                            context: context,
+                                                            title:
+                                                                'เบอร์ติดต่อไม่ถูกต้อง',
+                                                            text:
+                                                                'กรุณากรอกเบอร์ติดต่อให้ถูกต้อง',
+                                                            type: QuickAlertType
+                                                                .error,
+                                                            confirmBtnText:
+                                                                'ตกลง',
+                                                            confirmBtnColor:
+                                                                Colors.red
+                                                                    .shade900,
+                                                          );
+                                                          return;
+                                                        }
+                                                        //regex ตรวจสอบเบอร์โทร
+                                                        if (!isThaiPhoneNumber(
+                                                            contactNumberController
+                                                                .text)) {
+                                                          QuickAlert.show(
+                                                            context: context,
+                                                            title:
+                                                                'เบอร์ติดต่อไม่ถูกต้อง',
+                                                            text:
+                                                                'กรุณากรอกเบอร์ติดต่อให้ถูกต้อง',
+                                                            type: QuickAlertType
+                                                                .error,
+                                                            confirmBtnText:
+                                                                'ตกลง',
+                                                            confirmBtnColor:
+                                                                Colors.red
+                                                                    .shade900,
+                                                          );
+                                                          return;
+                                                        }
+
+                                                        bool isRelativeExist =
+                                                            await checkRelative(
+                                                                relativeIDController
+                                                                    .text);
+                                                        print(
+                                                            "isRelativeExist: $isRelativeExist");
+                                                        setState(() {
+                                                          if (relativeData
+                                                                  .length ==
+                                                              0) {
+                                                            relativeData.add({
+                                                              'relativeID':
+                                                                  relativeID,
+                                                              'relativeName':
+                                                                  relativeNameController
+                                                                      .text,
+                                                              'contactNumber':
+                                                                  contactNumberController
+                                                                      .text,
+                                                              'relativeIDCARD':
+                                                                  relativeIDController
+                                                                      .text,
+                                                            });
+                                                            relativeIDController
+                                                                .clear();
+                                                            relativeNameController
+                                                                .clear();
+                                                            contactNumberController
+                                                                .clear();
+                                                            relativeID = '';
+                                                            Navigator.pop(
+                                                                context);
+                                                          } else {
+                                                            //เช็ค relativeID ซ้ำ
+                                                            for (var i = 0;
+                                                                i <
+                                                                    relativeData
+                                                                        .length;
+                                                                i++) {
+                                                              if (relativeData[
+                                                                          i][
+                                                                      'relativeIDCARD'] ==
+                                                                  relativeIDController
+                                                                      .text) {
+                                                                QuickAlert.show(
+                                                                  context:
+                                                                      context,
+                                                                  title:
+                                                                      'รหัสบัตรประจำตัวซ้ำ',
+                                                                  text:
+                                                                      'รหัสบัตรประจำตัวนี้ถูกใช้ไปแล้ว',
+                                                                  type:
+                                                                      QuickAlertType
+                                                                          .error,
+                                                                  confirmBtnText:
+                                                                      'ตกลง',
+                                                                  confirmBtnColor:
+                                                                      Colors.red
+                                                                          .shade900,
+                                                                );
+                                                                return;
+                                                              }
+                                                            }
+                                                            relativeData.add({
+                                                              'relativeID':
+                                                                  relativeID,
+                                                              'relativeName':
+                                                                  relativeNameController
+                                                                      .text,
+                                                              'contactNumber':
+                                                                  contactNumberController
+                                                                      .text,
+                                                              'relativeIDCARD':
+                                                                  relativeIDController
+                                                                      .text,
+                                                            });
+                                                            relativeIDController
+                                                                .clear();
+                                                            relativeNameController
+                                                                .clear();
+                                                            contactNumberController
+                                                                .clear();
+                                                            relativeID = '';
+                                                            Navigator.pop(
+                                                                context);
+                                                          }
+                                                        });
+                                                        print(relativeData);
+                                                      },
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        minimumSize: Size(
+                                                            double.infinity,
+                                                            50),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                        ),
+                                                        foregroundColor:
+                                                            Colors.white,
+                                                        backgroundColor:
+                                                            Colors.green,
+                                                      ),
+                                                      child: Text(
+                                                        'เพิ่ม',
+                                                        style: TextStyle(
+                                                            fontSize: 18),
+                                                      ),
+                                                    )
+                                                  : Container(),
+                                            ],
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: -100,
+                                          child: Image.asset(
+                                              "assets/images/app_logoxxx.png",
+                                              width: 170,
+                                              height: 170),
+                                        ),
+                                        Positioned(
+                                          right: -10,
+                                          top: 0,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Icon(Icons.close),
+                                            style: ElevatedButton.styleFrom(
+                                              shape: CircleBorder(),
+                                              backgroundColor: Colors.red,
+                                              foregroundColor: Colors.white,
+                                              minimumSize: Size(30, 30),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        },
+                        icon: Icon(Icons.person_add),
+                        label: Text('เพิ่มญาติ'),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(double.infinity, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.blue.shade600,
+                        ),
+                      ),
+                      // SizedBox(height: 10),
+                      if (relativeData.length > 0)
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: relativeData.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              child: ListTile(
+                                title: Text(
+                                    'รหัสบัตรประจำตัว: ${relativeData[index]['relativeIDCARD']}'),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        'ชื่อ: ${relativeData[index]['relativeName']}'),
+                                    Text(
+                                        'เบอร์ติดต่อ: ${relativeData[index]['contactNumber']}'),
+                                  ],
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.red.shade900,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      relativeData.removeAt(index);
+                                    });
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      SizedBox(height: 10),
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          QuickAlert.show(
+                            context: context,
+                            title: 'บันทึกข้อมูล',
+                            text: 'คุณต้องการบันทึกข้อมูลใช่หรือไม่',
+                            type: QuickAlertType.confirm,
+                            confirmBtnText: 'ใช่',
+                            confirmBtnColor: Colors.green.shade900,
+                            cancelBtnText: 'ไม่',
+                            onConfirmBtnTap: () async {
+                              await inserrecordold();
+                            },
+                          );
+                        },
+                        icon: Icon(Icons.save),
+                        label: Text('บันทึกข้อมูล'),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(double.infinity, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.green.shade700,
+                        ),
+                      ),
                     ],
                   ),
                 );
