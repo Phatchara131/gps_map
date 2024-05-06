@@ -739,33 +739,17 @@ class _Insert_oldNewState extends State<Insert_oldNew> {
                 ),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(
-                            Icons.arrow_back_ios,
-                            color: Colors.white,
-                            shadows: [
-                              BoxShadow(
-                                color: Colors.white,
-                                blurRadius: 10,
-                                spreadRadius: 1,
-                                offset: Offset(1, 1),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          child: Text(
-                            'บันทึกข้อมูลผู้สูงอายุ',
-                            style: TextStyle(
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(
+                              Icons.arrow_back_ios,
                               color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
                               shadows: [
                                 BoxShadow(
                                   color: Colors.white,
@@ -776,27 +760,48 @@ class _Insert_oldNewState extends State<Insert_oldNew> {
                               ],
                             ),
                           ),
-                        ),
-                        SizedBox(width: 50),
-                      ],
+                          Container(
+                            child: Text(
+                              'บันทึกข้อมูลผู้สูงอายุ',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                shadows: [
+                                  BoxShadow(
+                                    color: Colors.white,
+                                    blurRadius: 10,
+                                    spreadRadius: 1,
+                                    offset: Offset(1, 1),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 50),
+                        ],
+                      ),
                     ),
                     // SizedBox(height: 10),
                     Container(
                       width: double.infinity,
-                      child: Text(
-                        'เพื่มผู้สูงอายุที่ลงทะเบียนไว้ในระบบ',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            BoxShadow(
-                              color: Colors.white,
-                              blurRadius: 10,
-                              spreadRadius: 1,
-                              offset: Offset(1, 1),
-                            ),
-                          ],
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Text(
+                          'เพื่มผู้สูงอายุที่ลงทะเบียนไว้ในระบบ',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            shadows: [
+                              BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 10,
+                                spreadRadius: 1,
+                                offset: Offset(1, 1),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
