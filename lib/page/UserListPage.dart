@@ -1013,7 +1013,7 @@ class _UserListPageState extends State<UserListPage> {
                           color: Colors.black.withOpacity(0.3),
                         ),
                         child: Text(
-                          user['user_name'][0].toUpperCase(),
+                          user['user_email'][0].toUpperCase(),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 30,
