@@ -790,7 +790,7 @@ class _UserListPageState extends State<UserListPage> {
                           ),
                           oldData.length != 0
                               ? Text(
-                                  'รายการญาติ',
+                                  'รายการผู้สูงอายุ',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 20,
@@ -879,15 +879,7 @@ class _UserListPageState extends State<UserListPage> {
                                             ],
                                           ),
                                           leading: CircleAvatar(
-                                            backgroundColor: ColorsUsername
-                                                    .where((element) =>
-                                                        element.keys.first ==
-                                                        oldData[index]
-                                                                ['old_fname'][0]
-                                                            .toUpperCase())
-                                                .first
-                                                .values
-                                                .first,
+                                            backgroundColor: Colors.blue,
                                             child: Text(
                                               oldData[index]['old_fname'][0]
                                                   .toUpperCase(),
