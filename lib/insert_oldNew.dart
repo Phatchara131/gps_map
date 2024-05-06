@@ -766,7 +766,7 @@ class _Insert_oldNewState extends State<Insert_oldNew> {
                           'เพื่มผู้สูงอายุที่ลงทะเบียนไว้ในระบบ',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 17,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                             shadows: [
                               BoxShadow(
