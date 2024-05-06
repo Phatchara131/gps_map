@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_5/insert_old.dart';
+import 'package:flutter_application_5/insert_oldNew.dart';
 import 'package:flutter_application_5/login.dart';
 import 'package:flutter_application_5/page/UserListPage.dart';
 import 'package:flutter_application_5/view_map.dart';
@@ -123,7 +124,8 @@ class CustomDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Insert_old(),
+                  // builder: (context) => Insert_old(),
+                  builder: (context) => Insert_oldNew(),
                 ),
               );
             },
