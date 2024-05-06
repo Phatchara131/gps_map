@@ -8,6 +8,7 @@ import 'package:flutter_application_5/view_mapnoti.dart';
 import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ViewOldRela extends StatefulWidget {
   const ViewOldRela({
@@ -28,6 +29,8 @@ class _ViewOldRelaState extends State<ViewOldRela> {
   bool isDarkModeEnabled = false;
   bool isCardView = true;
   String searchText = '';
+  bool isLoading = true;
+  List<bool> user_status = [];
   // String titleDrawer = '';
   // String emailDrawer = '';
   @override
@@ -35,7 +38,47 @@ class _ViewOldRelaState extends State<ViewOldRela> {
     super.initState();
     // initPlatformState();
     getrecord();
+    _showLoading();
+    connect_io();
     // getEmail();
+  }
+
+  void connect_io() {
+    IO.Socket socket =
+        IO.io('https://msg-server-msle.onrender.com/', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': false,
+    });
+    socket.connect();
+    socket.onConnect((data) {
+      print('connect');
+      // socket.emit('send message', 'test');
+    });
+    socket.on('message', (data) {
+      // print(data);
+      var datax = json.decode(data);
+      print(datax);
+      // old_status 1 คือเปิด 0 คือปิด
+      List<bool> datax_status = List.generate(datax.length, (index) {
+        return datax[index]["old_status"] == 1;
+      });
+      print("datax_status: $datax_status");
+      print("user_status: $user_status");
+      //ถ้าสองค่าไม่เท่ากัน
+      if (datax_status.toString() != user_status.toString()) {
+        setState(() {
+          user_status = datax_status;
+        });
+      }
+    });
+  }
+
+  void _showLoading() {
+    Future.delayed(Duration(seconds: 3), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
 
   Future<void> initPlatformState() async {
@@ -133,7 +176,7 @@ class _ViewOldRelaState extends State<ViewOldRela> {
                       ),
                       image: DecorationImage(
                         image: AssetImage(
-                          'assets/images/wengang-zhai-DEg6mbiK6DI-unsplash.jpg',
+                          'assets/images/wengang-xxx.jpg',
                         ),
                         fit: BoxFit.cover,
                       ),
@@ -277,8 +320,21 @@ class _ViewOldRelaState extends State<ViewOldRela> {
                       ),
                       SizedBox(height: 10),
                       Expanded(
-                        child:
-                            isCardView ? _buildCardView() : _buildTableView(),
+                        child: isLoading
+                            ? Center(
+                                child: SizedBox(
+                                  width: 50,
+                                  height: 50,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.cyanAccent,
+                                    backgroundColor: Colors.grey.shade300,
+                                    strokeWidth: 10,
+                                  ),
+                                ),
+                              )
+                            : isCardView
+                                ? _buildCardView()
+                                : _buildTableView(),
                       ),
                     ],
                   ),
@@ -359,35 +415,67 @@ class _ViewOldRelaState extends State<ViewOldRela> {
                 ),
               ],
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Stack(
               children: [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundColor: getRandomColor(),
-                  child: Text(
-                    isEnglish(userdata[index]["old_fname"].toString())
-                        ? userdata[index]["old_fname"]
-                            .toString()
-                            .substring(0, 1)
-                            .toUpperCase()
-                        : userdata[index]["old_fname"]
-                            .toString()
-                            .substring(0, 1),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                Container(
+                  width: double.infinity,
+                  // height: 200,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundColor: getRandomColor(),
+                        child: Text(
+                          isEnglish(userdata[index]["old_fname"].toString())
+                              ? userdata[index]["old_fname"]
+                                  .toString()
+                                  .substring(0, 1)
+                                  .toUpperCase()
+                              : userdata[index]["old_fname"]
+                                  .toString()
+                                  .substring(0, 1),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "${userdata[index]["old_fname"]} ${userdata[index]["old_lname"]}",
+                        style: TextStyle(
+                          color:
+                              isDarkModeEnabled ? Colors.white : Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(height: 10),
-                Text(
-                  "${userdata[index]["old_fname"]} ${userdata[index]["old_lname"]}",
-                  style: TextStyle(
-                    color: isDarkModeEnabled ? Colors.white : Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                Positioned(
+                  top: 5,
+                  right: 5,
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 50,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: user_status[index]
+                          ? Colors.green
+                          : Colors.red.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      user_status[index] ? "เปิด" : "ปิด",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -547,6 +635,12 @@ class _ViewOldRelaState extends State<ViewOldRela> {
         } else {
           setState(() {
             userdata = data['data'];
+            //user_status = 1 คือเปิด 0 คือปิด
+            print(userdata);
+            user_status = List.generate(userdata.length, (index) {
+              return userdata[index]["old_status"] == 1;
+            });
+            print(user_status);
           });
         }
       }

@@ -459,14 +459,29 @@ class _Update_oldState extends State<Update_old> {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   String password = prefs.getString('user_password') ?? '';
+                  String user_idcard = prefs.getString('user_idcard') ?? '';
+                  String titleDrawer = prefs.getString('user_name') ?? '';
+                  String emailDrawer = prefs.getString('user_email') ?? '';
                   print(password);
                   if (passwordCheck.text == password) {
                     Navigator.of(context).pop(); // ปิด AlertDialog
                     delrecord(widget.old_id); // เรียกใช้งานฟังก์ชัน
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => ViewOld()),
-                        (route) => false);
+                    if (user_idcard == 'admin') {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => ViewOld()),
+                          (route) => false);
+                    } else {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ViewOldRela(
+                              titleDrawer: titleDrawer,
+                              emailDrawer: emailDrawer,
+                            ),
+                          ),
+                          (route) => false);
+                    }
                   } else {
                     QuickAlert.show(
                       context: context,
