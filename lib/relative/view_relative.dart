@@ -638,7 +638,7 @@ class _ViewOldRelaState extends State<ViewOldRela> {
             //user_status = 1 คือเปิด 0 คือปิด
             print(userdata);
             user_status = List.generate(userdata.length, (index) {
-              return userdata[index]["old_status"] == 1;
+              return userdata[index]["old_status"].toString() == "1";
             });
             print(user_status);
           });
