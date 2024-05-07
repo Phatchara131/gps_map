@@ -361,7 +361,7 @@ class _UserListPageState extends State<UserListPage> {
                   padding: EdgeInsets.only(left: 20),
                   width: double.infinity,
                   child: Text(
-                    "จำนวนผู้ใช้ทั้งหมด 10 คน",
+                    "จำนวนผู้ใช้ทั้งหมด ${users.length} คน",
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       color: Colors.white,
