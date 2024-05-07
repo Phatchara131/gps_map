@@ -631,8 +631,9 @@ class _ViewOldState extends State<ViewOld> {
         userdata = jsonDecode(response.body);
         print(userdata);
         user_status = List.generate(userdata.length, (index) {
-          return userdata[index]["old_status"] == 1;
+          return userdata[index]["old_status"].toString() == "1";
         });
+        print("user_status: $user_status");
       });
     } catch (e) {
       print(e);
