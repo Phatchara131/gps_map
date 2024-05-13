@@ -13,7 +13,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   List userdata = [];
   bool _obscurePassword = true;
-  List<bool> _isSelected = [false, false, false];
+  List<bool> _isSelected = [false, false];
   final TextEditingController user_name = TextEditingController();
   final TextEditingController user_idcard = TextEditingController();
   final TextEditingController user_email = TextEditingController();
@@ -64,16 +64,16 @@ class _RegisterPageState extends State<RegisterPage> {
       });
     }
 
-    // ตรวจสอบว่ามีตัวอักษรพิเศษอย่างน้อย 1 ตัว
-    if (!password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>\_-]'))) {
-      setState(() {
-        _isSelected[2] = false;
-      });
-    } else {
-      setState(() {
-        _isSelected[2] = true;
-      });
-    }
+    // // ตรวจสอบว่ามีตัวอักษรพิเศษอย่างน้อย 1 ตัว
+    // if (!password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>\_-]'))) {
+    //   setState(() {
+    //     _isSelected[2] = false;
+    //   });
+    // } else {
+    //   setState(() {
+    //     _isSelected[2] = true;
+    //   });
+    // }
 
     print(_isSelected);
   }
@@ -178,7 +178,7 @@ class _RegisterPageState extends State<RegisterPage> {
             );
             return;
           }
-          if (!_isSelected[0] || !_isSelected[1] || !_isSelected[2]) {
+          if (!_isSelected[0] || !_isSelected[1]) {
             QuickAlert.show(
               context: context,
               title: 'ตรวจสอบรหัสผ่าน',
@@ -539,26 +539,26 @@ class _RegisterPageState extends State<RegisterPage> {
                             ],
                           ),
                           // ตรวจสอบว่ามีตัวอักษรพิเศษอย่างน้อย 1 ตัว
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Icon(
-                                _isSelected[2]
-                                    ? Icons.check_circle_sharp
-                                    : Icons.check_circle_outline,
-                                color: Colors.greenAccent,
-                                size: 20,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'ต้องมีตัวอักษรพิเศษอย่างน้อย 1 ตัว',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.start,
+                          //   children: [
+                          //     Icon(
+                          //       _isSelected[2]
+                          //           ? Icons.check_circle_sharp
+                          //           : Icons.check_circle_outline,
+                          //       color: Colors.greenAccent,
+                          //       size: 20,
+                          //     ),
+                          //     SizedBox(width: 5),
+                          //     Text(
+                          //       'ต้องมีตัวอักษรพิเศษอย่างน้อย 1 ตัว',
+                          //       style: TextStyle(
+                          //         fontSize: 14,
+                          //         color: Colors.white,
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                         ]
                             .expand(
                                 (element) => [element, SizedBox(height: 10)])
