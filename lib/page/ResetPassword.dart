@@ -15,7 +15,8 @@ class ResetPSD extends StatefulWidget {
 class _ResetPSDState extends State<ResetPSD> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  List<bool> _isSelected = [false, false, false];
+  List<bool> _isSelected = [false, false];
+  // List<bool> _isSelected = [false, false, false];
 
   Future<void> resetPassword() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -141,16 +142,16 @@ class _ResetPSDState extends State<ResetPSD> {
       });
     }
 
-    // ตรวจสอบว่ามีตัวอักษรพิเศษอย่างน้อย 1 ตัว
-    if (!password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>\_-]'))) {
-      setState(() {
-        _isSelected[2] = false;
-      });
-    } else {
-      setState(() {
-        _isSelected[2] = true;
-      });
-    }
+    // // ตรวจสอบว่ามีตัวอักษรพิเศษอย่างน้อย 1 ตัว
+    // if (!password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>\_-]'))) {
+    //   setState(() {
+    //     _isSelected[2] = false;
+    //   });
+    // } else {
+    //   setState(() {
+    //     _isSelected[2] = true;
+    //   });
+    // }
 
     print(_isSelected);
   }
@@ -281,26 +282,26 @@ class _ResetPSDState extends State<ResetPSD> {
                       ],
                     ),
                     // ตรวจสอบว่ามีตัวอักษรพิเศษอย่างน้อย 1 ตัว
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(
-                          _isSelected[2]
-                              ? Icons.check_circle_sharp
-                              : Icons.check_circle_outline,
-                          color: Colors.greenAccent,
-                          size: 20,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          'ต้องมีตัวอักษรพิเศษอย่างน้อย 1 ตัว',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   children: [
+                    //     Icon(
+                    //       _isSelected[2]
+                    //           ? Icons.check_circle_sharp
+                    //           : Icons.check_circle_outline,
+                    //       color: Colors.greenAccent,
+                    //       size: 20,
+                    //     ),
+                    //     SizedBox(width: 5),
+                    //     Text(
+                    //       'ต้องมีตัวอักษรพิเศษอย่างน้อย 1 ตัว',
+                    //       style: TextStyle(
+                    //         fontSize: 14,
+                    //         color: Colors.grey,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ]
                       .expand((element) => [element, SizedBox(height: 10)])
                       .toList(),
